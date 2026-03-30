@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>브링크 지점관리 - 종합 매출</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Noto+Sans+KR:wght@400;500&family=Poppins:wght@500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; color: #111111; display: flex; height: 100vh; overflow: hidden; }
@@ -22,7 +23,8 @@ body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; co
 .nav-group-trigger { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; color: #505050; font-size: 14px; font-weight: 500; cursor: pointer; }
 .nav-group-trigger:hover { background: #F6F6F6; }
 .nav-group-trigger.open { color: #111111; font-weight: 500; }
-.nav-arrow { margin-left: auto; font-size: 10px; color: #767676; }
+.nav-arrow { margin-left: auto; font-size: 10px; color: #767676; transition: transform .2s; display: inline-block; }
+.nav-group-trigger.open .nav-arrow { transform: rotate(180deg); }
 .nav-sub { display: none; flex-direction: column; padding-left: 32px; gap: 1px; }
 .nav-sub.show { display: flex; }
 .nav-sub-item { padding: 7px 12px; border-radius: 6px; font-size: 13px; color: #505050; text-decoration: none; font-weight: 400; }
@@ -39,17 +41,22 @@ body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; co
 .user-avatar { width: 32px; height: 32px; background: #EDF2F6; border-radius: 9999px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; color: #505050; }
 .user-name { font-size: 13px; font-weight: 500; color: #111; }
 .user-role { font-size: 11px; color: #767676; }
+.user-info { display: flex; flex-direction: column; }
 .page-content { flex: 1; overflow-y: auto; padding: 28px; }
 .page-title { font-size: 24px; font-weight: 500; color: #111; margin-bottom: 20px; }
+.card { background: #fff; border-radius: 20px; box-shadow: 0 4px 20px rgba(238,238,238,.5); padding: 20px 24px; }
+.card-title { font-size: 16px; font-weight: 500; color: #111; margin-bottom: 4px; }
+.card-sub { font-size: 12px; color: #767676; }
 .badge { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; }
 .badge-success { background: #E6FBF4; color: #00B377; }
 .badge-warning { background: #FEF6E6; color: #E0A830; }
 .badge-error { background: #FDE8E8; color: #D32F2F; }
 .badge-primary { background: #E6F4FF; color: #0077CC; }
 .badge-gray { background: #F0F0F0; color: #505050; }
-.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; text-decoration: none; }
 .btn-primary { background: #0095FF; color: #fff; }
 .btn-outline { background: #fff; color: #505050; border: 1px solid #EDF2F6; }
+.btn-danger { background: #EC3D3D; color: #fff; }
 .btn-sm { padding: 5px 10px; font-size: 12px; border-radius: 4px; }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
 thead th { padding: 10px 12px; background: #FAFAFA; border-bottom: 1px solid #EDF2F6; font-weight: 500; color: #767676; text-align: left; font-size: 12px; }
@@ -69,18 +76,16 @@ tbody tr:hover td { background: #FAFAFA; }
 .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
 .page-header .page-title { margin-bottom: 0; }
 .filter-select { padding: 7px 12px; border-radius: 6px; border: 1px solid #EDF2F6; background: #fff; font-size: 13px; font-weight: 500; color: #505050; cursor: pointer; font-family: 'Inter', 'Noto Sans KR', sans-serif; }
-.card { background: #fff; border-radius: 20px; box-shadow: 0 4px 20px rgba(238,238,238,.5); padding: 20px 24px; }
 .progress-bar-wrap { height: 10px; background: #EDF2F6; border-radius: 9999px; overflow: hidden; }
 .progress-bar { height: 100%; border-radius: 9999px; }
 
-.card-title { font-size: 16px; font-weight: 500; color: #111111; margin-bottom: 4px; }
-.card-sub { font-size: 12px; color: #767676; }
-.btn-danger { background: #EC3D3D; color: #fff; }
-.badge-gray { background: #F0F0F0; color: #505050; }
-.user-info { display: flex; flex-direction: column; }
-.stat-value { font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 500; color: #111111; margin-bottom: 6px; }
-.nav-group-trigger.open .nav-arrow { transform: rotate(180deg); }
-.nav-arrow { transition: transform .2s; display: inline-block; }
+/* 차트 관련 */
+.chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+.chart-card { background: #fff; border-radius: 20px; box-shadow: 0 4px 20px rgba(238,238,238,.5); padding: 20px 24px; }
+.chart-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.chart-card-title { font-size: 15px; font-weight: 500; color: #111; }
+.chart-card-sub { font-size: 11px; color: #767676; }
+.chart-canvas-wrap { height: 180px; position: relative; }
 </style>
 </head>
 <body>
@@ -194,6 +199,32 @@ tbody tr:hover td { background: #FAFAFA; }
       </div>
     </div>
 
+    <!-- 차트 2컬럼 -->
+    <div class="chart-row">
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">총 매출</div>
+            <div class="chart-card-sub">최근 7일 매출 현황</div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:#767676;"><span style="width:8px;height:8px;background:#0095FF;border-radius:2px;display:inline-block;"></span>기능샷</span>
+            <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:#767676;"><span style="width:8px;height:8px;background:#00E096;border-radius:2px;display:inline-block;"></span>맛샷</span>
+          </div>
+        </div>
+        <div class="chart-canvas-wrap"><canvas id="salesBarChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">매출 추이 분석</div>
+            <div class="chart-card-sub">최근 7일 누적 매출</div>
+          </div>
+        </div>
+        <div class="chart-canvas-wrap"><canvas id="salesLineChart"></canvas></div>
+      </div>
+    </div>
+
     <!-- Sales Trend Table -->
     <div class="table-wrap" style="margin-bottom:20px;">
       <div class="section-header">
@@ -295,6 +326,43 @@ tbody tr:hover td { background: #FAFAFA; }
 </div>
 
 <script>
+const barCtx = document.getElementById('salesBarChart').getContext('2d');
+new Chart(barCtx, {
+  type: 'bar',
+  data: {
+    labels: ['3/24', '3/25', '3/26', '3/27', '3/28', '3/29', '3/30'],
+    datasets: [
+      { label: '기능샷', data: [594000, 396000, 792000, 990000, 792000, 396000, 198000], backgroundColor: '#0095FF', borderRadius: 4, barPercentage: 0.5, categoryPercentage: 0.7 },
+      { label: '맛샷', data: [256000, 384000, 128000, 256000, 384000, 256000, 118000], backgroundColor: '#00E096', borderRadius: 4, barPercentage: 0.5, categoryPercentage: 0.7 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 11 }, color: '#767676' } },
+      y: { grid: { color: '#F0F0F0' }, ticks: { font: { size: 11 }, color: '#767676', callback: v => v >= 1000 ? (v/1000)+'K' : v } }
+    }
+  }
+});
+
+const lineCtx = document.getElementById('salesLineChart').getContext('2d');
+new Chart(lineCtx, {
+  type: 'line',
+  data: {
+    labels: ['3/24', '3/25', '3/26', '3/27', '3/28', '3/29', '3/30'],
+    datasets: [{ label: '누적 매출', data: [850000, 1630000, 2550000, 3796000, 4972000, 5624000, 5940000], borderColor: '#0095FF', backgroundColor: 'rgba(0,149,255,0.08)', fill: true, tension: 0.4, pointBackgroundColor: '#0095FF', pointRadius: 4 }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 11 }, color: '#767676' } },
+      y: { grid: { color: '#F0F0F0' }, ticks: { font: { size: 11 }, color: '#767676', callback: v => v >= 1000 ? (v/1000)+'K' : v } }
+    }
+  }
+});
+
 function toggleGroup(el){el.classList.toggle('open');var s=el.nextElementSibling;if(s)s.classList.toggle('show');}
 (function(){if(!sessionStorage.getItem('branchAuth')){location.href='branch-login.html';}})();
 </script>

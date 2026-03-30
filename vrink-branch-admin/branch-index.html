@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>브링크 지점관리 - 대시보드</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Noto+Sans+KR:wght@400;500&family=Poppins:wght@500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; color: #111111; display: flex; height: 100vh; overflow: hidden; }
@@ -22,7 +23,8 @@ body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; co
 .nav-group-trigger { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; color: #505050; font-size: 14px; font-weight: 500; cursor: pointer; }
 .nav-group-trigger:hover { background: #F6F6F6; }
 .nav-group-trigger.open { color: #111111; font-weight: 500; }
-.nav-arrow { margin-left: auto; font-size: 10px; color: #767676; }
+.nav-arrow { margin-left: auto; font-size: 10px; color: #767676; transition: transform .2s; display: inline-block; }
+.nav-group-trigger.open .nav-arrow { transform: rotate(180deg); }
 .nav-sub { display: none; flex-direction: column; padding-left: 32px; gap: 1px; }
 .nav-sub.show { display: flex; }
 .nav-sub-item { padding: 7px 12px; border-radius: 6px; font-size: 13px; color: #505050; text-decoration: none; font-weight: 400; }
@@ -39,25 +41,22 @@ body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; co
 .user-avatar { width: 32px; height: 32px; background: #EDF2F6; border-radius: 9999px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; color: #505050; }
 .user-name { font-size: 13px; font-weight: 500; color: #111; }
 .user-role { font-size: 11px; color: #767676; }
+.user-info { display: flex; flex-direction: column; }
 .page-content { flex: 1; overflow-y: auto; padding: 28px; }
 .page-title { font-size: 24px; font-weight: 500; color: #111; margin-bottom: 20px; }
 .card { background: #fff; border-radius: 20px; box-shadow: 0 4px 20px rgba(238,238,238,.5); padding: 20px 24px; }
-.stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
-.stat-card { background: #fff; border-radius: 16px; box-shadow: 0 4px 20px rgba(238,238,238,.5); padding: 18px 20px; }
-.stat-label { font-size: 12px; color: #767676; margin-bottom: 6px; }
-.stat-value { font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 500; color: #111; margin-bottom: 4px; }
-.stat-change { font-size: 11px; color: #767676; }
-.stat-change.up { color: #0095FF; font-weight: 500; }
-.stat-change.down { color: #EC3D3D; }
+.card-title { font-size: 16px; font-weight: 500; color: #111; margin-bottom: 4px; }
+.card-sub { font-size: 12px; color: #767676; }
 .badge { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; }
 .badge-success { background: #E6FBF4; color: #00B377; }
 .badge-warning { background: #FEF6E6; color: #E0A830; }
 .badge-error { background: #FDE8E8; color: #D32F2F; }
 .badge-primary { background: #E6F4FF; color: #0077CC; }
 .badge-gray { background: #F0F0F0; color: #505050; }
-.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; text-decoration: none; }
 .btn-primary { background: #0095FF; color: #fff; }
 .btn-outline { background: #fff; color: #505050; border: 1px solid #EDF2F6; }
+.btn-danger { background: #EC3D3D; color: #fff; }
 .btn-sm { padding: 5px 10px; font-size: 12px; border-radius: 4px; }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
 thead th { padding: 10px 12px; background: #FAFAFA; border-bottom: 1px solid #EDF2F6; font-weight: 500; color: #767676; text-align: left; font-size: 12px; }
@@ -65,24 +64,54 @@ tbody td { padding: 12px; border-bottom: 1px solid #EDF2F6; vertical-align: midd
 tbody tr:last-child td { border-bottom: none; }
 tbody tr:hover td { background: #FAFAFA; }
 .table-wrap { background: #fff; border-radius: 20px; box-shadow: 0 4px 20px rgba(238,238,238,.5); overflow: hidden; }
-
 .section-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid #EDF2F6; }
 .section-title { font-size: 15px; font-weight: 500; color: #111; }
-.top3-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 20px; }
-.top3-card { background: #fff; border-radius: 16px; box-shadow: 0 4px 20px rgba(238,238,238,.5); padding: 18px 20px; display: flex; align-items: center; gap: 14px; }
-.top3-rank { font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 500; }
-.top3-info { flex: 1; }
-.top3-name { font-size: 14px; font-weight: 500; color: #111; margin-bottom: 4px; }
-.top3-count { font-size: 12px; color: #767676; }
+.stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+.stat-card { background: #fff; border-radius: 16px; box-shadow: 0 4px 20px rgba(238,238,238,.5); padding: 18px 20px; }
+.stat-label { font-size: 12px; color: #767676; margin-bottom: 6px; }
+.stat-value { font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 500; color: #111; margin-bottom: 4px; }
+.stat-change { font-size: 11px; color: #767676; }
+.stat-change.up { color: #0095FF; font-weight: 500; }
+.stat-change.down { color: #EC3D3D; }
 
-.card-title { font-size: 16px; font-weight: 500; color: #111111; margin-bottom: 4px; }
-.card-sub { font-size: 12px; color: #767676; }
-.btn-danger { background: #EC3D3D; color: #fff; }
-.badge-gray { background: #F0F0F0; color: #505050; }
-.user-info { display: flex; flex-direction: column; }
-.stat-value { font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 500; color: #111111; margin-bottom: 6px; }
-.nav-group-trigger.open .nav-arrow { transform: rotate(180deg); }
-.nav-arrow { transition: transform .2s; display: inline-block; }
+/* Dashboard specific */
+.top-row { display: grid; grid-template-columns: 1fr 320px; gap: 16px; margin-bottom: 20px; }
+.chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+
+.realtime-card { background: #fff; border-radius: 20px; box-shadow: 0 4px 20px rgba(238,238,238,.5); padding: 20px 24px; }
+.realtime-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.realtime-header-title { font-size: 16px; font-weight: 500; color: #111; }
+.realtime-items { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.realtime-item { padding: 16px; background: #F8F9FA; border-radius: 12px; cursor: pointer; transition: background .15s; }
+.realtime-item:hover { background: #EDF2F6; }
+.realtime-label { font-size: 12px; color: #767676; margin-bottom: 8px; }
+.realtime-val { font-family: 'Poppins', sans-serif; font-size: 24px; font-weight: 700; color: #111; margin-bottom: 8px; }
+.realtime-compare-lbl { font-size: 11px; color: #767676; display: block; margin-bottom: 2px; }
+.compare-pos { font-size: 12px; font-weight: 500; color: #EC3D3D; }
+.compare-neg { font-size: 12px; font-weight: 500; color: #0095FF; }
+
+.issue-card { background: #fff; border-radius: 20px; box-shadow: 0 4px 20px rgba(238,238,238,.5); padding: 20px 24px; }
+.issue-count { font-size: 28px; font-weight: 500; color: #EC3D3D; font-family: 'Poppins', sans-serif; }
+.issue-label { font-size: 12px; color: #EC3D3D; font-weight: 500; margin-bottom: 14px; }
+.issue-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.issue-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #F8F8FA; border-radius: 8px; }
+.issue-text { font-size: 13px; color: #111; font-weight: 500; }
+.issue-resolve-btn { background: #0095FF; color: #fff; border: none; border-radius: 6px; padding: 8px 16px; font-size: 13px; font-weight: 500; cursor: pointer; width: 100%; }
+
+.chart-card { background: #fff; border-radius: 20px; box-shadow: 0 4px 20px rgba(238,238,238,.5); padding: 20px 24px; }
+.chart-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.chart-card-title { font-size: 15px; font-weight: 500; color: #111; }
+.chart-card-sub { font-size: 11px; color: #767676; }
+.chart-canvas-wrap { height: 180px; position: relative; }
+
+.donut-card { background: #fff; border-radius: 20px; box-shadow: 0 4px 20px rgba(238,238,238,.5); padding: 20px 24px; }
+.donut-inner { display: flex; align-items: center; gap: 32px; }
+.donut-canvas-wrap { width: 180px; height: 180px; flex-shrink: 0; position: relative; }
+.donut-legend { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+.legend-item { display: flex; align-items: center; gap: 8px; }
+.legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+.legend-text { font-size: 12px; color: #505050; flex: 1; }
+.legend-count { font-size: 12px; font-weight: 500; color: #111; }
 </style>
 </head>
 <body>
@@ -164,116 +193,163 @@ tbody tr:hover td { background: #FAFAFA; }
   <div class="page-content">
     <div class="page-title">대시보드</div>
 
-    <!-- Stat Grid -->
-    <div class="stat-grid">
-      <div class="stat-card">
-        <div class="stat-label">오늘 매출</div>
-        <div class="stat-value">156,500<span style="font-size:14px;font-weight:400;color:#767676;">원</span></div>
-        <div class="stat-change up">▲ +12.3% 어제 대비</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">오늘 주문수</div>
-        <div class="stat-value">28<span style="font-size:14px;font-weight:400;color:#767676;">건</span></div>
-        <div class="stat-change up">▲ +3건 어제 대비</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">이번달 회원수</div>
-        <div class="stat-value">142<span style="font-size:14px;font-weight:400;color:#767676;">명</span></div>
-        <div class="stat-change up">▲ +5명 이번달</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">잔여 재고</div>
-        <div class="stat-value" style="font-size:16px;line-height:1.5;">
-          기능샷 2L<br>맛샷 3.5L
+    <!-- 상단 2컬럼: 실시간 현황 + 이슈 -->
+    <div class="top-row">
+      <div class="realtime-card">
+        <div class="realtime-header">
+          <div>
+            <span class="realtime-header-title">실시간 현황 표</span>
+            <div style="font-size:12px;color:#767676;margin-top:3px;">각 버튼을 클릭하면 더 자세한 현황을 볼 수 있습니다</div>
+          </div>
+          <button class="btn btn-outline" onclick="exportDashboardCSV()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            액셀로 추출하기
+          </button>
         </div>
-        <div style="margin-top:6px;"><span class="badge badge-warning">재고 부족 주의</span></div>
+        <div class="realtime-items">
+          <div class="realtime-item" onclick="location.href='branch-members.html'">
+            <div class="realtime-label">총 회원 수</div>
+            <div class="realtime-val">157명</div>
+            <span class="realtime-compare-lbl">새로 유입된 회원 수</span>
+            <span class="compare-neg">이번달 +8명</span>
+          </div>
+          <div class="realtime-item" onclick="location.href='branch-orders.html'">
+            <div class="realtime-label">오늘 주문 건수</div>
+            <div class="realtime-val">12건</div>
+            <span class="realtime-compare-lbl">건수 비교</span>
+            <span class="compare-pos">어제보다 +2건</span>
+          </div>
+          <div class="realtime-item" onclick="location.href='branch-sales.html'">
+            <div class="realtime-label">오늘 매출</div>
+            <div class="realtime-val">316,000원</div>
+            <span class="realtime-compare-lbl">매출 비교</span>
+            <span class="compare-neg">어제보다 +3건</span>
+          </div>
+          <div class="realtime-item" onclick="location.href='branch-sales.html'">
+            <div class="realtime-label">이번달 매출</div>
+            <div class="realtime-val">5,940,000원</div>
+            <span class="realtime-compare-lbl">매출 비교</span>
+            <span class="compare-neg">지난달보다 +12%</span>
+          </div>
+        </div>
+        <div style="margin-top:16px;padding-top:14px;border-top:1px solid #F0F0F0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+          <div style="font-size:11px;color:#A0A0A0;">마지막 업데이트: 방금 전</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <a href="branch-orders.html" style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:8px;background:#F8F9FA;font-size:12px;color:#505050;text-decoration:none;font-weight:500;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              주문 내역
+            </a>
+            <a href="branch-inventory.html" style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:8px;background:#F8F9FA;font-size:12px;color:#505050;text-decoration:none;font-weight:500;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+              재고 관리
+            </a>
+            <a href="branch-members.html" style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:8px;background:#F8F9FA;font-size:12px;color:#505050;text-decoration:none;font-weight:500;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              회원 관리
+            </a>
+            <a href="branch-sales.html" style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:8px;background:#F8F9FA;font-size:12px;color:#505050;text-decoration:none;font-weight:500;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+              매출 현황
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="issue-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+          <span style="font-size:15px;font-weight:500;color:#111;">이슈 현황</span>
+        </div>
+        <div class="issue-count">2건</div>
+        <div class="issue-label">해결이 필요한 이슈가 있어요</div>
+        <div class="issue-list">
+          <div class="issue-item">
+            <span class="issue-text">기능샷 비타민 재고 부족</span>
+            <span class="badge badge-warning">재고</span>
+          </div>
+          <div class="issue-item">
+            <span class="issue-text">맛샷 청포도 재고 주의</span>
+            <span class="badge badge-warning">재고</span>
+          </div>
+        </div>
+        <button class="issue-resolve-btn" onclick="location.href='branch-inventory.html'">재고 관리하기</button>
       </div>
     </div>
 
-    <!-- Recent Orders -->
-    <div class="table-wrap" style="margin-bottom: 20px;">
-      <div class="section-header">
-        <div class="section-title">최근 주문</div>
-        <a href="branch-orders.html" class="btn btn-outline btn-sm">전체 보기</a>
+    <!-- 차트 2컬럼 -->
+    <div class="chart-row">
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">총 매출</div>
+            <div class="chart-card-sub">최근 7일 매출 현황</div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:#767676;"><span style="width:8px;height:8px;background:#0095FF;border-radius:2px;display:inline-block;"></span>기능샷</span>
+            <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:#767676;"><span style="width:8px;height:8px;background:#00E096;border-radius:2px;display:inline-block;"></span>맛샷</span>
+          </div>
+        </div>
+        <div class="chart-canvas-wrap">
+          <canvas id="salesBarChart"></canvas>
+        </div>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>주문번호</th>
-            <th>메뉴</th>
-            <th>수량</th>
-            <th>금액</th>
-            <th>상태</th>
-            <th>시간</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td style="font-weight:500;color:#111;">ORD-1042</td>
-            <td>부스터샷</td>
-            <td>1</td>
-            <td>5,500원</td>
-            <td><span class="badge badge-success">완료</span></td>
-            <td style="color:#767676;">14:32</td>
-          </tr>
-          <tr>
-            <td style="font-weight:500;color:#111;">ORD-1041</td>
-            <td>맛·레몬</td>
-            <td>2</td>
-            <td>256,000원</td>
-            <td><span class="badge badge-success">완료</span></td>
-            <td style="color:#767676;">13:58</td>
-          </tr>
-          <tr>
-            <td style="font-weight:500;color:#111;">ORD-1040</td>
-            <td>비타민샷</td>
-            <td>1</td>
-            <td>5,000원</td>
-            <td><span class="badge badge-warning">준비중</span></td>
-            <td style="color:#767676;">13:45</td>
-          </tr>
-          <tr>
-            <td style="font-weight:500;color:#111;">ORD-1039</td>
-            <td>컷팅샷</td>
-            <td>3</td>
-            <td>16,500원</td>
-            <td><span class="badge badge-success">완료</span></td>
-            <td style="color:#767676;">12:30</td>
-          </tr>
-          <tr>
-            <td style="font-weight:500;color:#111;">ORD-1038</td>
-            <td>맛·망고</td>
-            <td>1</td>
-            <td>128,000원</td>
-            <td><span class="badge badge-error">취소</span></td>
-            <td style="color:#767676;">11:20</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">매출 추이 분석</div>
+            <div class="chart-card-sub">최근 7일 누적 매출</div>
+          </div>
+        </div>
+        <div class="chart-canvas-wrap">
+          <canvas id="salesLineChart"></canvas>
+        </div>
+      </div>
     </div>
 
-    <!-- Top 3 -->
-    <div style="font-size:15px;font-weight:500;color:#111;margin-bottom:12px;">인기 메뉴 TOP 3</div>
-    <div class="top3-grid">
-      <div class="top3-card">
-        <div><span class="badge badge-primary" style="font-size:13px;padding:4px 10px;">1위</span></div>
-        <div class="top3-info">
-          <div class="top3-name">맛·레몬</div>
-          <div class="top3-count">오늘 18건 판매</div>
+    <!-- 하단 2열: 옵션 선택 비중 + 시간대별 주문 현황 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+      <div class="donut-card">
+        <div class="chart-card-header" style="margin-bottom:20px;">
+          <div>
+            <div class="chart-card-title">옵션 선택 비중</div>
+            <div class="chart-card-sub" id="optionSubtitle">전체 주문 기준 · 최근 하루</div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <select id="optionCatSel" onchange="updateOptionChart()" style="font-size:12px;padding:5px 10px;border:1px solid #EDF2F6;border-radius:8px;color:#505050;background:#fff;cursor:pointer;outline:none;">
+              <option value="func">기능샷</option>
+              <option value="flavor">맛</option>
+              <option value="strength">농도</option>
+              <option value="carbonation">탄산옵션</option>
+            </select>
+            <select id="optionPeriodSel" onchange="updateOptionChart()" style="font-size:12px;padding:5px 10px;border:1px solid #EDF2F6;border-radius:8px;color:#505050;background:#fff;cursor:pointer;outline:none;">
+              <option value="day">하루</option>
+              <option value="week">일주일</option>
+              <option value="month">월</option>
+              <option value="year">년</option>
+            </select>
+          </div>
+        </div>
+        <div class="donut-inner">
+          <div class="donut-canvas-wrap">
+            <canvas id="donutChartOption"></canvas>
+          </div>
+          <div class="donut-legend" id="optionLegend"></div>
         </div>
       </div>
-      <div class="top3-card">
-        <div><span class="badge badge-warning" style="font-size:13px;padding:4px 10px;">2위</span></div>
-        <div class="top3-info">
-          <div class="top3-name">부스터샷</div>
-          <div class="top3-count">오늘 7건 판매</div>
+
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">시간대별 주문 현황</div>
+            <div class="chart-card-sub">오늘 기준 시간대별 주문 건수</div>
+          </div>
+          <select id="hourlyPeriodSel" onchange="updateHourlyChart()" style="font-size:12px;padding:5px 10px;border:1px solid #EDF2F6;border-radius:8px;color:#505050;background:#fff;cursor:pointer;outline:none;">
+            <option value="today">오늘</option>
+            <option value="week">이번 주 평균</option>
+            <option value="month">이번 달 평균</option>
+          </select>
         </div>
-      </div>
-      <div class="top3-card">
-        <div><span class="badge badge-gray" style="font-size:13px;padding:4px 10px;">3위</span></div>
-        <div class="top3-info">
-          <div class="top3-name">비타민샷</div>
-          <div class="top3-count">오늘 3건 판매</div>
+        <div class="chart-canvas-wrap" style="height:200px;">
+          <canvas id="hourlyBarChart"></canvas>
         </div>
       </div>
     </div>
@@ -281,6 +357,130 @@ tbody tr:hover td { background: #FAFAFA; }
 </div>
 
 <script>
+// 총 매출 Bar Chart
+const barCtx = document.getElementById('salesBarChart').getContext('2d');
+new Chart(barCtx, {
+  type: 'bar',
+  data: {
+    labels: ['3/23', '3/24', '3/25', '3/26', '3/27', '3/28', '3/29'],
+    datasets: [
+      { label: '기능샷', data: [594000, 396000, 792000, 990000, 792000, 396000, 198000], backgroundColor: '#0095FF', borderRadius: 4, barPercentage: 0.5, categoryPercentage: 0.7 },
+      { label: '맛샷', data: [256000, 384000, 128000, 256000, 384000, 256000, 118000], backgroundColor: '#00E096', borderRadius: 4, barPercentage: 0.5, categoryPercentage: 0.7 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 11 }, color: '#767676' } },
+      y: { grid: { color: '#F0F0F0' }, ticks: { font: { size: 11 }, color: '#767676', callback: v => v >= 1000 ? (v/1000)+'K' : v } }
+    }
+  }
+});
+
+// 매출 추이 Line Chart
+const lineCtx = document.getElementById('salesLineChart').getContext('2d');
+new Chart(lineCtx, {
+  type: 'line',
+  data: {
+    labels: ['3/23', '3/24', '3/25', '3/26', '3/27', '3/28', '3/29'],
+    datasets: [{ label: '누적 매출', data: [850000, 1630000, 2550000, 3796000, 4972000, 5624000, 5940000], borderColor: '#0095FF', backgroundColor: 'rgba(0,149,255,0.08)', fill: true, tension: 0.4, pointBackgroundColor: '#0095FF', pointRadius: 4 }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 11 }, color: '#767676' } },
+      y: { grid: { color: '#F0F0F0' }, ticks: { font: { size: 11 }, color: '#767676', callback: v => v >= 1000 ? (v/1000)+'K' : v } }
+    }
+  }
+});
+
+// 옵션 선택 비중 도넛
+const OPTION_DATA = {
+  func: { labels: ['릴렉스샷', '아미노샷', '비타민샷', '컷팅샷', '부스터샷'], data: [31, 24, 19, 17, 17], colors: ['#0095FF', '#00E096', '#9B8AFB', '#EC3D3D', '#38BDF8'] },
+  flavor: { labels: ['레몬', '청포도', '사과', '체리', '망고'], data: [28, 22, 19, 15, 12], colors: ['#FFB347', '#6DCE9E', '#FF6B6B', '#C380F0', '#38BDF8'] },
+  strength: { labels: ['보통', '진하게', '연하게'], data: [52, 31, 17], colors: ['#0095FF', '#00E096', '#9B8AFB'] },
+  carbonation: { labels: ['탄산', '무탄산'], data: [64, 36], colors: ['#0095FF', '#9B8AFB'] }
+};
+const PERIOD_LABELS = { day: '최근 하루', week: '최근 일주일', month: '이번 달', year: '올해' };
+
+function renderOptionLegend(cat) {
+  const d = OPTION_DATA[cat];
+  document.getElementById('optionLegend').innerHTML = d.labels.map((lbl, i) =>
+    `<div class="legend-item"><span class="legend-dot" style="background:${d.colors[i]};"></span><span class="legend-text">${lbl}</span><span class="legend-count">${d.data[i]}건</span></div>`
+  ).join('');
+}
+
+const optionDonutCtx = document.getElementById('donutChartOption').getContext('2d');
+const optionChart = new Chart(optionDonutCtx, {
+  type: 'doughnut',
+  data: { labels: OPTION_DATA.func.labels, datasets: [{ data: OPTION_DATA.func.data, backgroundColor: OPTION_DATA.func.colors, borderWidth: 0, hoverOffset: 6 }] },
+  options: { responsive: true, maintainAspectRatio: false, cutout: '68%', plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw}건` } } } }
+});
+renderOptionLegend('func');
+
+function updateOptionChart() {
+  const cat = document.getElementById('optionCatSel').value;
+  const period = document.getElementById('optionPeriodSel').value;
+  const d = OPTION_DATA[cat];
+  optionChart.data.labels = d.labels;
+  optionChart.data.datasets[0].data = d.data;
+  optionChart.data.datasets[0].backgroundColor = d.colors;
+  optionChart.update();
+  renderOptionLegend(cat);
+  document.getElementById('optionSubtitle').textContent = '전체 주문 기준 · ' + PERIOD_LABELS[period];
+}
+
+// 시간대별 주문 현황
+const HOURLY_DATA = {
+  today: [0, 0, 0, 1, 3, 8, 12, 9, 5, 7, 6, 4, 3, 5, 8, 14, 18, 15, 10, 5, 2, 1, 0, 0],
+  week:  [0, 0, 0, 1, 2, 7, 10, 8, 5, 6, 5, 4, 3, 4, 7, 12, 15, 13, 9, 4, 2, 1, 0, 0],
+  month: [0, 0, 0, 1, 2, 6, 9, 7, 4, 5, 5, 4, 3, 4, 6, 11, 14, 12, 8, 4, 2, 1, 0, 0]
+};
+const HOURLY_LABELS = Array.from({length:24}, (_, i) => i + '시');
+
+const hourlyCtx = document.getElementById('hourlyBarChart').getContext('2d');
+const hourlyChart = new Chart(hourlyCtx, {
+  type: 'bar',
+  data: {
+    labels: HOURLY_LABELS,
+    datasets: [{ data: HOURLY_DATA.today, backgroundColor: HOURLY_DATA.today.map(v => v >= 12 ? '#0095FF' : '#D1E9FF'), borderRadius: 4, barPercentage: 0.7 }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.raw}건` } } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 10 }, color: '#767676', maxRotation: 0, minRotation: 0, callback: (_, i) => (i % 3 === 0 ? HOURLY_LABELS[i] : '') } },
+      y: { grid: { color: '#F0F0F0' }, ticks: { font: { size: 11 }, color: '#767676' }, beginAtZero: true }
+    }
+  }
+});
+
+function updateHourlyChart() {
+  const period = document.getElementById('hourlyPeriodSel').value;
+  const d = HOURLY_DATA[period];
+  hourlyChart.data.datasets[0].data = d;
+  hourlyChart.data.datasets[0].backgroundColor = d.map(v => v >= 12 ? '#0095FF' : '#D1E9FF');
+  hourlyChart.update();
+}
+
+function exportDashboardCSV() {
+  var rows = [
+    ['항목', '값', '비교'],
+    ['총 회원 수', '157명', '이번달 +8명'],
+    ['오늘 주문 건수', '12건', '어제보다 +2건'],
+    ['오늘 매출', '316,000원', '어제보다 +3건'],
+    ['이번달 매출', '5,940,000원', '지난달보다 +12%'],
+  ];
+  var csv = '\uFEFF' + rows.map(function(r){ return r.map(function(c){ return '"' + String(c).replace(/"/g, '""') + '"'; }).join(','); }).join('\r\n');
+  var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = '대시보드_현황_' + new Date().toISOString().slice(0,10) + '.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+
 function toggleGroup(el){el.classList.toggle('open');var s=el.nextElementSibling;if(s)s.classList.toggle('show');}
 (function(){if(!sessionStorage.getItem('branchAuth')){location.href='branch-login.html';}})();
 </script>

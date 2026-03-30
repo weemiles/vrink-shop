@@ -22,7 +22,8 @@ body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; co
 .nav-group-trigger { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; color: #505050; font-size: 14px; font-weight: 500; cursor: pointer; }
 .nav-group-trigger:hover { background: #F6F6F6; }
 .nav-group-trigger.open { color: #111111; font-weight: 500; }
-.nav-arrow { margin-left: auto; font-size: 10px; color: #767676; }
+.nav-arrow { margin-left: auto; font-size: 10px; color: #767676; transition: transform .2s; display: inline-block; }
+.nav-group-trigger.open .nav-arrow { transform: rotate(180deg); }
 .nav-sub { display: none; flex-direction: column; padding-left: 32px; gap: 1px; }
 .nav-sub.show { display: flex; }
 .nav-sub-item { padding: 7px 12px; border-radius: 6px; font-size: 13px; color: #505050; text-decoration: none; font-weight: 400; }
@@ -39,17 +40,22 @@ body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; co
 .user-avatar { width: 32px; height: 32px; background: #EDF2F6; border-radius: 9999px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; color: #505050; }
 .user-name { font-size: 13px; font-weight: 500; color: #111; }
 .user-role { font-size: 11px; color: #767676; }
+.user-info { display: flex; flex-direction: column; }
 .page-content { flex: 1; overflow-y: auto; padding: 28px; }
 .page-title { font-size: 24px; font-weight: 500; color: #111; margin-bottom: 20px; }
+.card { background: #fff; border-radius: 20px; box-shadow: 0 4px 20px rgba(238,238,238,.5); padding: 20px 24px; }
+.card-title { font-size: 16px; font-weight: 500; color: #111; margin-bottom: 4px; }
+.card-sub { font-size: 12px; color: #767676; }
 .badge { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; }
 .badge-success { background: #E6FBF4; color: #00B377; }
 .badge-warning { background: #FEF6E6; color: #E0A830; }
 .badge-error { background: #FDE8E8; color: #D32F2F; }
 .badge-primary { background: #E6F4FF; color: #0077CC; }
 .badge-gray { background: #F0F0F0; color: #505050; }
-.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; text-decoration: none; }
 .btn-primary { background: #0095FF; color: #fff; }
 .btn-outline { background: #fff; color: #505050; border: 1px solid #EDF2F6; }
+.btn-danger { background: #EC3D3D; color: #fff; }
 .btn-sm { padding: 5px 10px; font-size: 12px; border-radius: 4px; }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
 thead th { padding: 10px 12px; background: #FAFAFA; border-bottom: 1px solid #EDF2F6; font-weight: 500; color: #767676; text-align: left; font-size: 12px; }
@@ -67,15 +73,23 @@ tbody tr:hover td { background: #FAFAFA; }
 .filter-bar { display: flex; gap: 8px; margin-bottom: 16px; }
 .filter-btn { padding: 6px 14px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid #EDF2F6; background: #fff; color: #505050; transition: all .15s; }
 .filter-btn.active { background: #0095FF; color: #fff; border-color: #0095FF; font-weight: 500; }
-
-.card-title { font-size: 16px; font-weight: 500; color: #111111; margin-bottom: 4px; }
-.card-sub { font-size: 12px; color: #767676; }
-.btn-danger { background: #EC3D3D; color: #fff; }
-.badge-gray { background: #F0F0F0; color: #505050; }
-.user-info { display: flex; flex-direction: column; }
 .stat-value { font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 500; color: #111111; margin-bottom: 6px; }
-.nav-group-trigger.open .nav-arrow { transform: rotate(180deg); }
-.nav-arrow { transition: transform .2s; display: inline-block; }
+
+/* 재고 바 */
+.stock-bar-wrap { width: 80px; background: #EDF2F6; border-radius: 4px; height: 6px; display: inline-block; }
+.stock-bar { height: 6px; border-radius: 4px; display: block; }
+
+/* 모달 */
+.inv-modal-overlay { position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:none;align-items:center;justify-content:center; }
+.inv-modal-overlay.open { display:flex; }
+.inv-modal { background:#fff;border-radius:20px;padding:28px;width:480px;max-width:90vw;box-shadow:0 24px 64px rgba(0,0,0,.18); }
+.inv-modal-title { font-size:18px;font-weight:500;color:#111;margin-bottom:20px; }
+.inv-modal-close { float:right;background:none;border:none;font-size:18px;cursor:pointer;color:#767676; }
+.inv-form-group { margin-bottom:16px; }
+.inv-form-label { font-size:12px;font-weight:500;color:#505050;display:block;margin-bottom:6px; }
+.inv-form-input, .inv-form-select { width:100%;height:42px;border:1px solid #EDF2F6;border-radius:8px;padding:0 12px;font-size:13px;font-family:inherit;color:#111;outline:none;box-sizing:border-box; }
+.inv-form-input:focus, .inv-form-select:focus { border-color:#0095FF; }
+.inv-modal-footer { display:flex;gap:8px;justify-content:flex-end;margin-top:20px; }
 </style>
 </head>
 <body>
@@ -155,7 +169,13 @@ tbody tr:hover td { background: #FAFAFA; }
   </header>
 
   <div class="page-content">
-    <div class="page-title">재고 관리</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <div class="page-title" style="margin-bottom:0;">재고 관리</div>
+      <button class="btn btn-primary" onclick="document.getElementById('invInModal').classList.add('open')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        재고 입고
+      </button>
+    </div>
 
     <!-- Summary Cards -->
     <div class="summary-grid">
@@ -206,6 +226,7 @@ tbody tr:hover td { background: #FAFAFA; }
             <th>상품명</th>
             <th>카테고리</th>
             <th>현재 재고</th>
+            <th>재고 현황</th>
             <th>최소 재고</th>
             <th>상태</th>
           </tr>
@@ -215,6 +236,7 @@ tbody tr:hover td { background: #FAFAFA; }
             <td style="font-weight:500;color:#111;">기능샷 부스터</td>
             <td><span class="badge badge-primary">기능샷</span></td>
             <td style="font-family:'Poppins',sans-serif;font-weight:500;">12<span style="font-size:11px;font-weight:400;color:#767676;"> 박스</span></td>
+            <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:100%;background:#00E096;"></div></div><span style="font-size:11px;color:#505050;">100%</span></div></td>
             <td style="color:#767676;">8 박스</td>
             <td><span class="badge badge-success">정상</span></td>
           </tr>
@@ -222,6 +244,7 @@ tbody tr:hover td { background: #FAFAFA; }
             <td style="font-weight:500;color:#111;">기능샷 컷팅</td>
             <td><span class="badge badge-primary">기능샷</span></td>
             <td style="font-family:'Poppins',sans-serif;font-weight:500;">5<span style="font-size:11px;font-weight:400;color:#767676;"> 박스</span></td>
+            <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:62%;background:#F4BE5E;"></div></div><span style="font-size:11px;color:#505050;">62%</span></div></td>
             <td style="color:#767676;">8 박스</td>
             <td><span class="badge badge-warning">주의</span></td>
           </tr>
@@ -229,6 +252,7 @@ tbody tr:hover td { background: #FAFAFA; }
             <td style="font-weight:500;color:#111;">기능샷 비타민</td>
             <td><span class="badge badge-primary">기능샷</span></td>
             <td style="font-family:'Poppins',sans-serif;font-weight:500;color:#D32F2F;">3<span style="font-size:11px;font-weight:400;color:#767676;"> 박스</span></td>
+            <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:37%;background:#EC3D3D;"></div></div><span style="font-size:11px;color:#505050;">37%</span></div></td>
             <td style="color:#767676;">8 박스</td>
             <td><span class="badge badge-error">부족</span></td>
           </tr>
@@ -236,6 +260,7 @@ tbody tr:hover td { background: #FAFAFA; }
             <td style="font-weight:500;color:#111;">기능샷 릴렉스</td>
             <td><span class="badge badge-primary">기능샷</span></td>
             <td style="font-family:'Poppins',sans-serif;font-weight:500;">9<span style="font-size:11px;font-weight:400;color:#767676;"> 박스</span></td>
+            <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:100%;background:#00E096;"></div></div><span style="font-size:11px;color:#505050;">100%</span></div></td>
             <td style="color:#767676;">8 박스</td>
             <td><span class="badge badge-success">정상</span></td>
           </tr>
@@ -243,6 +268,7 @@ tbody tr:hover td { background: #FAFAFA; }
             <td style="font-weight:500;color:#111;">기능샷 아미노</td>
             <td><span class="badge badge-primary">기능샷</span></td>
             <td style="font-family:'Poppins',sans-serif;font-weight:500;">7<span style="font-size:11px;font-weight:400;color:#767676;"> 박스</span></td>
+            <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:87%;background:#0095FF;"></div></div><span style="font-size:11px;color:#505050;">87%</span></div></td>
             <td style="color:#767676;">8 박스</td>
             <td><span class="badge badge-warning">주의</span></td>
           </tr>
@@ -250,6 +276,7 @@ tbody tr:hover td { background: #FAFAFA; }
             <td style="font-weight:500;color:#111;">맛샷 레몬</td>
             <td><span class="badge badge-warning">맛샷</span></td>
             <td style="font-family:'Poppins',sans-serif;font-weight:500;">11<span style="font-size:11px;font-weight:400;color:#767676;"> 박스</span></td>
+            <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:100%;background:#00E096;"></div></div><span style="font-size:11px;color:#505050;">100%</span></div></td>
             <td style="color:#767676;">6 박스</td>
             <td><span class="badge badge-success">정상</span></td>
           </tr>
@@ -257,11 +284,57 @@ tbody tr:hover td { background: #FAFAFA; }
             <td style="font-weight:500;color:#111;">맛샷 청포도</td>
             <td><span class="badge badge-warning">맛샷</span></td>
             <td style="font-family:'Poppins',sans-serif;font-weight:500;">4<span style="font-size:11px;font-weight:400;color:#767676;"> 박스</span></td>
+            <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:66%;background:#F4BE5E;"></div></div><span style="font-size:11px;color:#505050;">66%</span></div></td>
             <td style="color:#767676;">6 박스</td>
             <td><span class="badge badge-warning">주의</span></td>
           </tr>
         </tbody>
       </table>
+    </div>
+  </div>
+</div>
+
+<!-- 재고 입고 모달 -->
+<div class="inv-modal-overlay" id="invInModal">
+  <div class="inv-modal">
+    <button class="inv-modal-close" onclick="document.getElementById('invInModal').classList.remove('open')">✕</button>
+    <div class="inv-modal-title">재고 입고</div>
+    <div class="inv-form-group">
+      <label class="inv-form-label">상품명 *</label>
+      <select class="inv-form-select">
+        <option>기능샷 부스터</option>
+        <option>기능샷 컷팅</option>
+        <option>기능샷 비타민</option>
+        <option>기능샷 릴렉스</option>
+        <option>기능샷 아미노</option>
+        <option>맛샷 레몬</option>
+        <option>맛샷 청포도</option>
+        <option>맛샷 사과</option>
+        <option>맛샷 체리</option>
+        <option>맛샷 망고</option>
+      </select>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="inv-form-group">
+        <label class="inv-form-label">입고 수량 *</label>
+        <input class="inv-form-input" type="number" placeholder="예: 10">
+      </div>
+      <div class="inv-form-group">
+        <label class="inv-form-label">단위</label>
+        <select class="inv-form-select"><option>박스</option><option>개</option></select>
+      </div>
+    </div>
+    <div class="inv-form-group">
+      <label class="inv-form-label">입고일</label>
+      <input class="inv-form-input" type="date">
+    </div>
+    <div class="inv-form-group">
+      <label class="inv-form-label">메모</label>
+      <input class="inv-form-input" type="text" placeholder="특이사항 입력">
+    </div>
+    <div class="inv-modal-footer">
+      <button class="btn btn-outline" onclick="document.getElementById('invInModal').classList.remove('open')">취소</button>
+      <button class="btn btn-primary" onclick="showBranchToast('재고 입고가 등록되었습니다.');document.getElementById('invInModal').classList.remove('open')">저장</button>
     </div>
   </div>
 </div>
@@ -280,6 +353,7 @@ function filterInventory(btn, cat) {
     }
   });
 }
+document.getElementById('invInModal').addEventListener('click', function(e){ if(e.target === this) this.classList.remove('open'); });
 (function(){if(!sessionStorage.getItem('branchAuth')){location.href='branch-login.html';}})();
 </script>
 <script src="branch-common.js"></script>
