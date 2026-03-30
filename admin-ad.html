@@ -190,22 +190,216 @@ input[type="checkbox"] { width: 15px; height: 15px; accent-color: #0095FF; curso
   <div class="page-content">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
       <div class="page-title" style="margin-bottom:0;">광고 영상 관리</div>
-      <button class="btn btn-primary">영상 업로드</button>
+      <button class="btn btn-primary" onclick="document.getElementById('adUploadInput').click()">영상 업로드</button>
+      <input id="adUploadInput" type="file" accept="video/*" style="display:none" onchange="handleAdUpload(this)">
     </div>
     <div class="filter-bar">
-      <button class="filter-select-btn">전체 지점 ▾</button>
-      <button class="filter-select-btn">상태 ▾</button>
+      <div style="position:relative;display:inline-block;">
+        <button class="filter-select-btn" id="adBranchBtn" onclick="toggleAdDrop('adBranchDrop',this)">전체 지점 ▾</button>
+        <div class="ad-drop" id="adBranchDrop">
+          <div class="ad-drop-item" onclick="selectAdFilter('adBranchBtn','adBranchDrop','전체 지점')">전체 지점</div>
+          <div class="ad-drop-item" onclick="selectAdFilter('adBranchBtn','adBranchDrop','성수빌드업')">성수빌드업</div>
+          <div class="ad-drop-item" onclick="selectAdFilter('adBranchBtn','adBranchDrop','강남점')">강남점</div>
+          <div class="ad-drop-item" onclick="selectAdFilter('adBranchBtn','adBranchDrop','홍대점')">홍대점</div>
+        </div>
+      </div>
+      <div style="position:relative;display:inline-block;">
+        <button class="filter-select-btn" id="adStatusBtn" onclick="toggleAdDrop('adStatusDrop',this)">상태 ▾</button>
+        <div class="ad-drop" id="adStatusDrop">
+          <div class="ad-drop-item" onclick="selectAdFilter('adStatusBtn','adStatusDrop','상태')">전체</div>
+          <div class="ad-drop-item" onclick="selectAdFilter('adStatusBtn','adStatusDrop','방영중')">방영중</div>
+          <div class="ad-drop-item" onclick="selectAdFilter('adStatusBtn','adStatusDrop','예약됨')">예약됨</div>
+          <div class="ad-drop-item" onclick="selectAdFilter('adStatusBtn','adStatusDrop','대기중')">대기중</div>
+          <div class="ad-drop-item" onclick="selectAdFilter('adStatusBtn','adStatusDrop','종료됨')">종료됨</div>
+        </div>
+      </div>
     </div>
-    <div class="video-grid">
-      <div class="video-card"><div class="video-thumb" style="background:#1a1a2e;">🎬</div><div class="video-info"><div class="video-title">VRINK 부스터샷 광고</div><div class="video-meta">30초 · 전체 지점</div><div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;"><span class="badge badge-success">방영중</span><button class="btn btn-outline btn-sm">관리</button></div></div></div>
-      <div class="video-card"><div class="video-thumb" style="background:#0f3460;">🎥</div><div class="video-info"><div class="video-title">비타민샷 프로모션</div><div class="video-meta">20초 · 성수빌드업</div><div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;"><span class="badge badge-success">방영중</span><button class="btn btn-outline btn-sm">관리</button></div></div></div>
-      <div class="video-card"><div class="video-thumb" style="background:#16213e;">📹</div><div class="video-info"><div class="video-title">신메뉴 출시 안내</div><div class="video-meta">15초 · 전체 지점</div><div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;"><span class="badge badge-warning">예약됨</span><button class="btn btn-outline btn-sm">관리</button></div></div></div>
-      <div class="video-card"><div class="video-thumb" style="background:#1a1a2e;">🎞️</div><div class="video-info"><div class="video-title">VRINK 브랜드 영상</div><div class="video-meta">60초 · 전체 지점</div><div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;"><span class="badge badge-primary">대기중</span><button class="btn btn-outline btn-sm">관리</button></div></div></div>
-      <div class="video-card"><div class="video-thumb" style="background:#0d1117;">🎦</div><div class="video-info"><div class="video-title">여름 특별 이벤트</div><div class="video-meta">25초 · 강남</div><div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;"><span class="badge badge-error">종료됨</span><button class="btn btn-outline btn-sm">관리</button></div></div></div>
+    <div class="video-grid" id="videoGrid">
+      <div class="video-card" data-branch="전체 지점" data-status="방영중"><div class="video-thumb" style="background:#1a1a2e;">🎬</div><div class="video-info"><div class="video-title">VRINK 부스터샷 광고</div><div class="video-meta">30초 · 전체 지점</div><div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;"><span class="badge badge-success">방영중</span><button class="btn btn-outline btn-sm" onclick="openAdManage(this)">관리</button></div></div></div>
+      <div class="video-card" data-branch="성수빌드업" data-status="방영중"><div class="video-thumb" style="background:#0f3460;">🎥</div><div class="video-info"><div class="video-title">비타민샷 프로모션</div><div class="video-meta">20초 · 성수빌드업</div><div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;"><span class="badge badge-success">방영중</span><button class="btn btn-outline btn-sm" onclick="openAdManage(this)">관리</button></div></div></div>
+      <div class="video-card" data-branch="전체 지점" data-status="예약됨"><div class="video-thumb" style="background:#16213e;">📹</div><div class="video-info"><div class="video-title">신메뉴 출시 안내</div><div class="video-meta">15초 · 전체 지점</div><div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;"><span class="badge badge-warning">예약됨</span><button class="btn btn-outline btn-sm" onclick="openAdManage(this)">관리</button></div></div></div>
+      <div class="video-card" data-branch="전체 지점" data-status="대기중"><div class="video-thumb" style="background:#1a1a2e;">🎞️</div><div class="video-info"><div class="video-title">VRINK 브랜드 영상</div><div class="video-meta">60초 · 전체 지점</div><div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;"><span class="badge badge-primary">대기중</span><button class="btn btn-outline btn-sm" onclick="openAdManage(this)">관리</button></div></div></div>
+      <div class="video-card" data-branch="강남점" data-status="종료됨"><div class="video-thumb" style="background:#0d1117;">🎦</div><div class="video-info"><div class="video-title">여름 특별 이벤트</div><div class="video-meta">25초 · 강남</div><div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;"><span class="badge badge-error">종료됨</span><button class="btn btn-outline btn-sm" onclick="openAdManage(this)">관리</button></div></div></div>
     </div>
   </div>
 </div>
-<script>function toggleGroup(el){el.classList.toggle('open');var s=el.nextElementSibling;if(s)s.classList.toggle('show');}</script>
+
+<div class="modal-overlay" id="adManageModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">영상 관리</span>
+      <button class="modal-close" onclick="closeModal('adManageModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">영상 제목</label>
+        <input class="form-input" id="adManageTitle" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">노출 지점</label>
+          <select class="form-select" id="adManageBranch">
+            <option>전체 지점</option><option>성수빌드업</option><option>강남점</option><option>홍대점</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">상태</label>
+          <select class="form-select" id="adManageStatus">
+            <option>방영중</option><option>예약됨</option><option>대기중</option><option>종료됨</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger btn-sm" onclick="deleteAdCard()">삭제</button>
+      <button class="btn btn-outline" onclick="closeModal('adManageModal')">취소</button>
+      <button class="btn btn-primary" onclick="saveAdManage()">저장</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="adUploadModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">영상 업로드</span>
+      <button class="modal-close" onclick="closeModal('adUploadModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">영상 파일</label>
+        <div id="adUploadFileName" style="padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:13px;color:#767676;"></div>
+        <div id="adThumbPreview" style="width:100%;aspect-ratio:16/9;background:#1a1a2e;border-radius:8px;margin-top:8px;display:flex;align-items:center;justify-content:center;color:#767676;font-size:12px;">썸네일이 여기에 표시됩니다</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">영상 제목</label>
+        <input class="form-input" id="adUploadTitle" placeholder="영상 제목 입력" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">노출 지점</label>
+          <select class="form-select" id="adUploadBranch">
+            <option>전체 지점</option><option>성수빌드업</option><option>강남점</option><option>홍대점</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">재생 시간 (초)</label>
+          <input class="form-input" id="adUploadDur" type="number" placeholder="30" min="1" />
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('adUploadModal')">취소</button>
+      <button class="btn btn-primary" onclick="saveAdUpload()">업로드</button>
+    </div>
+  </div>
+</div>
+
+<style>
+.ad-drop { position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #EDF2F6;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.08);min-width:130px;padding:4px;z-index:100;display:none; }
+.ad-drop.show { display:block; }
+.ad-drop-item { padding:8px 12px;border-radius:6px;font-size:13px;color:#505050;cursor:pointer; }
+.ad-drop-item:hover { background:#F6F6F6; }
+</style>
+<script>
+function toggleGroup(el){el.classList.toggle('open');var s=el.nextElementSibling;if(s)s.classList.toggle('show');}
+
+var _adFilter = { branch: '전체 지점', status: '상태' };
+var _adManageTarget = null;
+var _adUploadFile = null;
+var _adUploadThumb = null;
+
+function toggleAdDrop(id, btn) {
+  event.stopPropagation();
+  document.querySelectorAll('.ad-drop').forEach(function(d){ if(d.id!==id) d.classList.remove('show'); });
+  document.getElementById(id).classList.toggle('show');
+}
+function selectAdFilter(btnId, dropId, val) {
+  document.getElementById(btnId).textContent = val + ' ▾';
+  document.getElementById(dropId).classList.remove('show');
+  if (btnId === 'adBranchBtn') _adFilter.branch = val;
+  else _adFilter.status = val;
+  filterAdCards();
+}
+function filterAdCards() {
+  document.querySelectorAll('.video-card').forEach(function(c){
+    var bOk = _adFilter.branch === '전체 지점' || c.dataset.branch === _adFilter.branch;
+    var sOk = _adFilter.status === '상태' || c.dataset.status === _adFilter.status;
+    c.style.display = (bOk && sOk) ? '' : 'none';
+  });
+}
+document.addEventListener('click', function(){ document.querySelectorAll('.ad-drop').forEach(function(d){ d.classList.remove('show'); }); });
+
+function handleAdUpload(inp) {
+  if (!inp.files[0]) return;
+  _adUploadFile = inp.files[0];
+  _adUploadThumb = null;
+  document.getElementById('adUploadFileName').textContent = _adUploadFile.name;
+  document.getElementById('adUploadTitle').value = _adUploadFile.name.replace(/\.[^.]+$/,'');
+  var prev = document.getElementById('adThumbPreview');
+  if (prev) { prev.style.backgroundImage = ''; prev.style.backgroundSize = ''; prev.style.backgroundPosition = ''; prev.textContent = '썸네일 추출 중...'; }
+  var url = URL.createObjectURL(_adUploadFile);
+  var vid = document.createElement('video');
+  vid.src = url; vid.muted = true; vid.preload = 'metadata';
+  vid.addEventListener('loadedmetadata', function() { vid.currentTime = Math.min(0.5, vid.duration * 0.1); });
+  vid.addEventListener('seeked', function() {
+    var cvs = document.createElement('canvas');
+    cvs.width = vid.videoWidth || 640; cvs.height = vid.videoHeight || 360;
+    cvs.getContext('2d').drawImage(vid, 0, 0, cvs.width, cvs.height);
+    _adUploadThumb = cvs.toDataURL('image/jpeg', 0.85);
+    URL.revokeObjectURL(url);
+    if (prev) { prev.style.backgroundImage = 'url(' + _adUploadThumb + ')'; prev.style.backgroundSize = 'cover'; prev.style.backgroundPosition = 'center'; prev.textContent = ''; }
+  });
+  vid.load();
+  openModal('adUploadModal');
+  inp.value = '';
+}
+function saveAdUpload() {
+  var title = document.getElementById('adUploadTitle').value.trim() || '새 영상';
+  var branch = document.getElementById('adUploadBranch').value;
+  var dur = document.getElementById('adUploadDur').value || '?';
+  var card = document.createElement('div');
+  card.className = 'video-card';
+  card.dataset.branch = branch;
+  card.dataset.status = '대기중';
+  var thumbStyle = _adUploadThumb
+    ? 'background:#1a1a2e;background-image:url(' + _adUploadThumb + ');background-size:cover;background-position:center;'
+    : 'background:#1a1a2e;';
+  card.innerHTML = '<div class="video-thumb" style="' + thumbStyle + '"></div><div class="video-info"><div class="video-title">'+title+'</div><div class="video-meta">'+dur+'초 · '+branch+'</div><div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;"><span class="badge badge-primary">대기중</span><button class="btn btn-outline btn-sm" onclick="openAdManage(this)">관리</button></div></div>';
+  document.getElementById('videoGrid').appendChild(card);
+  closeModal('adUploadModal');
+}
+function openAdManage(btn) {
+  _adManageTarget = btn.closest('.video-card');
+  document.getElementById('adManageTitle').value = _adManageTarget.querySelector('.video-title').textContent;
+  var status = _adManageTarget.dataset.status;
+  var branch = _adManageTarget.dataset.branch;
+  var bSel = document.getElementById('adManageBranch');
+  var sSel = document.getElementById('adManageStatus');
+  for(var i=0;i<bSel.options.length;i++) if(bSel.options[i].value===branch) bSel.selectedIndex=i;
+  for(var i=0;i<sSel.options.length;i++) if(sSel.options[i].value===status) sSel.selectedIndex=i;
+  openModal('adManageModal');
+}
+function saveAdManage() {
+  if (!_adManageTarget) return;
+  var title = document.getElementById('adManageTitle').value.trim();
+  var branch = document.getElementById('adManageBranch').value;
+  var status = document.getElementById('adManageStatus').value;
+  var badgeMap = {방영중:'badge-success',예약됨:'badge-warning',대기중:'badge-primary',종료됨:'badge-error'};
+  _adManageTarget.querySelector('.video-title').textContent = title;
+  _adManageTarget.dataset.branch = branch;
+  _adManageTarget.dataset.status = status;
+  var badge = _adManageTarget.querySelector('.badge');
+  badge.textContent = status;
+  badge.className = 'badge ' + (badgeMap[status]||'badge-primary');
+  closeModal('adManageModal');
+}
+function deleteAdCard() {
+  if (_adManageTarget && confirm('이 영상을 삭제하시겠습니까?')) {
+    _adManageTarget.remove();
+    closeModal('adManageModal');
+  }
+}
+</script>
 <script src="admin-common.js"></script>
 </body>
 </html>
