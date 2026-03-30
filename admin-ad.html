@@ -213,13 +213,7 @@ input[type="checkbox"] { width: 15px; height: 15px; accent-color: #0095FF; curso
         </div>
       </div>
     </div>
-    <div class="video-grid" id="videoGrid">
-      <div class="video-card" data-branch="전체 지점" data-status="방영중"><div class="video-thumb" style="background:linear-gradient(135deg,#0095FF 0%,#00D4FF 100%);"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><div class="video-info"><div class="video-title">VRINK 부스터샷 광고</div><div class="video-meta">30초 · 전체 지점</div><div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;"><span class="badge badge-success">방영중</span><button class="btn btn-outline btn-sm" onclick="openAdManage(this)">관리</button></div></div></div>
-      <div class="video-card" data-branch="빌드업 성수점" data-status="방영중"><div class="video-thumb" style="background:linear-gradient(135deg,#00B377 0%,#00E096 100%);"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><div class="video-info"><div class="video-title">비타민샷 프로모션</div><div class="video-meta">20초 · 빌드업 성수점</div><div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;"><span class="badge badge-success">방영중</span><button class="btn btn-outline btn-sm" onclick="openAdManage(this)">관리</button></div></div></div>
-      <div class="video-card" data-branch="전체 지점" data-status="예약됨"><div class="video-thumb" style="background:linear-gradient(135deg,#E0A830 0%,#FFD166 100%);"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><div class="video-info"><div class="video-title">신메뉴 출시 안내</div><div class="video-meta">15초 · 전체 지점</div><div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;"><span class="badge badge-warning">예약됨</span><button class="btn btn-outline btn-sm" onclick="openAdManage(this)">관리</button></div></div></div>
-      <div class="video-card" data-branch="전체 지점" data-status="대기중"><div class="video-thumb" style="background:linear-gradient(135deg,#9B8AFB 0%,#C4B5FD 100%);"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><div class="video-info"><div class="video-title">VRINK 브랜드 영상</div><div class="video-meta">60초 · 전체 지점</div><div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;"><span class="badge badge-primary">대기중</span><button class="btn btn-outline btn-sm" onclick="openAdManage(this)">관리</button></div></div></div>
-      <div class="video-card" data-branch="빌드업 강남점" data-status="종료됨"><div class="video-thumb" style="background:linear-gradient(135deg,#A0A8B3 0%,#CBD5E1 100%);"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><div class="video-info"><div class="video-title">여름 특별 이벤트</div><div class="video-meta">25초 · 강남</div><div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;"><span class="badge badge-error">종료됨</span><button class="btn btn-outline btn-sm" onclick="openAdManage(this)">관리</button></div></div></div>
-    </div>
+    <div class="video-grid" id="videoGrid"></div>
   </div>
 </div>
 
@@ -302,7 +296,37 @@ input[type="checkbox"] { width: 15px; height: 15px; accent-color: #0095FF; curso
 <script>
 function toggleGroup(el){el.classList.toggle('open');var s=el.nextElementSibling;if(s)s.classList.toggle('show');}
 
+var _defaultAdItems = [
+  {title:'VRINK 부스터샷 광고', branch:'전체 지점', status:'방영중', duration:'30', thumbStyle:'background:linear-gradient(135deg,#0095FF 0%,#00D4FF 100%);', thumbImg:null},
+  {title:'비타민샷 프로모션', branch:'빌드업 성수점', status:'방영중', duration:'20', thumbStyle:'background:linear-gradient(135deg,#00B377 0%,#00E096 100%);', thumbImg:null},
+  {title:'신메뉴 출시 안내', branch:'전체 지점', status:'예약됨', duration:'15', thumbStyle:'background:linear-gradient(135deg,#E0A830 0%,#FFD166 100%);', thumbImg:null},
+  {title:'VRINK 브랜드 영상', branch:'전체 지점', status:'대기중', duration:'60', thumbStyle:'background:linear-gradient(135deg,#9B8AFB 0%,#C4B5FD 100%);', thumbImg:null},
+  {title:'여름 특별 이벤트', branch:'빌드업 강남점', status:'종료됨', duration:'25', thumbStyle:'background:linear-gradient(135deg,#A0A8B3 0%,#CBD5E1 100%);', thumbImg:null}
+];
+function loadAdItems(){try{var s=localStorage.getItem('vrink_ad_items');return s?JSON.parse(s):_defaultAdItems.map(function(i){return Object.assign({},i);});}catch(e){return _defaultAdItems.map(function(i){return Object.assign({},i);});}}
+function saveAdItems(){localStorage.setItem('vrink_ad_items',JSON.stringify(adItems));}
+var adItems = loadAdItems();
+
+var PLAY_SVG = '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+function renderAdGrid(){
+  var badgeMap={방영중:'badge-success',예약됨:'badge-warning',대기중:'badge-primary',종료됨:'badge-error'};
+  document.getElementById('videoGrid').innerHTML = adItems.map(function(item,idx){
+    var thumbInner = item.thumbImg ? '' : PLAY_SVG;
+    var thumbStyle = item.thumbImg ? 'background:#000;background-image:url('+item.thumbImg+');background-size:cover;background-position:center;' : item.thumbStyle;
+    return '<div class="video-card" data-branch="'+item.branch+'" data-status="'+item.status+'">'
+      +'<div class="video-thumb" style="'+thumbStyle+'">'+thumbInner+'</div>'
+      +'<div class="video-info"><div class="video-title">'+item.title+'</div>'
+      +'<div class="video-meta">'+item.duration+'초 · '+item.branch+'</div>'
+      +'<div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;">'
+      +'<span class="badge '+(badgeMap[item.status]||'badge-primary')+'">'+item.status+'</span>'
+      +'<button class="btn btn-outline btn-sm" onclick="openAdManage('+idx+')">관리</button>'
+      +'</div></div></div>';
+  }).join('');
+  filterAdCards();
+}
+
 var _adFilter = { branch: '전체 지점', status: '상태' };
+var _adManageIdx = null;
 var _adManageTarget = null;
 var _adUploadFile = null;
 var _adUploadThumb = null;
@@ -360,45 +384,35 @@ function saveAdUpload() {
   var title = document.getElementById('adUploadTitle').value.trim() || '새 영상';
   var branch = document.getElementById('adUploadBranch').value;
   var dur = document.getElementById('adUploadDur').value || '?';
-  var card = document.createElement('div');
-  card.className = 'video-card';
-  card.dataset.branch = branch;
-  card.dataset.status = '대기중';
-  var thumbStyle = _adUploadThumb
-    ? 'background:#1a1a2e;background-image:url(' + _adUploadThumb + ');background-size:cover;background-position:center;'
-    : 'background:#1a1a2e;';
-  card.innerHTML = '<div class="video-thumb" style="' + thumbStyle + '"></div><div class="video-info"><div class="video-title">'+title+'</div><div class="video-meta">'+dur+'초 · '+branch+'</div><div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;"><span class="badge badge-primary">대기중</span><button class="btn btn-outline btn-sm" onclick="openAdManage(this)">관리</button></div></div>';
-  document.getElementById('videoGrid').appendChild(card);
+  adItems.push({title:title, branch:branch, status:'대기중', duration:dur,
+    thumbStyle:'background:linear-gradient(135deg,#505060 0%,#808090 100%);',
+    thumbImg: _adUploadThumb || null});
+  saveAdItems(); renderAdGrid();
   closeModal('adUploadModal');
 }
-function openAdManage(btn) {
-  _adManageTarget = btn.closest('.video-card');
-  document.getElementById('adManageTitle').value = _adManageTarget.querySelector('.video-title').textContent;
-  var status = _adManageTarget.dataset.status;
-  var branch = _adManageTarget.dataset.branch;
+document.addEventListener('DOMContentLoaded', function(){ renderAdGrid(); });
+function openAdManage(idx) {
+  _adManageIdx = idx;
+  var item = adItems[idx];
+  document.getElementById('adManageTitle').value = item.title;
   var bSel = document.getElementById('adManageBranch');
   var sSel = document.getElementById('adManageStatus');
-  for(var i=0;i<bSel.options.length;i++) if(bSel.options[i].value===branch) bSel.selectedIndex=i;
-  for(var i=0;i<sSel.options.length;i++) if(sSel.options[i].value===status) sSel.selectedIndex=i;
+  for(var i=0;i<bSel.options.length;i++) if(bSel.options[i].value===item.branch||bSel.options[i].text===item.branch) bSel.selectedIndex=i;
+  for(var i=0;i<sSel.options.length;i++) if(sSel.options[i].value===item.status||sSel.options[i].text===item.status) sSel.selectedIndex=i;
   openModal('adManageModal');
 }
 function saveAdManage() {
-  if (!_adManageTarget) return;
-  var title = document.getElementById('adManageTitle').value.trim();
-  var branch = document.getElementById('adManageBranch').value;
-  var status = document.getElementById('adManageStatus').value;
-  var badgeMap = {방영중:'badge-success',예약됨:'badge-warning',대기중:'badge-primary',종료됨:'badge-error'};
-  _adManageTarget.querySelector('.video-title').textContent = title;
-  _adManageTarget.dataset.branch = branch;
-  _adManageTarget.dataset.status = status;
-  var badge = _adManageTarget.querySelector('.badge');
-  badge.textContent = status;
-  badge.className = 'badge ' + (badgeMap[status]||'badge-primary');
+  if (_adManageIdx===null) return;
+  adItems[_adManageIdx].title = document.getElementById('adManageTitle').value.trim();
+  adItems[_adManageIdx].branch = document.getElementById('adManageBranch').value;
+  adItems[_adManageIdx].status = document.getElementById('adManageStatus').value;
+  saveAdItems(); renderAdGrid();
   closeModal('adManageModal');
 }
 function deleteAdCard() {
-  if (_adManageTarget && confirm('이 영상을 삭제하시겠습니까?')) {
-    _adManageTarget.remove();
+  if (_adManageIdx!==null && confirm('이 영상을 삭제하시겠습니까?')) {
+    adItems.splice(_adManageIdx,1); _adManageIdx=null;
+    saveAdItems(); renderAdGrid();
     closeModal('adManageModal');
   }
 }
