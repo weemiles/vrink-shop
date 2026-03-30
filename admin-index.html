@@ -373,8 +373,7 @@ body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; co
           <div class="donut-legend">
             <div class="legend-item"><span class="legend-dot" style="background:#0095FF;"></span><span class="legend-text">릴렉스샷</span><span class="legend-count">31건</span></div>
             <div class="legend-item"><span class="legend-dot" style="background:#00E096;"></span><span class="legend-text">아미노샷</span><span class="legend-count">24건</span></div>
-            <div class="legend-item"><span class="legend-dot" style="background:#F4BE5E;"></span><span class="legend-text">아미노샷</span><span class="legend-count">23건</span></div>
-            <div class="legend-item"><span class="legend-dot" style="background:#9B8AFB;"></span><span class="legend-text">릴렉스샷+</span><span class="legend-count">19건</span></div>
+            <div class="legend-item"><span class="legend-dot" style="background:#9B8AFB;"></span><span class="legend-text">릴렉스샷</span><span class="legend-count">19건</span></div>
             <div class="legend-item"><span class="legend-dot" style="background:#EC3D3D;"></span><span class="legend-text">컷팅샷</span><span class="legend-count">17건</span></div>
             <div class="legend-item"><span class="legend-dot" style="background:#38BDF8;"></span><span class="legend-text">부스터샷</span><span class="legend-count">17건</span></div>
           </div>
@@ -489,10 +488,10 @@ const donutFuncCtx = document.getElementById('donutChartFunc').getContext('2d');
 new Chart(donutFuncCtx, {
   type: 'doughnut',
   data: {
-    labels: ['릴렉스샷', '아미노샷', '아미노샷', '릴렉스샷+', '컷팅샷', '부스터샷'],
+    labels: ['릴렉스샷', '아미노샷', '릴렉스샷', '컷팅샷', '부스터샷'],
     datasets: [{
-      data: [31, 24, 23, 19, 17, 17],
-      backgroundColor: ['#0095FF', '#00E096', '#F4BE5E', '#9B8AFB', '#EC3D3D', '#38BDF8'],
+      data: [31, 24, 19, 17, 17],
+      backgroundColor: ['#0095FF', '#00E096', '#9B8AFB', '#EC3D3D', '#38BDF8'],
       borderWidth: 0,
       hoverOffset: 6
     }]
@@ -551,8 +550,7 @@ function exportDashboardCSV() {
     ['메뉴명', '주문 건수', ''],
     ['릴렉스샷', '31건', ''],
     ['아미노샷', '24건', ''],
-    ['아미노샷', '23건', ''],
-    ['릴렉스샷+', '19건', ''],
+    ['릴렉스샷', '19건', ''],
     ['컷팅샷', '17건', ''],
     ['부스터샷', '17건', ''],
   ];
