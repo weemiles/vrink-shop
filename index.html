@@ -327,13 +327,18 @@
     .bar-fill { height: 100%; border-radius: 3px; transition: width .5s; }
 
     /* ═══════════════ 재고 관리 ═══════════════ */
-    .stock-mgmt { margin-top: 40px; }
+    .stock-mgmt {
+      margin-top: 28px;
+      background: #fff; border-radius: 20px;
+      box-shadow: 0px 4px 20px rgba(238,238,238,.8);
+      padding: 20px 24px;
+    }
     .stock-mgmt-head {
       display: flex; align-items: center; justify-content: space-between;
       margin-bottom: 16px;
     }
-    .stock-mgmt-title { font-size: 18px; font-weight: 700; color: var(--text); }
-    .stock-updated { font-size: 11px; color: var(--muted); }
+    .stock-mgmt-title { font-size: 15px; font-weight: 500; color: #111111; }
+    .stock-updated { font-size: 11px; color: #767676; }
 
     .stock-mgmt-grid {
       display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
@@ -400,46 +405,44 @@
     }
     .si-reorder-btn:hover { background: var(--cta-h); }
 
-    /* ═══════════════ 재고 현황 — Compact Table ═══════════════ */
-    .stock-tbl-wrap {
-      border: 1px solid var(--border); border-radius: 10px;
-      overflow: hidden; background: #fff;
-    }
+    /* ═══════════════ 재고 현황 — Admin Style ═══════════════ */
+    .stock-tbl-wrap { overflow: hidden; }
     .stock-tbl { width: 100%; border-collapse: collapse; }
     .stock-tbl th {
       padding: 10px 16px; text-align: left;
-      font-size: 11px; font-weight: 600; color: var(--muted);
-      letter-spacing: 0.05em; text-transform: uppercase;
-      background: var(--bg); border-bottom: 1px solid var(--border);
+      font-size: 11px; font-weight: 500; color: #767676;
+      background: #F8F9FB; border-bottom: 1px solid #EDF2F6;
     }
     .stock-tbl td {
-      padding: 13px 16px; font-size: 14px; color: var(--text);
-      border-bottom: 1px solid #f6f6f6; vertical-align: middle;
+      padding: 14px 16px; font-size: 13px; color: #111111;
+      border-bottom: 1px solid #F0F0F0; vertical-align: middle;
     }
     .stock-tbl tbody tr:last-child td { border-bottom: none; }
-    .stock-tbl tbody tr:hover td { background: #fafafa; }
+    .stock-tbl tbody tr:hover td { background: #FAFAFA; }
 
-    .stn { font-weight: 600; font-size: 14px; color: var(--text); }
-    .stn-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .stn { font-weight: 500; font-size: 14px; color: #111111; }
 
     .stock-bar-row { display: flex; align-items: center; gap: 10px; }
-    .stn-bar-track { flex: 1; height: 4px; background: #EBEBEB; border-radius: 4px; min-width: 80px; }
+    .stn-bar-track { flex: 1; height: 6px; background: #EDF2F6; border-radius: 4px; min-width: 80px; }
     .stn-bar-fill { height: 100%; border-radius: 4px; }
-    .stn-bar-fill.danger { background: #374151; }
-    .stn-bar-fill.warn   { background: #9CA3AF; }
-    .stn-remaining { font-size: 13px; font-weight: 700; white-space: nowrap; }
-    .stn-total     { font-size: 11px; color: var(--muted); white-space: nowrap; }
+    .stn-bar-fill.danger { background: #EC3D3D; }
+    .stn-bar-fill.warn   { background: #F4BE5E; }
+    .stn-remaining { font-size: 13px; font-weight: 600; white-space: nowrap; color: #111111; }
+    .stn-total     { font-size: 11px; color: #767676; white-space: nowrap; }
 
     .stt-badge {
-      display: inline-block; font-size: 11px; font-weight: 600;
-      padding: 3px 9px; border-radius: 20px; white-space: nowrap;
-      background: #F3F4F6; color: #374151; border: 1px solid var(--border);
+      display: inline-flex; align-items: center;
+      padding: 3px 8px; border-radius: 4px;
+      font-size: 11px; font-weight: 500; white-space: nowrap;
     }
+    .stt-badge.danger { background: #FDE8E8; color: #D32F2F; }
+    .stt-badge.warn   { background: #FEF6E6; color: #E0A830; }
+    .stt-badge.ok     { background: #E6FBF4; color: #00B377; }
 
-    .stt-depletion { font-size: 13px; white-space: nowrap; color: var(--sub); }
-    .stt-depletion.urgent { color: var(--text); font-weight: 700; }
+    .stt-depletion { font-size: 13px; white-space: nowrap; color: #505050; }
+    .stt-depletion.urgent { color: #111111; font-weight: 600; }
 
-    .stt-daily { font-size: 13px; color: var(--muted); white-space: nowrap; }
+    .stt-daily { font-size: 13px; color: #767676; white-space: nowrap; }
 
     .stt-order-btn {
       padding: 5px 13px; background: var(--cta); color: #fff;
@@ -657,7 +660,7 @@
                       <span class="stn-total">/ 500</span>
                     </div>
                   </td>
-                  <td><span class="stt-badge">재고 부족</span></td>
+                  <td><span class="stt-badge danger">재고 부족</span></td>
                   <td><span class="stt-depletion urgent">약 4일 후</span></td>
                   <td><span class="stt-daily">약 18잔</span></td>
                   <td></td>
@@ -675,7 +678,7 @@
                       <span class="stn-total">/ 250</span>
                     </div>
                   </td>
-                  <td><span class="stt-badge">주의</span></td>
+                  <td><span class="stt-badge warn">주의</span></td>
                   <td><span class="stt-depletion">약 7일 후</span></td>
                   <td><span class="stt-daily">약 28잔</span></td>
                   <td></td>
