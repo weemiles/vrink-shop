@@ -131,17 +131,14 @@ input[type="checkbox"] { width: 15px; height: 15px; accent-color: #0095FF; curso
         <a href="admin-combo.html" class="nav-sub-item">추천 조합</a>
       </div>
     </div>
-    <a href="admin-members.html" class="nav-item">
-      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
-      <span class="nav-label">회원</span>
-    </a>
     <div class="nav-group">
       <div class="nav-group-trigger" onclick="toggleGroup(this)">
         <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span>
-        <span class="nav-label">마케팅</span>
+        <span class="nav-label">회원·마케팅</span>
         <span class="nav-arrow">▾</span>
       </div>
       <div class="nav-sub">
+        <a href="admin-members.html" class="nav-sub-item">회원</a>
         <a href="admin-notice.html" class="nav-sub-item">공지사항</a>
         <a href="admin-popup.html" class="nav-sub-item">팝업</a>
         <a href="admin-promotion.html" class="nav-sub-item">프로모션</a>
@@ -287,15 +284,17 @@ var _catFilter = '전체', _statusFilter = '전체';
   document.addEventListener('DOMContentLoaded', function(){
     var catBtn = document.getElementById('catFilterBtn');
     var statusBtn = document.getElementById('statusFilterBtn');
-    function wrapBtn(btn, html) {
-      var wrap = document.createElement('div'); wrap.style.cssText = 'position:relative;display:inline-block;';
-      btn.parentNode.insertBefore(wrap, btn); wrap.appendChild(btn); wrap.insertAdjacentHTML('beforeend', html);
+    if (catBtn && statusBtn) {
+      function wrapBtn(btn, html) {
+        var wrap = document.createElement('div'); wrap.style.cssText = 'position:relative;display:inline-block;';
+        btn.parentNode.insertBefore(wrap, btn); wrap.appendChild(btn); wrap.insertAdjacentHTML('beforeend', html);
+      }
+      wrapBtn(catBtn, makeDropHTML('catDrop', catOpts));
+      wrapBtn(statusBtn, makeDropHTML('statusDrop', statusOpts));
+      catBtn.addEventListener('click', function(e){ e.stopPropagation(); document.getElementById('statusDrop').classList.remove('show'); document.getElementById('catDrop').classList.toggle('show'); });
+      statusBtn.addEventListener('click', function(e){ e.stopPropagation(); document.getElementById('catDrop').classList.remove('show'); document.getElementById('statusDrop').classList.toggle('show'); });
+      document.addEventListener('click', function(){ document.querySelectorAll('.dropdown-menu').forEach(function(m){ m.classList.remove('show'); }); });
     }
-    wrapBtn(catBtn, makeDropHTML('catDrop', catOpts));
-    wrapBtn(statusBtn, makeDropHTML('statusDrop', statusOpts));
-    catBtn.addEventListener('click', function(e){ e.stopPropagation(); document.getElementById('statusDrop').classList.remove('show'); document.getElementById('catDrop').classList.toggle('show'); });
-    statusBtn.addEventListener('click', function(e){ e.stopPropagation(); document.getElementById('catDrop').classList.remove('show'); document.getElementById('statusDrop').classList.toggle('show'); });
-    document.addEventListener('click', function(){ document.querySelectorAll('.dropdown-menu').forEach(function(m){ m.classList.remove('show'); }); });
     renderMenuTable();
   });
 })();
