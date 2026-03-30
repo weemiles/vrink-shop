@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>브링크 지점관리 - 지점 설정</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; color: #111111; display: flex; height: 100vh; overflow: hidden; }
+    .sidebar { width: 256px; min-width: 256px; height: 100vh; background: #fff; border-right: 1px solid rgba(0,0,0,.1); display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
+    .sidebar-logo { padding: 20px 20px 16px; border-bottom: 1px solid #EDF2F6; display:flex; align-items:center; gap:8px; cursor:pointer; }
+    .sidebar-nav { flex: 1; padding: 12px; display: flex; flex-direction: column; gap: 2px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; text-decoration: none; color: #505050; font-size: 14px; font-weight: 500; cursor: pointer; transition: background .15s; }
+    .nav-item:hover { background: #F6F6F6; }
+    .nav-item.active { background: #EFF6FF; color: #0095FF; }
+    .nav-item.nav-logout { color: #EC3D3D; }
+    .nav-icon { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .nav-label { flex: 1; }
+    .nav-group { display: flex; flex-direction: column; }
+    .nav-group-trigger { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; color: #505050; font-size: 14px; font-weight: 500; cursor: pointer; }
+    .nav-group-trigger:hover { background: #F6F6F6; }
+    .nav-arrow { margin-left: auto; font-size: 10px; color: #767676; }
+    .nav-sub { display: none; flex-direction: column; padding-left: 32px; gap: 1px; }
+    .nav-sub.show { display: flex; }
+    .nav-sub-item { padding: 7px 12px; border-radius: 6px; font-size: 13px; color: #505050; text-decoration: none; }
+    .nav-sub-item:hover { background: #F6F6F6; }
+    .nav-sub-item.active { color: #0095FF; font-weight: 500; background: #EFF6FF; }
+    .sidebar-bottom { padding: 12px 12px 16px; border-top: 1px solid #EDF2F6; display: flex; flex-direction: column; gap: 2px; }
+    .sidebar-section-title { font-size: 11px; font-weight: 500; color: #A098AE; letter-spacing: .91px; padding: 4px 12px 8px; text-transform: uppercase; }
+    .main-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .topbar { height: 64px; background: #fff; border-bottom: 1px solid #EDF2F6; display: flex; align-items: center; justify-content: flex-end; padding: 0 24px; gap: 12px; flex-shrink: 0; }
+    .topbar-btn { background: none; border: 1px solid #EDF2F6; border-radius: 8px; padding: 8px; cursor: pointer; position: relative; display: flex; align-items: center; justify-content: center; }
+    .notif-badge { position: absolute; top: -4px; right: -4px; background: #0095FF; color: #fff; font-size: 10px; border-radius: 9999px; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; }
+    .topbar-user { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 8px; border-radius: 8px; }
+    .topbar-user:hover { background: #F6F6F6; }
+    .user-avatar { width: 32px; height: 32px; background: #EDF2F6; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; color: #505050; }
+    .user-name { font-size: 13px; font-weight: 500; color: #111; }
+    .user-role { font-size: 11px; color: #767676; }
+    .page-content { flex: 1; overflow-y: auto; padding: 28px; }
+    .page-title { font-size: 24px; font-weight: 500; color: #111; margin-bottom: 20px; }
+    .card { background: #fff; border-radius: 20px; box-shadow: 0 4px 20px rgba(238,238,238,.5); padding: 24px; margin-bottom: 20px; }
+    .card-title { font-size: 16px; font-weight: 500; color: #111; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #EDF2F6; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; }
+    .btn-primary { background: #0095FF; color: #fff; }
+    .btn-outline { background: #fff; color: #505050; border: 1px solid #EDF2F6; }
+    .btn-sm { padding: 5px 10px; font-size: 12px; border-radius: 4px; }
+    .form-group { margin-bottom: 20px; }
+    .form-label { font-size: 12px; font-weight: 500; color: #505050; margin-bottom: 6px; display: block; }
+    .form-input { width: 100%; height: 42px; border: 1px solid #EDF2F6; border-radius: 8px; padding: 0 12px; font-size: 13px; outline: none; font-family: inherit; }
+    .form-input:focus { border-color: #0095FF; }
+    .form-input:disabled { background: #FAFAFA; color: #767676; cursor: not-allowed; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-note { font-size: 12px; color: #767676; margin-top: 5px; }
+    .section-divider { height: 1px; background: #EDF2F6; margin: 24px 0; }
+    .checkbox-list { display: flex; flex-direction: column; gap: 14px; }
+    .checkbox-item { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+    .checkbox-item input[type="checkbox"] { width: 16px; height: 16px; accent-color: #0095FF; cursor: pointer; flex-shrink: 0; }
+    .checkbox-item span { font-size: 13px; color: #111; }
+    .card-footer { margin-top: 20px; padding-top: 16px; border-top: 1px solid #EDF2F6; display: flex; justify-content: flex-end; }
+  </style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo" onclick="location.href='branch-index.html'">
+    <img src="logo_spinner.png" alt="VRINK" style="height:28px;width:auto;">
+    <span style="font-size:12px;font-weight:600;color:#0095FF;background:#EFF6FF;padding:2px 8px;border-radius:4px;">성수점</span>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="branch-index.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg></span>
+      <span class="nav-label">홈</span>
+    </a>
+    <a href="branch-menu.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></span>
+      <span class="nav-label">메뉴 설정</span>
+    </a>
+    <a href="branch-orders.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/></svg></span>
+      <span class="nav-label">주문 내역</span>
+    </a>
+    <div class="nav-group">
+      <div class="nav-group-trigger" onclick="toggleGroup(this)">
+        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></span>
+        <span class="nav-label">회원·멤버십</span>
+        <span class="nav-arrow">▾</span>
+      </div>
+      <div class="nav-sub">
+        <a href="branch-members.html" class="nav-sub-item">회원</a>
+        <a href="branch-membership.html" class="nav-sub-item">멤버십 상품</a>
+      </div>
+    </div>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="sidebar-section-title">SETTINGS</div>
+    <a href="branch-settings.html" class="nav-item active">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></span>
+      <span class="nav-label">지점 설정</span>
+    </a>
+    <a href="branch-help.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+      <span class="nav-label">도움말</span>
+    </a>
+    <button class="nav-item nav-logout" style="background:none;border:none;width:100%;text-align:left;cursor:pointer;" onclick="if(confirm('로그아웃 하시겠습니까?')){sessionStorage.removeItem('branchAuth');location.href='branch-login.html';}">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EC3D3D" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
+      <span class="nav-label">로그아웃</span>
+    </button>
+  </div>
+</aside>
+
+<div class="main-wrapper">
+  <div class="topbar">
+    <button class="topbar-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#505050" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+      <span class="notif-badge">2</span>
+    </button>
+    <div class="topbar-user">
+      <div class="user-avatar">성</div>
+      <div>
+        <div class="user-name">박지영</div>
+        <div class="user-role">지점 관리자</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-content">
+    <div class="page-title">지점 설정</div>
+
+    <!-- 카드 1: 지점 정보 -->
+    <div class="card">
+      <div class="card-title">지점 정보</div>
+      <div class="form-row" style="margin-bottom:20px;">
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label">지점명</label>
+          <input class="form-input" type="text" value="성수점" disabled>
+          <div class="form-note">지점명은 본사에서 관리됩니다</div>
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label">지점 코드</label>
+          <input class="form-input" type="text" value="B-2031" disabled>
+        </div>
+      </div>
+      <div class="form-row" style="margin-bottom:20px;">
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label">대표 연락처</label>
+          <input class="form-input" type="text" id="branchPhone" value="02-1234-5678">
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label">이메일</label>
+          <input class="form-input" type="email" id="branchEmail" value="seongsu@vrink.kr">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">주소</label>
+        <input class="form-input" type="text" id="branchAddress" value="서울특별시 성동구 성수이로 78">
+      </div>
+      <div class="form-group" style="margin-bottom:0;">
+        <label class="form-label">사업자등록번호</label>
+        <input class="form-input" type="text" value="123-45-67890" disabled>
+        <div class="form-note">변경이 필요한 경우 본사에 문의하세요</div>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-primary" onclick="saveBranchInfo()">저장</button>
+      </div>
+    </div>
+
+    <!-- 카드 2: 키오스크 설정 -->
+    <div class="card">
+      <div class="card-title">키오스크 설정</div>
+      <div class="form-row" style="margin-bottom:20px;">
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label">키오스크 대수</label>
+          <input class="form-input" type="number" id="kioskCount" value="2">
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label">운영 시간</label>
+          <input class="form-input" type="text" id="kioskHours" value="07:00 - 22:00">
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:0;">
+        <label class="form-label">대기 화면 메시지</label>
+        <input class="form-input" type="text" id="kioskMessage" value="환영합니다! VRINK 성수점입니다.">
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-primary" onclick="saveKioskInfo()">저장</button>
+      </div>
+    </div>
+
+    <!-- 카드 3: 알림 설정 -->
+    <div class="card">
+      <div class="card-title">알림 설정</div>
+      <div class="checkbox-list">
+        <label class="checkbox-item">
+          <input type="checkbox" id="notifStock" checked>
+          <span>재고 부족 알림 (원액 잔량 500ml 미만)</span>
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" id="notifOrder" checked>
+          <span>신규 주문 알림</span>
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" id="notifMembership" checked>
+          <span>멤버십 만료 예정 알림 (7일 전)</span>
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" id="notifReport">
+          <span>일일 매출 리포트 (매일 오후 8시)</span>
+        </label>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-primary" onclick="saveNotifSettings()">저장</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function toggleGroup(trigger) {
+    const sub = trigger.nextElementSibling;
+    sub.classList.toggle('show');
+    const arrow = trigger.querySelector('.nav-arrow');
+    arrow.textContent = sub.classList.contains('show') ? '▴' : '▾';
+  }
+
+  function saveBranchInfo() {
+    const data = {
+      phone: document.getElementById('branchPhone').value,
+      email: document.getElementById('branchEmail').value,
+      address: document.getElementById('branchAddress').value
+    };
+    localStorage.setItem('branchInfo', JSON.stringify(data));
+    showBranchToast('저장되었습니다');
+  }
+
+  function saveKioskInfo() {
+    const data = {
+      count: document.getElementById('kioskCount').value,
+      hours: document.getElementById('kioskHours').value,
+      message: document.getElementById('kioskMessage').value
+    };
+    localStorage.setItem('kioskInfo', JSON.stringify(data));
+    showBranchToast('저장되었습니다');
+  }
+
+  function saveNotifSettings() {
+    const data = {
+      stock: document.getElementById('notifStock').checked,
+      order: document.getElementById('notifOrder').checked,
+      membership: document.getElementById('notifMembership').checked,
+      report: document.getElementById('notifReport').checked
+    };
+    localStorage.setItem('notifSettings', JSON.stringify(data));
+    showBranchToast('저장되었습니다');
+  }
+
+  // 저장된 값 복원
+  (function loadSaved() {
+    const branchInfo = JSON.parse(localStorage.getItem('branchInfo') || 'null');
+    if (branchInfo) {
+      if (branchInfo.phone) document.getElementById('branchPhone').value = branchInfo.phone;
+      if (branchInfo.email) document.getElementById('branchEmail').value = branchInfo.email;
+      if (branchInfo.address) document.getElementById('branchAddress').value = branchInfo.address;
+    }
+    const kioskInfo = JSON.parse(localStorage.getItem('kioskInfo') || 'null');
+    if (kioskInfo) {
+      if (kioskInfo.count) document.getElementById('kioskCount').value = kioskInfo.count;
+      if (kioskInfo.hours) document.getElementById('kioskHours').value = kioskInfo.hours;
+      if (kioskInfo.message) document.getElementById('kioskMessage').value = kioskInfo.message;
+    }
+    const notifSettings = JSON.parse(localStorage.getItem('notifSettings') || 'null');
+    if (notifSettings) {
+      document.getElementById('notifStock').checked = notifSettings.stock;
+      document.getElementById('notifOrder').checked = notifSettings.order;
+      document.getElementById('notifMembership').checked = notifSettings.membership;
+      document.getElementById('notifReport').checked = notifSettings.report;
+    }
+  })();
+</script>
+
+</body>
+</html>

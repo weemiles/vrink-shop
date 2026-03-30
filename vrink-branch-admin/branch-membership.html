@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>브링크 지점관리 - 멤버십 상품</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; color: #111111; display: flex; height: 100vh; overflow: hidden; }
+.sidebar { width: 256px; min-width: 256px; height: 100vh; background: #fff; border-right: 1px solid rgba(0,0,0,.1); display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
+.sidebar-logo { padding: 20px 20px 16px; border-bottom: 1px solid #EDF2F6; display:flex; align-items:center; gap:8px; cursor:pointer; }
+.sidebar-nav { flex: 1; padding: 12px; display: flex; flex-direction: column; gap: 2px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; text-decoration: none; color: #505050; font-size: 14px; font-weight: 500; cursor: pointer; transition: background .15s; }
+.nav-item:hover { background: #F6F6F6; }
+.nav-item.active { background: #EFF6FF; color: #0095FF; }
+.nav-item.nav-logout { color: #EC3D3D; }
+.nav-icon { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.nav-label { flex: 1; }
+.nav-group { display: flex; flex-direction: column; }
+.nav-group-trigger { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; color: #505050; font-size: 14px; font-weight: 500; cursor: pointer; }
+.nav-group-trigger:hover,.nav-group-trigger.open { background: #F6F6F6; }
+.nav-arrow { margin-left: auto; font-size: 10px; color: #767676; }
+.nav-sub { display: none; flex-direction: column; padding-left: 32px; gap: 1px; }
+.nav-sub.show { display: flex; }
+.nav-sub-item { padding: 7px 12px; border-radius: 6px; font-size: 13px; color: #505050; text-decoration: none; }
+.nav-sub-item:hover { background: #F6F6F6; }
+.nav-sub-item.active { color: #0095FF; font-weight: 500; background: #EFF6FF; }
+.sidebar-bottom { padding: 12px 12px 16px; border-top: 1px solid #EDF2F6; display: flex; flex-direction: column; gap: 2px; }
+.sidebar-section-title { font-size: 11px; font-weight: 500; color: #A098AE; letter-spacing: .91px; padding: 4px 12px 8px; text-transform: uppercase; }
+.main-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { height: 64px; background: #fff; border-bottom: 1px solid #EDF2F6; display: flex; align-items: center; justify-content: flex-end; padding: 0 24px; gap: 12px; flex-shrink: 0; }
+.topbar-btn { background: none; border: 1px solid #EDF2F6; border-radius: 8px; padding: 8px; cursor: pointer; position: relative; display: flex; align-items: center; justify-content: center; }
+.notif-badge { position: absolute; top: -4px; right: -4px; background: #0095FF; color: #fff; font-size: 10px; border-radius: 9999px; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; }
+.topbar-user { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 8px; border-radius: 8px; }
+.topbar-user:hover { background: #F6F6F6; }
+.user-avatar { width: 32px; height: 32px; background: #EDF2F6; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; color: #505050; }
+.user-name { font-size: 13px; font-weight: 500; color: #111; }
+.user-role { font-size: 11px; color: #767676; }
+.page-content { flex: 1; overflow-y: auto; padding: 28px; }
+.badge { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; }
+.badge-success { background: #E6FBF4; color: #00B377; }
+.badge-warning { background: #FEF6E6; color: #E0A830; }
+.badge-primary { background: #E6F4FF; color: #0077CC; }
+.badge-gray { background: #F0F0F0; color: #505050; }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; }
+.btn-primary { background: #0095FF; color: #fff; }
+.btn-outline { background: #fff; color: #505050; border: 1px solid #EDF2F6; }
+.btn-danger { background: #EC3D3D; color: #fff; }
+.btn-sm { padding: 5px 10px; font-size: 12px; border-radius: 4px; }
+
+/* Page header */
+.page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.page-title { font-size: 24px; font-weight: 500; color: #111; }
+
+/* Product grid */
+.product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.product-card { background: #fff; border-radius: 20px; box-shadow: 0 4px 20px rgba(238,238,238,.5); padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+.product-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.product-name { font-size: 15px; font-weight: 600; color: #111; }
+.product-price { font-size: 20px; font-weight: 700; color: #0095FF; }
+.product-price span { font-size: 12px; font-weight: 400; color: #767676; }
+.product-meta { display: flex; flex-direction: column; gap: 6px; }
+.product-meta-row { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #505050; }
+.product-meta-row svg { flex-shrink: 0; }
+.product-divider { border: none; border-top: 1px solid #EDF2F6; margin: 0; }
+.product-footer { display: flex; align-items: center; justify-content: space-between; }
+.toggle-wrap { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #505050; }
+.toggle { position: relative; width: 36px; height: 20px; }
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle-slider { position: absolute; inset: 0; background: #DDD; border-radius: 20px; cursor: pointer; transition: background .2s; }
+.toggle-slider::before { content: ''; position: absolute; width: 14px; height: 14px; background: #fff; border-radius: 50%; top: 3px; left: 3px; transition: transform .2s; }
+.toggle input:checked + .toggle-slider { background: #0095FF; }
+.toggle input:checked + .toggle-slider::before { transform: translateX(16px); }
+.product-actions { display: flex; gap: 6px; }
+
+/* Modal */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 999; align-items: center; justify-content: center; }
+.modal-overlay.open { display: flex; }
+.modal-box { background: #fff; border-radius: 20px; padding: 28px; width: 480px; max-width: 90vw; max-height: 90vh; overflow-y: auto; }
+.modal-title { font-size: 18px; font-weight: 500; margin-bottom: 20px; }
+.modal-close { float: right; background: none; border: none; font-size: 18px; cursor: pointer; color: #767676; }
+.form-group { margin-bottom: 16px; }
+.form-label { font-size: 12px; font-weight: 500; color: #505050; margin-bottom: 6px; display: block; }
+.form-input { width: 100%; height: 42px; border: 1px solid #EDF2F6; border-radius: 8px; padding: 0 12px; font-size: 13px; outline: none; }
+.form-input:focus { border-color: #0095FF; }
+.form-select { width: 100%; height: 42px; border: 1px solid #EDF2F6; border-radius: 8px; padding: 0 12px; font-size: 13px; background: #fff; outline: none; }
+.form-select:focus { border-color: #0095FF; }
+.modal-footer { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-logo" onclick="location.href='branch-index.html'">
+    <img src="logo_spinner.png" alt="VRINK" style="height:28px;width:auto;">
+    <span style="font-size:12px;font-weight:600;color:#0095FF;background:#EFF6FF;padding:2px 8px;border-radius:4px;">성수점</span>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="branch-index.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg></span>
+      <span class="nav-label">홈</span>
+    </a>
+    <a href="branch-menu.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></span>
+      <span class="nav-label">메뉴 설정</span>
+    </a>
+    <a href="branch-orders.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/></svg></span>
+      <span class="nav-label">주문 내역</span>
+    </a>
+    <div class="nav-group">
+      <div class="nav-group-trigger open" onclick="toggleGroup(this)">
+        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></span>
+        <span class="nav-label">회원·멤버십</span>
+        <span class="nav-arrow">▾</span>
+      </div>
+      <div class="nav-sub show">
+        <a href="branch-members.html" class="nav-sub-item">회원</a>
+        <a href="branch-membership.html" class="nav-sub-item active">멤버십 상품</a>
+      </div>
+    </div>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="sidebar-section-title">SETTINGS</div>
+    <a href="branch-settings.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></span>
+      <span class="nav-label">지점 설정</span>
+    </a>
+    <a href="branch-help.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+      <span class="nav-label">도움말</span>
+    </a>
+    <button class="nav-item nav-logout" style="background:none;border:none;width:100%;text-align:left;cursor:pointer;" onclick="if(confirm('로그아웃 하시겠습니까?')){sessionStorage.removeItem('branchAuth');location.href='branch-login.html';}">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EC3D3D" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
+      <span class="nav-label">로그아웃</span>
+    </button>
+  </div>
+</aside>
+
+<!-- Main -->
+<div class="main-wrapper">
+  <div class="topbar">
+    <button class="topbar-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#505050" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+      <span class="notif-badge">2</span>
+    </button>
+    <div class="topbar-user">
+      <div class="user-avatar">김</div>
+      <div>
+        <div class="user-name">박지영</div>
+        <div class="user-role">지점 관리자</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-content">
+    <div class="page-header">
+      <div class="page-title">멤버십 상품 관리</div>
+      <button class="btn btn-primary" onclick="openAddModal()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        상품 추가
+      </button>
+    </div>
+
+    <div class="product-grid" id="productGrid"></div>
+  </div>
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="modal-overlay" id="productModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title" id="modalTitle">상품 추가</div>
+    <div class="form-group">
+      <label class="form-label">상품명</label>
+      <input class="form-input" id="fName" placeholder="예: 구독 30잔">
+    </div>
+    <div class="form-group">
+      <label class="form-label">타입</label>
+      <select class="form-select" id="fType">
+        <option value="구독제">구독제</option>
+        <option value="한잔권">한잔권</option>
+        <option value="자유이용권">자유이용권</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">가격 (원)</label>
+        <input class="form-input" id="fPrice" type="number" placeholder="예: 59000">
+      </div>
+      <div class="form-group">
+        <label class="form-label" id="fProvideLabel">제공 잔수</label>
+        <input class="form-input" id="fProvide" placeholder="예: 30">
+      </div>
+    </div>
+    <div class="form-group" id="fGiftWrap" style="display:none;">
+      <label class="form-label">
+        <input type="checkbox" id="fGift" style="margin-right:6px;">선물하기 가능
+      </label>
+    </div>
+    <div class="form-group">
+      <label class="form-label">판매 상태</label>
+      <select class="form-select" id="fActive">
+        <option value="1">판매중</option>
+        <option value="0">판매중지</option>
+      </select>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal()">취소</button>
+      <button class="btn btn-primary" id="modalSaveBtn" onclick="saveProduct()">저장</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'vrink_branch_membership';
+
+const DEFAULT_PRODUCTS = [
+  { id: 1, name: '구독 30잔',       type: '구독제',    price: 59000, provide: '30잔/월', gift: false, active: true },
+  { id: 2, name: '기능샷 10잔권',   type: '한잔권',    price: 45000, provide: '10잔',    gift: true,  active: true },
+  { id: 3, name: '7일 자유이용권',  type: '자유이용권', price: 49000, provide: '7일 무제한', gift: false, active: true },
+  { id: 4, name: '구독 50잔',       type: '구독제',    price: 89000, provide: '50잔/월', gift: false, active: true },
+  { id: 5, name: '맛샷 5잔권',      type: '한잔권',    price: 75000, provide: '5잔',     gift: true,  active: true },
+];
+
+let products = loadProducts();
+let editingId = null;
+let nextId = Math.max(...products.map(p => p.id)) + 1;
+
+function loadProducts() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    return saved ? JSON.parse(saved) : [...DEFAULT_PRODUCTS];
+  } catch(e) {
+    return [...DEFAULT_PRODUCTS];
+  }
+}
+
+function saveProducts() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
+}
+
+function typeBadge(type) {
+  if (type === '구독제')    return `<span class="badge badge-primary">${type}</span>`;
+  if (type === '한잔권')    return `<span class="badge badge-warning">${type}</span>`;
+  if (type === '자유이용권') return `<span class="badge badge-success">${type}</span>`;
+  return `<span class="badge badge-gray">${type}</span>`;
+}
+
+function priceUnit(type) {
+  return type === '구독제' ? '/월' : '';
+}
+
+function renderGrid() {
+  const grid = document.getElementById('productGrid');
+  grid.innerHTML = products.map(p => `
+    <div class="product-card" id="card-${p.id}">
+      <div class="product-card-header">
+        <div>
+          <div class="product-name">${p.name}</div>
+          <div style="margin-top:6px;">${typeBadge(p.type)}</div>
+        </div>
+      </div>
+      <div class="product-price">${p.price.toLocaleString()}원<span>${priceUnit(p.type)}</span></div>
+      <div class="product-meta">
+        <div class="product-meta-row">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0095FF" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          ${p.provide}
+        </div>
+        ${p.gift ? `<div class="product-meta-row"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#00B377" stroke-width="2"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg>선물하기 가능</div>` : ''}
+      </div>
+      <hr class="product-divider">
+      <div class="product-footer">
+        <div class="toggle-wrap">
+          <label class="toggle">
+            <input type="checkbox" ${p.active ? 'checked' : ''} onchange="toggleActive(${p.id}, this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+          <span>${p.active ? '판매중' : '판매중지'}</span>
+        </div>
+        <div class="product-actions">
+          <button class="btn btn-outline btn-sm" onclick="openEditModal(${p.id})">수정</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteProduct(${p.id})">삭제</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleActive(id, checked) {
+  const p = products.find(x => x.id === id);
+  if (p) {
+    p.active = checked;
+    saveProducts();
+    renderGrid();
+  }
+}
+
+function deleteProduct(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  if (!confirm(`"${p.name}" 상품을 삭제하시겠습니까?`)) return;
+  products = products.filter(x => x.id !== id);
+  saveProducts();
+  renderGrid();
+}
+
+function openAddModal() {
+  editingId = null;
+  document.getElementById('modalTitle').textContent = '상품 추가';
+  document.getElementById('fName').value = '';
+  document.getElementById('fType').value = '구독제';
+  document.getElementById('fPrice').value = '';
+  document.getElementById('fProvide').value = '';
+  document.getElementById('fGift').checked = false;
+  document.getElementById('fActive').value = '1';
+  updateProvideLabel();
+  document.getElementById('productModal').classList.add('open');
+}
+
+function openEditModal(id) {
+  editingId = id;
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('modalTitle').textContent = '상품 수정';
+  document.getElementById('fName').value = p.name;
+  document.getElementById('fType').value = p.type;
+  document.getElementById('fPrice').value = p.price;
+  document.getElementById('fProvide').value = p.provide;
+  document.getElementById('fGift').checked = p.gift;
+  document.getElementById('fActive').value = p.active ? '1' : '0';
+  updateProvideLabel();
+  document.getElementById('productModal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('productModal').classList.remove('open');
+}
+
+function updateProvideLabel() {
+  const type = document.getElementById('fType').value;
+  const label = document.getElementById('fProvideLabel');
+  const giftWrap = document.getElementById('fGiftWrap');
+  if (type === '자유이용권') {
+    label.textContent = '제공 기간';
+    document.getElementById('fProvide').placeholder = '예: 7일 무제한';
+    giftWrap.style.display = 'none';
+  } else if (type === '한잔권') {
+    label.textContent = '제공 잔수';
+    document.getElementById('fProvide').placeholder = '예: 10잔';
+    giftWrap.style.display = 'block';
+  } else {
+    label.textContent = '제공 잔수';
+    document.getElementById('fProvide').placeholder = '예: 30잔/월';
+    giftWrap.style.display = 'none';
+  }
+}
+
+document.getElementById('fType').addEventListener('change', updateProvideLabel);
+
+function saveProduct() {
+  const name    = document.getElementById('fName').value.trim();
+  const type    = document.getElementById('fType').value;
+  const price   = parseInt(document.getElementById('fPrice').value, 10);
+  const provide = document.getElementById('fProvide').value.trim();
+  const gift    = document.getElementById('fGift').checked;
+  const active  = document.getElementById('fActive').value === '1';
+
+  if (!name)           { alert('상품명을 입력해주세요.'); return; }
+  if (isNaN(price))    { alert('가격을 입력해주세요.'); return; }
+  if (!provide)        { alert('제공 잔수/기간을 입력해주세요.'); return; }
+
+  if (editingId !== null) {
+    const p = products.find(x => x.id === editingId);
+    Object.assign(p, { name, type, price, provide, gift, active });
+  } else {
+    products.push({ id: nextId++, name, type, price, provide, gift, active });
+  }
+
+  saveProducts();
+  renderGrid();
+  closeModal();
+}
+
+function toggleGroup(el) {
+  el.classList.toggle('open');
+  el.nextElementSibling.classList.toggle('show');
+}
+
+document.getElementById('productModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+renderGrid();
+</script>
+</body>
+</html>
