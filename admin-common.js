@@ -105,7 +105,7 @@
   .toggle-switch input:checked + .toggle-slider:before { transform:translateX(16px); }
 
   /* ── Typography: Regular(400) + Medium(500) only ── */
-  b, strong { font-weight: 500; }
+  b, strong { font-weight: 500 !important; }
   th { font-weight: 500; }
   `;
   const st = document.createElement('style');
