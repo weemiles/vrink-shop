@@ -119,7 +119,6 @@ input[type="checkbox"] { width: 15px; height: 15px; accent-color: #0095FF; curso
       </div>
       <div class="nav-sub show">
         <a href="admin-menu.html" class="nav-sub-item">메뉴</a>
-        <a href="admin-option.html" class="nav-sub-item">옵션</a>
         <a href="admin-nutrition.html" class="nav-sub-item">영양성분</a>
         <a href="admin-combo.html" class="nav-sub-item active">추천 조합</a>
       </div>
@@ -192,13 +191,105 @@ input[type="checkbox"] { width: 15px; height: 15px; accent-color: #0095FF; curso
       <div class="page-title" style="margin-bottom:0;">추천 조합 관리</div>
       <button class="btn btn-primary">조합 추가</button>
     </div>
-    <div class="combo-card"><div style="flex:1;"><div style="font-size:15px;font-weight:500;margin-bottom:4px;">에너지 부스트 콤보</div><div style="font-size:12px;color:#767676;margin-bottom:10px;">운동 전 에너지 보충에 최적화된 조합</div><div style="display:flex;gap:6px;"><span class="combo-tag">부스터샷</span><span class="combo-arrow">+</span><span class="combo-tag">아미노샷</span></div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;"><span class="badge badge-success">사용중</span><button class="btn btn-outline btn-sm">수정</button></div></div>
-    <div class="combo-card"><div style="flex:1;"><div style="font-size:15px;font-weight:500;margin-bottom:4px;">다이어트 케어 콤보</div><div style="font-size:12px;color:#767676;margin-bottom:10px;">체중 관리를 위한 영양소 균형 조합</div><div style="display:flex;gap:6px;"><span class="combo-tag">컷팅샷</span><span class="combo-arrow">+</span><span class="combo-tag">비타민샷</span><span class="combo-arrow">+</span><span class="combo-tag">레몬수</span></div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;"><span class="badge badge-success">사용중</span><button class="btn btn-outline btn-sm">수정</button></div></div>
-    <div class="combo-card"><div style="flex:1;"><div style="font-size:15px;font-weight:500;margin-bottom:4px;">힐링 릴렉스 콤보</div><div style="font-size:12px;color:#767676;margin-bottom:10px;">스트레스 해소와 편안한 휴식을 위한 조합</div><div style="display:flex;gap:6px;"><span class="combo-tag">릴렉스샷</span><span class="combo-arrow">+</span><span class="combo-tag">레몬수</span></div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;"><span class="badge badge-success">사용중</span><button class="btn btn-outline btn-sm">수정</button></div></div>
-    <div class="combo-card"><div style="flex:1;"><div style="font-size:15px;font-weight:500;margin-bottom:4px;">올인원 영양 콤보</div><div style="font-size:12px;color:#767676;margin-bottom:10px;">종합 영양 보충을 위한 프리미엄 조합</div><div style="display:flex;gap:6px;"><span class="combo-tag">비타민샷</span><span class="combo-arrow">+</span><span class="combo-tag">아미노샷</span><span class="combo-arrow">+</span><span class="combo-tag">부스터샷</span></div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;"><span class="badge badge-primary">준비중</span><button class="btn btn-outline btn-sm">수정</button></div></div>
+    <div class="combo-card"><div style="flex:1;"><div style="font-size:15px;font-weight:500;margin-bottom:4px;">에너지 부스트 콤보</div><div style="font-size:12px;color:#767676;margin-bottom:10px;">운동 전 에너지 보충에 최적화된 조합</div><div style="display:flex;gap:6px;"><span class="combo-tag">부스터샷</span><span class="combo-arrow">+</span><span class="combo-tag">아미노샷</span></div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;"><span class="badge badge-success">사용중</span><button class="btn btn-outline btn-sm" onclick="openComboEdit(this)">수정</button></div></div>
+    <div class="combo-card"><div style="flex:1;"><div style="font-size:15px;font-weight:500;margin-bottom:4px;">다이어트 케어 콤보</div><div style="font-size:12px;color:#767676;margin-bottom:10px;">체중 관리를 위한 영양소 균형 조합</div><div style="display:flex;gap:6px;"><span class="combo-tag">컷팅샷</span><span class="combo-arrow">+</span><span class="combo-tag">비타민샷</span><span class="combo-arrow">+</span><span class="combo-tag">레몬수</span></div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;"><span class="badge badge-success">사용중</span><button class="btn btn-outline btn-sm" onclick="openComboEdit(this)">수정</button></div></div>
+    <div class="combo-card"><div style="flex:1;"><div style="font-size:15px;font-weight:500;margin-bottom:4px;">힐링 릴렉스 콤보</div><div style="font-size:12px;color:#767676;margin-bottom:10px;">스트레스 해소와 편안한 휴식을 위한 조합</div><div style="display:flex;gap:6px;"><span class="combo-tag">릴렉스샷</span><span class="combo-arrow">+</span><span class="combo-tag">레몬수</span></div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;"><span class="badge badge-success">사용중</span><button class="btn btn-outline btn-sm" onclick="openComboEdit(this)">수정</button></div></div>
+    <div class="combo-card"><div style="flex:1;"><div style="font-size:15px;font-weight:500;margin-bottom:4px;">올인원 영양 콤보</div><div style="font-size:12px;color:#767676;margin-bottom:10px;">종합 영양 보충을 위한 프리미엄 조합</div><div style="display:flex;gap:6px;"><span class="combo-tag">비타민샷</span><span class="combo-arrow">+</span><span class="combo-tag">아미노샷</span><span class="combo-arrow">+</span><span class="combo-tag">부스터샷</span></div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;"><span class="badge badge-primary">준비중</span><button class="btn btn-outline btn-sm" onclick="openComboEdit(this)">수정</button></div></div>
   </div>
 </div>
-<script>function toggleGroup(el){el.classList.toggle('open');var s=el.nextElementSibling;if(s)s.classList.toggle('show');}</script>
+
+<div class="modal-overlay" id="comboEditModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">추천 조합 수정</span>
+      <button class="modal-close" onclick="closeModal('comboEditModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">조합명</label>
+        <input class="form-input" id="comboEditName" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">설명</label>
+        <input class="form-input" id="comboEditDesc" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">구성 메뉴 (쉼표로 구분)</label>
+        <input class="form-input" id="comboEditMenus" placeholder="예: 부스터샷, 아미노샷" />
+        <span class="form-hint">메뉴명을 쉼표(,)로 구분하여 입력하세요</span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">상태</label>
+        <select class="form-select" id="comboEditStatus">
+          <option value="사용중">사용중</option>
+          <option value="준비중">준비중</option>
+          <option value="중단">중단</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger btn-sm" onclick="deleteCombo()">삭제</button>
+      <button class="btn btn-outline" onclick="closeModal('comboEditModal')">취소</button>
+      <button class="btn btn-primary" onclick="saveComboEdit()">저장</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleGroup(el){el.classList.toggle('open');var s=el.nextElementSibling;if(s)s.classList.toggle('show');}
+
+var _comboEditTarget = null;
+
+function openComboEdit(btn) {
+  var card = btn.closest('.combo-card');
+  _comboEditTarget = card;
+  var name = card.querySelector('[style*="font-size:15px"]').textContent.trim();
+  var desc = card.querySelector('[style*="font-size:12px"][style*="color:#767676"]').textContent.trim();
+  var tags = Array.from(card.querySelectorAll('.combo-tag')).map(function(t){ return t.textContent.trim(); });
+  var statusEl = card.querySelector('.badge');
+  var status = statusEl ? statusEl.textContent.trim() : '사용중';
+  document.getElementById('comboEditName').value = name;
+  document.getElementById('comboEditDesc').value = desc;
+  document.getElementById('comboEditMenus').value = tags.join(', ');
+  var sel = document.getElementById('comboEditStatus');
+  for (var i = 0; i < sel.options.length; i++) {
+    if (sel.options[i].value === status) { sel.selectedIndex = i; break; }
+  }
+  openModal('comboEditModal');
+}
+
+function saveComboEdit() {
+  if (!_comboEditTarget) return;
+  var name = document.getElementById('comboEditName').value.trim();
+  var desc = document.getElementById('comboEditDesc').value.trim();
+  var menus = document.getElementById('comboEditMenus').value.split(',').map(function(m){ return m.trim(); }).filter(Boolean);
+  var status = document.getElementById('comboEditStatus').value;
+  var nameEl = _comboEditTarget.querySelector('[style*="font-size:15px"]');
+  var descEl = _comboEditTarget.querySelector('[style*="font-size:12px"][style*="color:#767676"]');
+  var tagsWrap = _comboEditTarget.querySelector('[style*="display:flex"][style*="gap:6px"]');
+  var statusEl = _comboEditTarget.querySelector('.badge');
+  if (nameEl) nameEl.textContent = name;
+  if (descEl) descEl.textContent = desc;
+  if (tagsWrap) {
+    tagsWrap.innerHTML = menus.map(function(m, i){
+      return '<span class="combo-tag">'+m+'</span>' + (i < menus.length-1 ? '<span class="combo-arrow">+</span>' : '');
+    }).join('');
+  }
+  if (statusEl) {
+    statusEl.textContent = status;
+    statusEl.className = 'badge ' + (status === '사용중' ? 'badge-success' : status === '준비중' ? 'badge-primary' : 'badge-warning');
+  }
+  closeModal('comboEditModal');
+}
+
+function deleteCombo() {
+  if (!_comboEditTarget) return;
+  if (confirm('이 조합을 삭제하시겠습니까?')) {
+    _comboEditTarget.remove();
+    closeModal('comboEditModal');
+  }
+}
+</script>
 <script src="admin-common.js"></script>
 </body>
 </html>

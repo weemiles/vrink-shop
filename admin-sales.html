@@ -65,9 +65,9 @@ body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; co
 .donut-card { background: #fff; border-radius: 20px; box-shadow: 0px 4px 20px rgba(238,238,238,.5); padding: 20px 24px; margin-bottom: 20px; }
 .donut-inner { display: flex; align-items: center; gap: 32px; }
 .donut-canvas-wrap { width: 180px; height: 180px; flex-shrink: 0; position: relative; }
-.donut-legend { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 24px; }
+.donut-legend { flex: 1; display: flex; flex-direction: column; gap: 10px; }
 .legend-item { display: flex; align-items: center; gap: 8px; }
-.legend-dot { width: 10px; height: 10px; border-radius: 9999px; flex-shrink: 0; }
+.legend-dot { display: none; }
 .legend-text { font-size: 12px; color: #505050; flex: 1; }
 .legend-count { font-size: 12px; font-weight: 500; color: #111111; }
 
@@ -130,7 +130,6 @@ body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; co
       </div>
       <div class="nav-sub">
         <a href="admin-menu.html" class="nav-sub-item">메뉴</a>
-        <a href="admin-option.html" class="nav-sub-item">옵션</a>
         <a href="admin-nutrition.html" class="nav-sub-item">영양성분</a>
         <a href="admin-combo.html" class="nav-sub-item">추천 조합</a>
       </div>

@@ -72,6 +72,11 @@ tr:hover td { background: #FAFAFA; }
 .filter-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
 .filter-select-btn { padding: 7px 14px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid #EDF2F6; background: #fff; color: #505050; }
 .date-input { padding: 7px 12px; border-radius: 6px; border: 1px solid #EDF2F6; font-size: 12px; color: #505050; background: #fff; outline: none; width: 140px; }
+.dropdown-menu { position:absolute; top:calc(100% + 4px); left:0; background:#fff; border:1px solid #EDF2F6; border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,.08); min-width:140px; padding:4px; z-index:100; display:none; }
+.dropdown-menu.show { display:block; }
+.dropdown-item { padding:8px 12px; border-radius:6px; font-size:13px; color:#505050; cursor:pointer; transition:background .1s; }
+.dropdown-item:hover { background:#F6F6F6; }
+.dropdown-item.active { color:#0095FF; font-weight:500; }
 .text-muted { color: #C0C0C0; }
 .delete-text-btn { background: none; border: none; color: #EC3D3D; font-size: 13px; font-weight: 500; cursor: pointer; padding: 7px 6px; }
 
@@ -130,7 +135,6 @@ input[type="checkbox"] { width: 15px; height: 15px; accent-color: #0095FF; curso
       </div>
       <div class="nav-sub">
         <a href="admin-menu.html" class="nav-sub-item">메뉴</a>
-        <a href="admin-option.html" class="nav-sub-item">옵션</a>
         <a href="admin-nutrition.html" class="nav-sub-item">영양성분</a>
         <a href="admin-combo.html" class="nav-sub-item">추천 조합</a>
       </div>
@@ -202,7 +206,7 @@ input[type="checkbox"] { width: 15px; height: 15px; accent-color: #0095FF; curso
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
       <div class="page-title" style="margin-bottom:0;">회원 관리</div>
       <div style="display:flex;gap:8px;">
-        <button class="btn btn-outline">멤버십 적용</button>
+        <button class="btn btn-outline" onclick="openMembershipModal()">멤버십 적용하기</button>
         <button class="btn btn-outline">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           액셀로 추출하기
@@ -212,15 +216,15 @@ input[type="checkbox"] { width: 15px; height: 15px; accent-color: #0095FF; curso
 
     <div class="filter-bar" style="justify-content:space-between;">
       <div style="display:flex;gap:8px;align-items:center;">
-        <button class="filter-select-btn">이름 ▾</button>
-        <button class="filter-select-btn">멤버십 ▾</button>
-        <button class="filter-select-btn">상태 ▾</button>
+        <button class="filter-select-btn" id="memSortBtn">이름 ▾</button>
+        <button class="filter-select-btn" id="memMembershipBtn">멤버십 ▾</button>
+        <button class="filter-select-btn" id="memStatusBtn">상태 ▾</button>
         <button class="delete-text-btn">삭제하기</button>
       </div>
       <div style="display:flex;gap:8px;align-items:center;">
-        <input class="date-input" type="text" placeholder="From MM-DD-YYYY">
-        <span style="color:#767676;font-size:13px;">/</span>
-        <input class="date-input" type="text" placeholder="To MM-DD-YYYY">
+        <button class="date-input" id="dateFromBtn" onclick="openDatePicker('from')" style="cursor:pointer;text-align:left;color:#767676;">From 날짜 선택</button>
+        <span style="color:#767676;font-size:13px;">—</span>
+        <button class="date-input" id="dateToBtn" onclick="openDatePicker('to')" style="cursor:pointer;text-align:left;color:#767676;">To 날짜 선택</button>
       </div>
     </div>
 
@@ -228,7 +232,7 @@ input[type="checkbox"] { width: 15px; height: 15px; accent-color: #0095FF; curso
       <table>
         <thead>
           <tr>
-            <th><input type="checkbox"></th>
+            <th><input type="checkbox" id="selectAllChk" onchange="toggleSelectAll(this)"></th>
             <th>No</th>
             <th>이름</th>
             <th>연락처</th>
@@ -400,7 +404,208 @@ function toggleGroup(el) {
 
   renderPage();
 })();
+
+(function(){
+  var sortOpts = ['이름 순','가입일 순','최근 방문 순'];
+  var membershipOpts = ['전체','일반','실버','골드','VIP'];
+  var statusOpts = ['전체','활성','휴면','탈퇴'];
+
+  function makeDropHTML(id, opts) {
+    return '<div class="dropdown-menu" id="'+id+'">'
+      + opts.map(function(o){ return '<div class="dropdown-item" onclick="memSelectFilter(\''+id+'\',\''+o+'\')">'+o+'</div>'; }).join('')
+      + '</div>';
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    var btns = [
+      {btn: document.getElementById('memSortBtn'), dropId: 'memSortDrop', opts: sortOpts},
+      {btn: document.getElementById('memMembershipBtn'), dropId: 'memMembershipDrop', opts: membershipOpts},
+      {btn: document.getElementById('memStatusBtn'), dropId: 'memStatusDrop', opts: statusOpts}
+    ];
+
+    btns.forEach(function(item){
+      var wrap = document.createElement('div');
+      wrap.style.cssText = 'position:relative;display:inline-block;';
+      item.btn.parentNode.insertBefore(wrap, item.btn);
+      wrap.appendChild(item.btn);
+      wrap.insertAdjacentHTML('beforeend', makeDropHTML(item.dropId, item.opts));
+      item.btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        btns.forEach(function(b){ if(b.dropId !== item.dropId) document.getElementById(b.dropId).classList.remove('show'); });
+        document.getElementById(item.dropId).classList.toggle('show');
+      });
+    });
+
+    document.addEventListener('click', function(){
+      document.querySelectorAll('.dropdown-menu').forEach(function(m){ m.classList.remove('show'); });
+    });
+  });
+})();
+
+window.toggleSelectAll = function(chk) {
+  document.querySelectorAll('tbody input[type="checkbox"]').forEach(function(c) { c.checked = chk.checked; });
+};
+
+window.openMembershipModal = function() {
+  var selected = Array.from(document.querySelectorAll('tbody tr')).filter(function(row) {
+    return row.querySelector('input[type="checkbox"]').checked;
+  }).map(function(row) {
+    return row.querySelector('td[style*="font-weight:500"]').textContent.trim();
+  });
+  var list = document.getElementById('membershipTargetList');
+  if (selected.length === 0) {
+    list.innerHTML = '<div style="color:#767676;font-size:13px;">선택된 회원이 없습니다. 먼저 회원을 선택해주세요.</div>';
+  } else {
+    list.innerHTML = selected.map(function(n){ return '<span style="display:inline-block;background:#EFF6FF;color:#0095FF;padding:4px 10px;border-radius:6px;font-size:13px;margin:3px;">' + n + '</span>'; }).join('');
+  }
+  openModal('membershipApplyModal');
+};
+
+window.applyMembership = function() {
+  var type = document.getElementById('membershipTypeSelect').value;
+  var period = document.getElementById('membershipPeriodInput').value;
+  var rows = document.querySelectorAll('tbody tr');
+  rows.forEach(function(row) {
+    if (row.querySelector('input[type="checkbox"]').checked) {
+      var memberCell = row.querySelectorAll('td')[4];
+      memberCell.textContent = type;
+      memberCell.className = '';
+      memberCell.style.cssText = 'font-size:12px;font-weight:500;color:#0095FF;';
+      var statusCell = row.querySelectorAll('td')[5];
+      statusCell.innerHTML = '<span class="badge badge-success">활성</span>';
+    }
+  });
+  document.getElementById('selectAllChk').checked = false;
+  document.querySelectorAll('tbody input[type="checkbox"]').forEach(function(c){ c.checked = false; });
+  closeModal('membershipApplyModal');
+};
+
+window.memSelectFilter = function(dropId, val) {
+  document.getElementById(dropId).classList.remove('show');
+  var labelMap = {'memSortDrop':'memSortBtn','memMembershipDrop':'memMembershipBtn','memStatusDrop':'memStatusBtn'};
+  var defaultMap = {'memSortBtn':'이름','memMembershipBtn':'멤버십','memStatusBtn':'상태'};
+  var btnId = labelMap[dropId];
+  if (btnId) {
+    var defVal = defaultMap[btnId];
+    document.getElementById(btnId).textContent = (val.indexOf('전체') !== -1 ? defVal : val) + ' ▾';
+  }
+};
 </script>
+<div class="modal-overlay" id="datePickerModal" style="z-index:900;">
+  <div class="modal" style="width:320px;padding:20px;">
+    <div class="modal-header" style="margin-bottom:16px;">
+      <span class="modal-title" id="datePickerTitle">날짜 선택</span>
+      <button class="modal-close" onclick="closeModal('datePickerModal')">✕</button>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+      <button onclick="changeCalMonth(-1)" style="background:none;border:none;cursor:pointer;font-size:18px;color:#505050;padding:4px 8px;">‹</button>
+      <span id="calMonthLabel" style="font-size:14px;font-weight:500;color:#111;"></span>
+      <button onclick="changeCalMonth(1)" style="background:none;border:none;cursor:pointer;font-size:18px;color:#505050;padding:4px 8px;">›</button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:6px;">
+      <div style="text-align:center;font-size:11px;color:#A0A8B3;padding:4px;">일</div>
+      <div style="text-align:center;font-size:11px;color:#A0A8B3;padding:4px;">월</div>
+      <div style="text-align:center;font-size:11px;color:#A0A8B3;padding:4px;">화</div>
+      <div style="text-align:center;font-size:11px;color:#A0A8B3;padding:4px;">수</div>
+      <div style="text-align:center;font-size:11px;color:#A0A8B3;padding:4px;">목</div>
+      <div style="text-align:center;font-size:11px;color:#A0A8B3;padding:4px;">금</div>
+      <div style="text-align:center;font-size:11px;color:#A0A8B3;padding:4px;">토</div>
+    </div>
+    <div id="calDays" style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;"></div>
+    <div style="margin-top:14px;text-align:center;">
+      <button class="btn btn-outline btn-sm" onclick="clearDateFilter()" style="margin-right:6px;">초기화</button>
+      <button class="btn btn-primary btn-sm" onclick="closeModal('datePickerModal')">확인</button>
+    </div>
+  </div>
+</div>
+
+<style>
+.cal-day { text-align:center;padding:6px 2px;border-radius:6px;font-size:13px;color:#111;cursor:pointer;transition:background .1s; }
+.cal-day:hover { background:#EFF6FF;color:#0095FF; }
+.cal-day.selected { background:#0095FF;color:#fff; }
+.cal-day.other-month { color:#D0D6DF; }
+.cal-day.today { font-weight:700;border:1px solid #0095FF;color:#0095FF; }
+</style>
+<script>
+var _calTarget = 'from';
+var _calYear = 2026, _calMonth = 2; // 0-indexed
+var _dateFrom = null, _dateTo = null;
+
+function openDatePicker(target) {
+  _calTarget = target;
+  var now = new Date();
+  _calYear = now.getFullYear(); _calMonth = now.getMonth();
+  document.getElementById('datePickerTitle').textContent = target === 'from' ? '시작 날짜 선택' : '종료 날짜 선택';
+  renderCal();
+  openModal('datePickerModal');
+}
+function changeCalMonth(d) { _calMonth += d; if(_calMonth>11){_calMonth=0;_calYear++;}else if(_calMonth<0){_calMonth=11;_calYear--;} renderCal(); }
+function renderCal() {
+  var months = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+  document.getElementById('calMonthLabel').textContent = _calYear + '년 ' + months[_calMonth];
+  var first = new Date(_calYear, _calMonth, 1).getDay();
+  var days = new Date(_calYear, _calMonth+1, 0).getDate();
+  var prevDays = new Date(_calYear, _calMonth, 0).getDate();
+  var today = new Date(); var todayStr = fmt3(today.getFullYear(), today.getMonth()+1, today.getDate());
+  var sel = _calTarget === 'from' ? _dateFrom : _dateTo;
+  var html = '';
+  for (var i=0;i<first;i++) { html += '<div class="cal-day other-month">'+(prevDays-first+1+i)+'</div>'; }
+  for (var d=1;d<=days;d++) {
+    var ds = fmt3(_calYear, _calMonth+1, d);
+    var cls = 'cal-day' + (ds===todayStr?' today':'') + (ds===sel?' selected':'');
+    html += '<div class="'+cls+'" onclick="selectCalDay('+_calYear+','+(+_calMonth+1)+','+d+')">'+d+'</div>';
+  }
+  document.getElementById('calDays').innerHTML = html;
+}
+function fmt3(y,m,d){ return y+'/'+String(m).padStart(2,'0')+'/'+String(d).padStart(2,'0'); }
+function selectCalDay(y,m,d) {
+  var ds = fmt3(y,m,d);
+  if (_calTarget==='from') { _dateFrom=ds; document.getElementById('dateFromBtn').textContent=ds; document.getElementById('dateFromBtn').style.color='#111'; }
+  else { _dateTo=ds; document.getElementById('dateToBtn').textContent=ds; document.getElementById('dateToBtn').style.color='#111'; }
+  renderCal();
+  setTimeout(function(){ closeModal('datePickerModal'); },200);
+}
+function clearDateFilter() {
+  _dateFrom=null; _dateTo=null;
+  document.getElementById('dateFromBtn').textContent='From 날짜 선택'; document.getElementById('dateFromBtn').style.color='#767676';
+  document.getElementById('dateToBtn').textContent='To 날짜 선택'; document.getElementById('dateToBtn').style.color='#767676';
+  closeModal('datePickerModal');
+}
+</script>
+
+<div class="modal-overlay" id="membershipApplyModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">멤버십 적용하기</span>
+      <button class="modal-close" onclick="closeModal('membershipApplyModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">적용 대상 회원</label>
+        <div id="membershipTargetList" style="min-height:40px;padding:8px;border:1px solid #EDF2F6;border-radius:8px;"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">멤버십 종류</label>
+          <select class="form-select" id="membershipTypeSelect">
+            <option value="일반">일반</option>
+            <option value="실버">실버</option>
+            <option value="골드">골드</option>
+            <option value="VIP">VIP</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">기간 (개월)</label>
+          <input class="form-input" id="membershipPeriodInput" type="number" value="1" min="1" max="24" />
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('membershipApplyModal')">취소</button>
+      <button class="btn btn-primary" onclick="applyMembership()">적용하기</button>
+    </div>
+  </div>
+</div>
 <script src="admin-common.js"></script>
 </body>
 </html>

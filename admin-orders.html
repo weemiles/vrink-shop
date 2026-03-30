@@ -72,6 +72,11 @@ tr:hover td { background: #FAFAFA; }
 .filter-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
 .filter-select-btn { padding: 7px 14px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid #EDF2F6; background: #fff; color: #505050; display: flex; align-items: center; gap: 6px; }
 .search-input { padding: 7px 12px; border-radius: 6px; border: 1px solid #EDF2F6; font-size: 13px; color: #111; background: #fff; outline: none; width: 200px; }
+.dropdown-menu { position:absolute; top:calc(100% + 4px); left:0; background:#fff; border:1px solid #EDF2F6; border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,.08); min-width:140px; padding:4px; z-index:100; display:none; }
+.dropdown-menu.show { display:block; }
+.dropdown-item { padding:8px 12px; border-radius:6px; font-size:13px; color:#505050; cursor:pointer; transition:background .1s; }
+.dropdown-item:hover { background:#F6F6F6; }
+.dropdown-item.active { color:#0095FF; font-weight:500; }
 .text-muted { color: #C0C0C0; }
 .member-id { font-size: 11px; color: #767676; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .cancel-btn { background: none; border: 1px solid #EDF2F6; border-radius: 4px; padding: 4px 10px; font-size: 11px; font-weight: 500; color: #505050; cursor: pointer; }
@@ -129,7 +134,6 @@ tr:hover td { background: #FAFAFA; }
       </div>
       <div class="nav-sub">
         <a href="admin-menu.html" class="nav-sub-item">메뉴</a>
-        <a href="admin-option.html" class="nav-sub-item">옵션</a>
         <a href="admin-nutrition.html" class="nav-sub-item">영양성분</a>
         <a href="admin-combo.html" class="nav-sub-item">추천 조합</a>
       </div>
@@ -202,9 +206,9 @@ tr:hover td { background: #FAFAFA; }
 
     <div class="filter-bar" style="justify-content: space-between;">
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <button class="filter-select-btn">날짜 ▾</button>
-        <button class="filter-select-btn">결제 수단 ▾</button>
-        <button class="filter-select-btn">결제 상태 ▾</button>
+        <button class="filter-select-btn" id="ordDateBtn">날짜 ▾</button>
+        <button class="filter-select-btn" id="ordPayBtn">결제 수단 ▾</button>
+        <button class="filter-select-btn" id="ordStatusBtn">결제 상태 ▾</button>
       </div>
       <div style="display:flex;gap:8px;align-items:center;">
         <input class="search-input" type="text" placeholder="주문번호, 회원 검색...">
@@ -429,6 +433,70 @@ function toggleGroup(el) {
     </div>
   </div>
 </div>
+<script>
+(function(){
+  var dateOpts = ['전체','오늘','이번 주','이번 달','직접 선택'];
+  var payOpts = ['전체','카드','현금','간편결제'];
+  var statusOpts = ['전체','결제완료','결제대기','취소/환불'];
+
+  function makeDropHTML(id, opts) {
+    return '<div class="dropdown-menu" id="'+id+'">'
+      + opts.map(function(o){ return '<div class="dropdown-item" onclick="ordSelectFilter(\''+id+'\',\''+o+'\')">'+o+'</div>'; }).join('')
+      + '</div>';
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    var btns = [
+      {btn: document.getElementById('ordDateBtn'), dropId: 'ordDateDrop', opts: dateOpts, defLabel: '날짜'},
+      {btn: document.getElementById('ordPayBtn'), dropId: 'ordPayDrop', opts: payOpts, defLabel: '결제 수단'},
+      {btn: document.getElementById('ordStatusBtn'), dropId: 'ordStatusDrop', opts: statusOpts, defLabel: '결제 상태'}
+    ];
+
+    btns.forEach(function(item){
+      var wrap = document.createElement('div');
+      wrap.style.cssText = 'position:relative;display:inline-block;';
+      item.btn.parentNode.insertBefore(wrap, item.btn);
+      wrap.appendChild(item.btn);
+      wrap.insertAdjacentHTML('beforeend', makeDropHTML(item.dropId, item.opts));
+      item.btn.setAttribute('data-def', item.defLabel);
+      item.btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        btns.forEach(function(b){ if(b.dropId !== item.dropId) document.getElementById(b.dropId).classList.remove('show'); });
+        document.getElementById(item.dropId).classList.toggle('show');
+      });
+    });
+
+    document.addEventListener('click', function(){
+      document.querySelectorAll('.dropdown-menu').forEach(function(m){ m.classList.remove('show'); });
+    });
+  });
+})();
+
+window.ordSelectFilter = function(dropId, val) {
+  document.getElementById(dropId).classList.remove('show');
+  var map = {'ordDateDrop':'ordDateBtn','ordPayDrop':'ordPayBtn','ordStatusDrop':'ordStatusBtn'};
+  var btnId = map[dropId];
+  if (btnId) {
+    var btn = document.getElementById(btnId);
+    var defLabel = btn.getAttribute('data-def') || '';
+    btn.textContent = (val === '전체' ? defLabel : val) + ' ▾';
+
+    if (dropId === 'ordStatusDrop') {
+      filterOrdersByStatus(val);
+    }
+  }
+};
+
+function filterOrdersByStatus(status) {
+  var rows = document.querySelectorAll('table tbody tr');
+  rows.forEach(function(tr){
+    if (status === '전체') { tr.style.display = ''; return; }
+    var badge = tr.querySelector('.badge');
+    var txt = badge ? badge.textContent.trim() : '';
+    tr.style.display = (txt === status) ? '' : 'none';
+  });
+}
+</script>
 <script src="admin-common.js"></script>
 </body>
 </html>

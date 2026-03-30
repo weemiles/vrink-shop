@@ -68,6 +68,11 @@ input[type="checkbox"] { width: 15px; height: 15px; accent-color: #0095FF; curso
 .empty-title { font-size: 16px; font-weight: 500; color: #505050; margin-bottom: 6px; }
 .empty-desc { font-size: 13px; color: #767676; }
 .stock-bar-wrap { width: 100px; background: #EDF2F6; border-radius: 4px; height: 6px; } .stock-bar { height: 6px; border-radius: 4px; }
+.dropdown-menu { position:absolute; top:calc(100% + 4px); left:0; background:#fff; border:1px solid #EDF2F6; border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,.08); min-width:140px; padding:4px; z-index:100; display:none; }
+.dropdown-menu.show { display:block; }
+.dropdown-item { padding:8px 12px; border-radius:6px; font-size:13px; color:#505050; cursor:pointer; transition:background .1s; }
+.dropdown-item:hover { background:#F6F6F6; }
+.dropdown-item.active { color:#0095FF; font-weight:500; }
 </style>
 </head>
 <body>
@@ -119,7 +124,6 @@ input[type="checkbox"] { width: 15px; height: 15px; accent-color: #0095FF; curso
       </div>
       <div class="nav-sub">
         <a href="admin-menu.html" class="nav-sub-item">메뉴</a>
-        <a href="admin-option.html" class="nav-sub-item">옵션</a>
         <a href="admin-nutrition.html" class="nav-sub-item">영양성분</a>
         <a href="admin-combo.html" class="nav-sub-item">추천 조합</a>
       </div>
@@ -196,25 +200,87 @@ input[type="checkbox"] { width: 15px; height: 15px; accent-color: #0095FF; curso
       </div>
     </div>
     <div class="filter-bar">
-      <button class="filter-select-btn">전체 지점 ▾</button>
-      <button class="filter-select-btn">재고 상태 ▾</button>
+      <button class="filter-select-btn" id="invBranchBtn">전체 지점 ▾</button>
+      <button class="filter-select-btn" id="invStatusBtn">재고 상태 ▾</button>
     </div>
     <div class="table-wrap">
       <table>
         <thead><tr><th>원료명</th><th>현재 재고</th><th>안전 재고</th><th>재고 현황</th><th>상태</th><th>마지막 입고일</th><th>관리</th></tr></thead>
         <tbody>
-          <tr><td><strong>부스터 원액</strong></td><td>24병</td><td>10병</td><td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:70%;background:#0095FF;"></div></div><span style="font-size:12px;color:#505050;">70%</span></div></td><td><span class="badge badge-success">양호</span></td><td>2026-03-25</td><td><button class="btn btn-outline btn-sm" onclick="openModal('inventoryInModal')">입고</button></td></tr>
-          <tr><td><strong>비타민 원액</strong></td><td>8병</td><td>10병</td><td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:30%;background:#F4BE5E;"></div></div><span style="font-size:12px;color:#505050;">30%</span></div></td><td><span class="badge badge-warning">부족</span></td><td>2026-03-20</td><td><button class="btn btn-primary btn-sm" onclick="openModal('inventoryInModal')">입고</button></td></tr>
-          <tr><td><strong>컷팅 원액</strong></td><td>3병</td><td>10병</td><td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:15%;background:#EC3D3D;"></div></div><span style="font-size:12px;color:#505050;">15%</span></div></td><td><span class="badge badge-error">위험</span></td><td>2026-03-15</td><td><button class="btn btn-danger btn-sm" onclick="openModal('inventoryInModal')">긴급입고</button></td></tr>
-          <tr><td><strong>릴렉스 원액</strong></td><td>18병</td><td>10병</td><td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:85%;background:#00E096;"></div></div><span style="font-size:12px;color:#505050;">85%</span></div></td><td><span class="badge badge-success">양호</span></td><td>2026-03-28</td><td><button class="btn btn-outline btn-sm" onclick="openModal('inventoryInModal')">입고</button></td></tr>
-          <tr><td><strong>아미노 원액</strong></td><td>12병</td><td>10병</td><td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:60%;background:#0095FF;"></div></div><span style="font-size:12px;color:#505050;">60%</span></div></td><td><span class="badge badge-success">양호</span></td><td>2026-03-22</td><td><button class="btn btn-outline btn-sm" onclick="openModal('inventoryInModal')">입고</button></td></tr>
-          <tr><td><strong>레몬 농축액</strong></td><td>30병</td><td>15병</td><td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:100%;background:#00E096;"></div></div><span style="font-size:12px;color:#505050;">100%</span></div></td><td><span class="badge badge-success">양호</span></td><td>2026-03-29</td><td><button class="btn btn-outline btn-sm" onclick="openModal('inventoryInModal')">입고</button></td></tr>
+          <tr><td><strong>부스터 원액</strong></td><td>24박스</td><td>10박스</td><td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:70%;background:#0095FF;"></div></div><span style="font-size:12px;color:#505050;">70%</span></div></td><td><span class="badge badge-success">양호</span></td><td>2026-03-25</td><td><button class="btn btn-outline btn-sm" onclick="openModal('inventoryInModal')">입고</button></td></tr>
+          <tr><td><strong>비타민 원액</strong></td><td>8박스</td><td>10박스</td><td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:30%;background:#F4BE5E;"></div></div><span style="font-size:12px;color:#505050;">30%</span></div></td><td><span class="badge badge-warning">부족</span></td><td>2026-03-20</td><td><button class="btn btn-primary btn-sm" onclick="openModal('inventoryInModal')">입고</button></td></tr>
+          <tr><td><strong>컷팅 원액</strong></td><td>3박스</td><td>10박스</td><td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:15%;background:#EC3D3D;"></div></div><span style="font-size:12px;color:#505050;">15%</span></div></td><td><span class="badge badge-error">위험</span></td><td>2026-03-15</td><td><button class="btn btn-danger btn-sm" onclick="openModal('inventoryInModal')">긴급입고</button></td></tr>
+          <tr><td><strong>릴렉스 원액</strong></td><td>18박스</td><td>10박스</td><td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:85%;background:#00E096;"></div></div><span style="font-size:12px;color:#505050;">85%</span></div></td><td><span class="badge badge-success">양호</span></td><td>2026-03-28</td><td><button class="btn btn-outline btn-sm" onclick="openModal('inventoryInModal')">입고</button></td></tr>
+          <tr><td><strong>아미노 원액</strong></td><td>12박스</td><td>10박스</td><td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:60%;background:#0095FF;"></div></div><span style="font-size:12px;color:#505050;">60%</span></div></td><td><span class="badge badge-success">양호</span></td><td>2026-03-22</td><td><button class="btn btn-outline btn-sm" onclick="openModal('inventoryInModal')">입고</button></td></tr>
+          <tr><td><strong>레몬 농축액</strong></td><td>30박스</td><td>15박스</td><td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:100%;background:#00E096;"></div></div><span style="font-size:12px;color:#505050;">100%</span></div></td><td><span class="badge badge-success">양호</span></td><td>2026-03-29</td><td><button class="btn btn-outline btn-sm" onclick="openModal('inventoryInModal')">입고</button></td></tr>
         </tbody>
       </table>
     </div>
   </div>
 </div>
-<script>function toggleGroup(el){el.classList.toggle('open');var s=el.nextElementSibling;if(s)s.classList.toggle('show');}</script>
+<script>
+function toggleGroup(el){el.classList.toggle('open');var s=el.nextElementSibling;if(s)s.classList.toggle('show');}
+
+(function(){
+  var branchOpts = ['전체','성수빌드업','강남점','홍대점'];
+  var statusOpts = ['전체','양호','부족','위험'];
+
+  function makeDropHTML(id, opts) {
+    return '<div class="dropdown-menu" id="'+id+'">'
+      + opts.map(function(o){ return '<div class="dropdown-item" onclick="invSelectFilter(\''+id+'\',\''+o+'\')">'+o+'</div>'; }).join('')
+      + '</div>';
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    var branchBtn = document.getElementById('invBranchBtn');
+    var statusBtn = document.getElementById('invStatusBtn');
+
+    function wrapBtn(btn, html) {
+      var wrap = document.createElement('div');
+      wrap.style.cssText = 'position:relative;display:inline-block;';
+      btn.parentNode.insertBefore(wrap, btn);
+      wrap.appendChild(btn);
+      wrap.insertAdjacentHTML('beforeend', html);
+    }
+    wrapBtn(branchBtn, makeDropHTML('invBranchDrop', branchOpts));
+    wrapBtn(statusBtn, makeDropHTML('invStatusDrop', statusOpts));
+
+    branchBtn.addEventListener('click', function(e){
+      e.stopPropagation();
+      document.getElementById('invStatusDrop').classList.remove('show');
+      document.getElementById('invBranchDrop').classList.toggle('show');
+    });
+    statusBtn.addEventListener('click', function(e){
+      e.stopPropagation();
+      document.getElementById('invBranchDrop').classList.remove('show');
+      document.getElementById('invStatusDrop').classList.toggle('show');
+    });
+    document.addEventListener('click', function(){
+      document.querySelectorAll('.dropdown-menu').forEach(function(m){ m.classList.remove('show'); });
+    });
+  });
+})();
+
+window.invSelectFilter = function(dropId, val) {
+  document.getElementById(dropId).classList.remove('show');
+  if (dropId === 'invBranchDrop') {
+    document.getElementById('invBranchBtn').textContent = (val === '전체' ? '전체 지점' : val) + ' ▾';
+  } else {
+    document.getElementById('invStatusBtn').textContent = (val === '전체' ? '재고 상태' : val) + ' ▾';
+    filterInvByStatus(val);
+  }
+};
+
+function filterInvByStatus(status) {
+  var rows = document.querySelectorAll('table tbody tr');
+  rows.forEach(function(tr){
+    if (status === '전체') { tr.style.display = ''; return; }
+    var badge = tr.querySelector('.badge');
+    var txt = badge ? badge.textContent.trim() : '';
+    tr.style.display = (txt === status) ? '' : 'none';
+  });
+}
+</script>
 <div class="modal-overlay" id="inventoryAlertModal">
   <div class="modal">
     <div class="modal-header">
