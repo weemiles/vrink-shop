@@ -63,7 +63,7 @@ tr:hover td { background: #FAFAFA; }
 .filter-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
 .filter-select-btn { padding: 7px 14px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid #EDF2F6; background: #fff; color: #505050; }
 input[type="checkbox"] { width: 15px; height: 15px; accent-color: #0095FF; cursor: pointer; }
-.policy-card { background: #fff; border-radius: 16px; box-shadow: 0px 4px 20px rgba(238,238,238,.5); padding: 18px 20px; margin-bottom: 12px; display: flex; align-items: flex-start; gap: 16px; } .policy-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 18px; } .toggle-switch { width: 40px; height: 22px; background: #EDF2F6; border-radius: 11px; position: relative; cursor: pointer; flex-shrink: 0; } .toggle-switch.on { background: #0095FF; } .toggle-knob { width: 18px; height: 18px; background: #fff; border-radius: 9px; position: absolute; top: 2px; left: 2px; transition: left .2s; } .toggle-switch.on .toggle-knob { left: 20px; }
+.policy-card { background: #fff; border-radius: 16px; box-shadow: 0px 4px 20px rgba(238,238,238,.5); padding: 18px 20px; margin-bottom: 12px; display: flex; align-items: center; gap: 16px; } .toggle-switch { width: 40px; height: 22px; background: #EDF2F6; border-radius: 11px; position: relative; cursor: pointer; flex-shrink: 0; } .toggle-switch.on { background: #0095FF; } .toggle-knob { width: 18px; height: 18px; background: #fff; border-radius: 9px; position: absolute; top: 2px; left: 2px; transition: left .2s; } .toggle-switch.on .toggle-knob { left: 20px; }
 </style>
 </head>
 <body>
@@ -186,36 +186,32 @@ input[type="checkbox"] { width: 15px; height: 15px; accent-color: #0095FF; curso
   <div class="page-content">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
       <div class="page-title" style="margin-bottom:0;">MDM 정책 관리</div>
-      <button class="btn btn-outline">정책 내보내기</button>
-      <button class="btn btn-primary" onclick="openModal('policyAddModal')">정책 추가</button>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-outline">정책 내보내기</button>
+        <button class="btn btn-primary" onclick="openModal('policyAddModal')">정책 추가</button>
+      </div>
     </div>
     <div class="policy-card">
-      <div class="policy-icon" style="background:#EFF6FF;">🔒</div>
       <div style="flex:1;"><div style="font-size:14px;font-weight:500;margin-bottom:4px;">화면 잠금 정책</div><div style="font-size:12px;color:#767676;">비활성 5분 후 자동 잠금, PIN 필수</div></div>
       <div class="toggle-switch on"><div class="toggle-knob"></div></div>
     </div>
     <div class="policy-card">
-      <div class="policy-icon" style="background:#ECFDF5;">📶</div>
       <div style="flex:1;"><div style="font-size:14px;font-weight:500;margin-bottom:4px;">네트워크 제한</div><div style="font-size:12px;color:#767676;">지정된 Wi-Fi만 허용, VPN 불가</div></div>
       <div class="toggle-switch on"><div class="toggle-knob"></div></div>
     </div>
     <div class="policy-card">
-      <div class="policy-icon" style="background:#FEF6E6;">📸</div>
       <div style="flex:1;"><div style="font-size:14px;font-weight:500;margin-bottom:4px;">카메라 비활성화</div><div style="font-size:12px;color:#767676;">업무 기기 보안을 위해 카메라 사용 금지</div></div>
       <div class="toggle-switch on"><div class="toggle-knob"></div></div>
     </div>
     <div class="policy-card">
-      <div class="policy-icon" style="background:#F3E8FF;">📱</div>
       <div style="flex:1;"><div style="font-size:14px;font-weight:500;margin-bottom:4px;">앱 설치 제한</div><div style="font-size:12px;color:#767676;">승인된 앱만 설치 가능, 외부 APK 차단</div></div>
       <div class="toggle-switch on"><div class="toggle-knob"></div></div>
     </div>
     <div class="policy-card">
-      <div class="policy-icon" style="background:#EDF2F6;">🔔</div>
       <div style="flex:1;"><div style="font-size:14px;font-weight:500;margin-bottom:4px;">알림 제한</div><div style="font-size:12px;color:#767676;">VRINK 앱 알림만 허용</div></div>
       <div class="toggle-switch"><div class="toggle-knob"></div></div>
     </div>
     <div class="policy-card">
-      <div class="policy-icon" style="background:#FDE8E8;">🔄</div>
       <div style="flex:1;"><div style="font-size:14px;font-weight:500;margin-bottom:4px;">자동 업데이트</div><div style="font-size:12px;color:#767676;">앱 및 OS 자동 업데이트 허용</div></div>
       <div class="toggle-switch on"><div class="toggle-knob"></div></div>
     </div>
