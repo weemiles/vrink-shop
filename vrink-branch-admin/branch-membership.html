@@ -197,7 +197,7 @@ body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; co
 <!-- Add/Edit Modal -->
 <div class="modal-overlay" id="productModal">
   <div class="modal-box">
-    <button class="modal-close" onclick="closeModal()">✕</button>
+    <button class="modal-close" onclick="closeProductModal()">✕</button>
     <div class="modal-title" id="modalTitle">상품 추가</div>
     <div class="form-group">
       <label class="form-label">상품명</label>
@@ -234,7 +234,7 @@ body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; co
       </select>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeModal()">취소</button>
+      <button class="btn btn-outline" onclick="closeProductModal()">취소</button>
       <button class="btn btn-primary" id="modalSaveBtn" onclick="saveProduct()">저장</button>
     </div>
   </div>
@@ -361,7 +361,7 @@ function openEditModal(id) {
   document.getElementById('productModal').classList.add('open');
 }
 
-function closeModal() {
+function closeProductModal() {
   document.getElementById('productModal').classList.remove('open');
 }
 
@@ -407,7 +407,7 @@ function saveProduct() {
 
   saveProducts();
   renderGrid();
-  closeModal();
+  closeProductModal();
 }
 
 function toggleGroup(el) {
@@ -416,10 +416,12 @@ function toggleGroup(el) {
 }
 
 document.getElementById('productModal').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
+  if (e.target === this) closeProductModal();
 });
 
 renderGrid();
 </script>
+<script>(function(){if(!sessionStorage.getItem('branchAuth')){location.href='branch-login.html';}})()</script>
+<script src="branch-common.js"></script>
 </body>
 </html>

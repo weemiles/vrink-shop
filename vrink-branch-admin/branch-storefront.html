@@ -83,6 +83,7 @@ tbody tr:hover td { background: #FAFAFA; }
 .stat-value { font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 500; color: #111111; margin-bottom: 6px; }
 .nav-group-trigger.open .nav-arrow { transform: rotate(180deg); }
 .nav-arrow { transition: transform .2s; display: inline-block; }
+.page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
 </style>
 </head>
 <body>
@@ -162,31 +163,7 @@ tbody tr:hover td { background: #FAFAFA; }
   </header>
 
   <div class="page-content">
-    <div class="page-title">자사몰 현황</div>
-
-    <!-- Stat Grid -->
-    <div class="stat-grid">
-      <div class="stat-card">
-        <div class="stat-label">오늘 주문</div>
-        <div class="stat-value">12<span style="font-size:14px;font-weight:400;color:#767676;">건</span></div>
-        <div class="stat-change up">▲ +2건 어제 대비</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">이번 달 주문</div>
-        <div class="stat-value">284<span style="font-size:14px;font-weight:400;color:#767676;">건</span></div>
-        <div class="stat-change up">▲ +23건 지난달 대비</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">평균 주문금액</div>
-        <div class="stat-value" style="font-size:18px;">198,000<span style="font-size:13px;font-weight:400;color:#767676;">원</span></div>
-        <div class="stat-change">이번 달 평균</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">누적 회원</div>
-        <div class="stat-value">157<span style="font-size:14px;font-weight:400;color:#767676;">명</span></div>
-        <div class="stat-change up">▲ +8명 이번달 신규</div>
-      </div>
-    </div>
+    <div class="page-header"><div class="page-title">자사몰 관리</div></div>
 
     <!-- Product Cards -->
     <div style="font-size:15px;font-weight:500;color:#111;margin-bottom:12px;">판매 상품</div>

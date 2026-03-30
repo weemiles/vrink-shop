@@ -22,7 +22,9 @@
     .nav-group { display: flex; flex-direction: column; }
     .nav-group-trigger { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; color: #505050; font-size: 14px; font-weight: 500; cursor: pointer; }
     .nav-group-trigger:hover { background: #F6F6F6; }
-    .nav-arrow { margin-left: auto; font-size: 10px; color: #767676; }
+    .nav-group-trigger.open { background: #F6F6F6; }
+    .nav-group-trigger.open .nav-arrow { transform: rotate(180deg); }
+    .nav-arrow { transition: transform .2s; display: inline-block; margin-left: auto; font-size: 10px; color: #767676; }
     .nav-sub { display: none; flex-direction: column; padding-left: 32px; gap: 1px; }
     .nav-sub.show { display: flex; }
     .nav-sub-item { padding: 7px 12px; border-radius: 6px; font-size: 13px; color: #505050; text-decoration: none; font-weight: 400; }
@@ -235,10 +237,8 @@
 
 <script>
   function toggleGroup(trigger) {
-    const sub = trigger.nextElementSibling;
-    sub.classList.toggle('show');
-    const arrow = trigger.querySelector('.nav-arrow');
-    arrow.textContent = sub.classList.contains('show') ? '▴' : '▾';
+    trigger.classList.toggle('open');
+    trigger.nextElementSibling.classList.toggle('show');
   }
 
   function saveBranchInfo() {
@@ -295,6 +295,7 @@
     }
   })();
 </script>
-
+<script>(function(){if(!sessionStorage.getItem('branchAuth')){location.href='branch-login.html';}})()</script>
+<script src="branch-common.js"></script>
 </body>
 </html>
