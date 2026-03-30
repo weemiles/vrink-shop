@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>자사몰 주문 — VRINK 관리자</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://js.tosspayments.com/v1/payment"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -93,6 +94,7 @@
       display: grid;
       grid-template-columns: 1fr 300px;
       min-height: 100%;
+      align-items: start;
     }
 
     /* ═══════════════ FILTER SIDEBAR ═══════════════ */
@@ -523,11 +525,11 @@
             <div class="variant-section">
               <select class="variant-select" id="sel-func" onchange="selectVariant('func', this.value); this.classList.toggle('has-value', !!this.value)">
                 <option value="">샷 선택</option>
-                <option value="부스터 샷">부스터 샷 — 지친 몸을 깨우고 싶다면 (타우린, 카페인)</option>
-                <option value="컷팅 샷">컷팅 샷 — 지방 관리를 한다면 (L-카르니틴, 녹차추출물)</option>
-                <option value="비타민 샷">비타민 샷 — 하루 비타민을 채우고 싶다면 (비타민B, 비타민C)</option>
-                <option value="릴렉스 샷">릴렉스 샷 — 긴장을 완화하고 싶다면 (L-테아닌, 타우린)</option>
-                <option value="아미노 샷">아미노 샷 — 근육 운동을 한다면 (필수 아미노산 9종, 타우린)</option>
+                <option value="부스터 샷">부스터 샷</option>
+                <option value="컷팅 샷">컷팅 샷</option>
+                <option value="비타민 샷">비타민 샷</option>
+                <option value="릴렉스 샷">릴렉스 샷</option>
+                <option value="아미노 샷">아미노 샷</option>
               </select>
             </div>
             <div class="prod-order">
@@ -908,6 +910,88 @@
   }
 
   renderCart();
+
+  // 토스페이먼츠 결제
+  const tossPayments = TossPayments('test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq');
+
+  function placeOrder() {
+    const keys = Object.keys(cart);
+    if (!keys.length) return;
+    document.getElementById('payModal').style.display = 'flex';
+    document.getElementById('payName').value = '';
+    document.getElementById('payPhone').value = '';
+    document.getElementById('payName').focus();
+  }
+
+  document.getElementById('payModal').addEventListener('click', function(e) {
+    if (e.target === this) this.style.display = 'none';
+  });
+
+  document.getElementById('payCancelBtn').addEventListener('click', function() {
+    document.getElementById('payModal').style.display = 'none';
+  });
+
+  document.getElementById('payConfirmBtn').addEventListener('click', function() {
+    const name = document.getElementById('payName').value.trim();
+    const phone = document.getElementById('payPhone').value.trim();
+    if (!name) { document.getElementById('payName').focus(); return; }
+    if (!phone) { document.getElementById('payPhone').focus(); return; }
+
+    const keys = Object.keys(cart);
+    const total = keys.reduce((s, k) => s + PRICE[typeOf(k)] * cart[k], 0);
+    const orderId = 'ORD-' + Date.now().toString().slice(-8);
+    const today = new Date();
+    const ds = `${today.getFullYear()}.${String(today.getMonth()+1).padStart(2,'0')}.${String(today.getDate()).padStart(2,'0')}`;
+    function addBusinessDays(date, days) {
+      let d = new Date(date); let added = 0;
+      while (added < days) { d.setDate(d.getDate() + 1); if (d.getDay() !== 0 && d.getDay() !== 6) added++; }
+      return d;
+    }
+    const now = new Date(); const cutoff = new Date(now); cutoff.setHours(14, 0, 0, 0);
+    const daysToAdd = (now.getDay() === 0 || now.getDay() === 6) ? 2 : (now < cutoff ? 1 : 2);
+    const arrivalDate = addBusinessDays(now, daysToAdd);
+    const arrival = `${arrivalDate.getFullYear()}.${String(arrivalDate.getMonth()+1).padStart(2,'0')}.${String(arrivalDate.getDate()).padStart(2,'0')}`;
+    const orderData = {
+      orderId, date: ds, arrival,
+      branch: '빌드업 피트니스 성수 지점', branchSub: '서울 성동구 성수동',
+      items: keys.map(k => ({ key: k, name: NAME[typeOf(k)], variant: variantOf(k), spec: SPEC[typeOf(k)], qty: cart[k], price: PRICE[typeOf(k)] * cart[k] })),
+      total
+    };
+    localStorage.setItem('vrinkOrder', JSON.stringify(orderData));
+    document.getElementById('payModal').style.display = 'none';
+
+    const firstItem = keys[0];
+    const orderName = keys.length === 1 ? `${NAME[typeOf(firstItem)]} ${variantOf(firstItem)}` : `${NAME[typeOf(firstItem)]} ${variantOf(firstItem)} 외 ${keys.length - 1}건`;
+
+    tossPayments.requestPayment('카드', {
+      amount: total,
+      orderId: orderId,
+      orderName: orderName,
+      customerName: name,
+      successUrl: 'https://weemiles.github.io/vrink-shop/vrink-order-confirm.html',
+      failUrl: 'https://weemiles.github.io/vrink-shop/index.html'
+    });
+  });
 </script>
+
+<!-- 결제 정보 입력 모달 -->
+<div id="payModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:20px;padding:32px 28px;width:340px;box-shadow:0 8px 40px rgba(0,0,0,.15);">
+    <div style="font-size:17px;font-weight:700;color:#111;margin-bottom:6px;">결제 정보 입력</div>
+    <div style="font-size:13px;color:#767676;margin-bottom:24px;">주문자 정보를 입력해주세요.</div>
+    <div style="margin-bottom:14px;">
+      <label style="font-size:12px;font-weight:500;color:#505050;display:block;margin-bottom:6px;">이름</label>
+      <input id="payName" type="text" placeholder="홍길동" style="width:100%;height:42px;border:1px solid #E5E7EB;border-radius:8px;padding:0 12px;font-size:14px;outline:none;font-family:inherit;" onfocus="this.style.borderColor='#0095FF'" onblur="this.style.borderColor='#E5E7EB'">
+    </div>
+    <div style="margin-bottom:28px;">
+      <label style="font-size:12px;font-weight:500;color:#505050;display:block;margin-bottom:6px;">연락처</label>
+      <input id="payPhone" type="tel" placeholder="010-0000-0000" style="width:100%;height:42px;border:1px solid #E5E7EB;border-radius:8px;padding:0 12px;font-size:14px;outline:none;font-family:inherit;" onfocus="this.style.borderColor='#0095FF'" onblur="this.style.borderColor='#E5E7EB'">
+    </div>
+    <div style="display:flex;gap:10px;">
+      <button id="payCancelBtn" style="flex:1;height:44px;border:1px solid #E5E7EB;border-radius:10px;background:#fff;font-size:14px;font-weight:500;color:#505050;cursor:pointer;">취소</button>
+      <button id="payConfirmBtn" style="flex:2;height:44px;border:none;border-radius:10px;background:#0095FF;font-size:14px;font-weight:600;color:#fff;cursor:pointer;">결제하기</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>

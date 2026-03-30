@@ -355,53 +355,34 @@ body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; co
       </div>
     </div>
 
-    <!-- 메뉴 선택 비중 -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
-
-      <!-- 기능샷 - 가로 배치 (차트 좌 + 범례 우) -->
-      <div class="donut-card">
-        <div class="chart-card-header" style="margin-bottom:20px;">
-          <div>
-            <div class="chart-card-title">기능샷 선택 비중</div>
-            <div class="chart-card-sub">전체 주문 기준</div>
-          </div>
+    <!-- 옵션 선택 비중 -->
+    <div class="donut-card" style="margin-bottom:20px;">
+      <div class="chart-card-header" style="margin-bottom:20px;">
+        <div>
+          <div class="chart-card-title">옵션 선택 비중</div>
+          <div class="chart-card-sub" id="optionSubtitle">전체 주문 기준 · 최근 하루</div>
         </div>
-        <div class="donut-inner">
-          <div class="donut-canvas-wrap">
-            <canvas id="donutChartFunc"></canvas>
-          </div>
-          <div class="donut-legend">
-            <div class="legend-item"><span class="legend-dot" style="background:#0095FF;"></span><span class="legend-text">릴렉스샷</span><span class="legend-count">31건</span></div>
-            <div class="legend-item"><span class="legend-dot" style="background:#00E096;"></span><span class="legend-text">아미노샷</span><span class="legend-count">24건</span></div>
-            <div class="legend-item"><span class="legend-dot" style="background:#9B8AFB;"></span><span class="legend-text">릴렉스샷</span><span class="legend-count">19건</span></div>
-            <div class="legend-item"><span class="legend-dot" style="background:#EC3D3D;"></span><span class="legend-text">컷팅샷</span><span class="legend-count">17건</span></div>
-            <div class="legend-item"><span class="legend-dot" style="background:#38BDF8;"></span><span class="legend-text">부스터샷</span><span class="legend-count">17건</span></div>
-          </div>
+        <div style="display:flex;gap:8px;">
+          <select id="optionCatSel" onchange="updateOptionChart()" style="font-size:12px;padding:5px 10px;border:1px solid #EDF2F6;border-radius:8px;color:#505050;background:#fff;cursor:pointer;outline:none;">
+            <option value="func">기능샷</option>
+            <option value="flavor">맛샷</option>
+            <option value="strength">농도</option>
+            <option value="carbonation">탄산옵션</option>
+          </select>
+          <select id="optionPeriodSel" onchange="updateOptionChart()" style="font-size:12px;padding:5px 10px;border:1px solid #EDF2F6;border-radius:8px;color:#505050;background:#fff;cursor:pointer;outline:none;">
+            <option value="day">하루</option>
+            <option value="week">일주일</option>
+            <option value="month">월</option>
+            <option value="year">년</option>
+          </select>
         </div>
       </div>
-
-      <!-- 맛샷 - 기능샷과 동일한 가로 배치 -->
-      <div class="donut-card">
-        <div class="chart-card-header" style="margin-bottom:20px;">
-          <div>
-            <div class="chart-card-title">맛샷 선택 비중</div>
-            <div class="chart-card-sub">전체 주문 기준</div>
-          </div>
+      <div class="donut-inner">
+        <div class="donut-canvas-wrap">
+          <canvas id="donutChartOption"></canvas>
         </div>
-        <div class="donut-inner">
-          <div class="donut-canvas-wrap">
-            <canvas id="donutChartFlavor"></canvas>
-          </div>
-          <div class="donut-legend">
-            <div class="legend-item"><span class="legend-dot" style="background:#FFB347;"></span><span class="legend-text">레몬</span><span class="legend-count">28건</span></div>
-            <div class="legend-item"><span class="legend-dot" style="background:#6DCE9E;"></span><span class="legend-text">청포도</span><span class="legend-count">22건</span></div>
-            <div class="legend-item"><span class="legend-dot" style="background:#FF6B6B;"></span><span class="legend-text">사과</span><span class="legend-count">19건</span></div>
-            <div class="legend-item"><span class="legend-dot" style="background:#C380F0;"></span><span class="legend-text">체리</span><span class="legend-count">15건</span></div>
-            <div class="legend-item"><span class="legend-dot" style="background:#38BDF8;"></span><span class="legend-text">망고</span><span class="legend-count">12건</span></div>
-          </div>
-        </div>
+        <div class="donut-legend" id="optionLegend"></div>
       </div>
-
     </div>
   </div>
 </div>
@@ -483,53 +464,63 @@ new Chart(lineCtx, {
   }
 });
 
-// 기능샷 도넛 차트
-const donutFuncCtx = document.getElementById('donutChartFunc').getContext('2d');
-new Chart(donutFuncCtx, {
-  type: 'doughnut',
-  data: {
-    labels: ['릴렉스샷', '아미노샷', '릴렉스샷', '컷팅샷', '부스터샷'],
-    datasets: [{
-      data: [31, 24, 19, 17, 17],
-      backgroundColor: ['#0095FF', '#00E096', '#9B8AFB', '#EC3D3D', '#38BDF8'],
-      borderWidth: 0,
-      hoverOffset: 6
-    }]
+// 옵션 선택 비중 - 단일 도넛 차트
+const OPTION_DATA = {
+  func: {
+    labels: ['릴렉스샷', '아미노샷', '비타민샷', '컷팅샷', '부스터샷'],
+    data: [31, 24, 19, 17, 17],
+    colors: ['#0095FF', '#00E096', '#9B8AFB', '#EC3D3D', '#38BDF8']
   },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    cutout: '68%',
-    plugins: {
-      legend: { display: false },
-      tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw}건` } }
-    }
-  }
-});
-
-// 맛샷 도넛 차트
-const donutFlavorCtx = document.getElementById('donutChartFlavor').getContext('2d');
-new Chart(donutFlavorCtx, {
-  type: 'doughnut',
-  data: {
+  flavor: {
     labels: ['레몬', '청포도', '사과', '체리', '망고'],
-    datasets: [{
-      data: [28, 22, 19, 15, 12],
-      backgroundColor: ['#FFB347', '#6DCE9E', '#FF6B6B', '#C380F0', '#38BDF8'],
-      borderWidth: 0,
-      hoverOffset: 6
-    }]
+    data: [28, 22, 19, 15, 12],
+    colors: ['#FFB347', '#6DCE9E', '#FF6B6B', '#C380F0', '#38BDF8']
+  },
+  strength: {
+    labels: ['보통', '진하게', '연하게'],
+    data: [52, 31, 17],
+    colors: ['#0095FF', '#00E096', '#9B8AFB']
+  },
+  carbonation: {
+    labels: ['탄산', '무탄산'],
+    data: [64, 36],
+    colors: ['#0095FF', '#9B8AFB']
+  }
+};
+const PERIOD_LABELS = { day: '최근 하루', week: '최근 일주일', month: '이번 달', year: '올해' };
+
+function renderOptionLegend(cat) {
+  const d = OPTION_DATA[cat];
+  document.getElementById('optionLegend').innerHTML = d.labels.map((lbl, i) =>
+    `<div class="legend-item"><span class="legend-dot" style="background:${d.colors[i]};"></span><span class="legend-text">${lbl}</span><span class="legend-count">${d.data[i]}건</span></div>`
+  ).join('');
+}
+
+const optionDonutCtx = document.getElementById('donutChartOption').getContext('2d');
+const optionChart = new Chart(optionDonutCtx, {
+  type: 'doughnut',
+  data: {
+    labels: OPTION_DATA.func.labels,
+    datasets: [{ data: OPTION_DATA.func.data, backgroundColor: OPTION_DATA.func.colors, borderWidth: 0, hoverOffset: 6 }]
   },
   options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    cutout: '68%',
-    plugins: {
-      legend: { display: false },
-      tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw}건` } }
-    }
+    responsive: true, maintainAspectRatio: false, cutout: '68%',
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw}건` } } }
   }
 });
+renderOptionLegend('func');
+
+function updateOptionChart() {
+  const cat = document.getElementById('optionCatSel').value;
+  const period = document.getElementById('optionPeriodSel').value;
+  const d = OPTION_DATA[cat];
+  optionChart.data.labels = d.labels;
+  optionChart.data.datasets[0].data = d.data;
+  optionChart.data.datasets[0].backgroundColor = d.colors;
+  optionChart.update();
+  renderOptionLegend(cat);
+  document.getElementById('optionSubtitle').textContent = '전체 주문 기준 · ' + PERIOD_LABELS[period];
+}
 </script>
 <script>
 function toggleGroup(el) {
