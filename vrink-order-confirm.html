@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>주문 완료 — VRINK 관리자</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --cta:    #66A6FF;
+      --cta-h:  #4d93f5;
+      --red:    #ec3d3d;
+      --text:   #111111;
+      --sub:    #505050;
+      --muted:  #888;
+      --bg:     #f8f8fa;
+      --border: #ebebeb;
+    }
+
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: #f5f6fa;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+      color: var(--text);
+    }
+
+    /* ═══════════════ SIDEBAR ═══════════════ */
+    .sidebar {
+      width: 256px; min-width: 256px; height: 100vh;
+      background: #fff; border-right: 1px solid rgba(0,0,0,0.08);
+      display: flex; flex-direction: column;
+      padding: 24px; gap: 20px;
+    }
+    .logo { display: flex; align-items: center; gap: 8px; height: 28px; }
+    .logo-mark {
+      width: 28px; height: 28px; background: var(--red);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .logo-mark svg { width: 14px; height: 14px; }
+    .logo-text { font-family: 'Poppins', sans-serif; font-size: 17px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
+    .divider { height: 2px; background: #f6f6f6; border-radius: 2px; flex-shrink: 0; }
+    .nav { display: flex; flex-direction: column; gap: 2px; }
+    .nav-lbl-sm { font-size: 10px; font-weight: 600; letter-spacing: .5px; text-transform: uppercase; color: var(--muted); padding: 6px 12px 4px; }
+    .nav-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 12px; border-radius: 8px; cursor: pointer; text-decoration: none;
+      transition: background .15s;
+    }
+    .nav-item:hover { background: #f6f6f6; }
+    .nav-item.shop-active { background: #eff6ff; }
+    .nav-item.shop-active .nav-name { color: var(--cta); font-weight: 700; }
+    .nav-item.logout .nav-name { color: var(--red); }
+    .nav-icon { width: 20px; height: 20px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+    .nav-name { flex: 1; font-size: 14px; font-weight: 500; letter-spacing: -0.28px; color: var(--muted); line-height: 20px; }
+    .nav-chev { width: 16px; height: 16px; flex-shrink: 0; color: #ccc; }
+
+    /* ═══════════════ MAIN ═══════════════ */
+    .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+    .header {
+      height: 64px; background: #fff; border-bottom: 1px solid #f0f0f0;
+      display: flex; align-items: center; justify-content: flex-end;
+      padding: 0 36px; gap: 20px; flex-shrink: 0;
+    }
+    .hdr-notif { position: relative; cursor: pointer; width: 24px; height: 28px; }
+    .hdr-badge {
+      position: absolute; top: -1px; right: -3px;
+      width: 16px; height: 16px; background: var(--red); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Poppins', sans-serif; font-size: 10px; font-weight: 700; color: #fff;
+    }
+    .hdr-branch { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+    .hdr-branch span { font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 600; color: #646464; }
+    .hdr-user { display: flex; align-items: center; gap: 10px; }
+    .hdr-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: linear-gradient(135deg,#667eea,#764ba2);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 13px; color: #fff;
+    }
+    .hdr-info { display: flex; flex-direction: column; }
+    .hdr-name { font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.3; }
+    .hdr-role { font-family: 'Poppins', sans-serif; font-size: 12px; font-weight: 500; color: #565656; }
+
+    /* ═══════════════ CONTENT ═══════════════ */
+    .content { flex: 1; overflow-y: auto; background: #fff; display: flex; align-items: flex-start; justify-content: center; }
+
+    /* ═══════════════ CONFIRM CARD ═══════════════ */
+    .confirm-wrap {
+      width: 100%; max-width: 480px;
+      padding: 40px 20px;
+      margin: 0 auto;
+    }
+
+    /* 체크 아이콘 — 초록 채운 원 + 흰 체크 */
+    .check-circle {
+      width: 60px; height: 60px; border-radius: 50%;
+      background: #22c55e;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 22px;
+    }
+    .check-circle svg { width: 28px; height: 28px; }
+
+    .confirm-title {
+      font-size: 20px; font-weight: 700; color: var(--text);
+      text-align: center; margin-bottom: 6px;
+    }
+    .confirm-sub {
+      font-size: 13px; color: var(--muted);
+      text-align: center; margin-bottom: 32px; line-height: 1.7;
+    }
+
+    /* 주문 정보 카드 */
+    .order-card {
+      border: 1px solid var(--border);
+      border-radius: 10px; overflow: hidden; margin-bottom: 12px;
+    }
+    .order-card-head {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .order-card-head-lbl { font-size: 12px; font-weight: 600; color: var(--muted); }
+    .order-meta { display: flex; align-items: center; gap: 10px; }
+    .order-date { font-family: 'Poppins', sans-serif; font-size: 12px; color: var(--muted); }
+    .order-id { font-family: 'Poppins', sans-serif; font-size: 12px; font-weight: 600; color: var(--sub); }
+
+    .order-items { padding: 0 18px; }
+    .order-item-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 0; border-bottom: 1px solid #f4f4f4; gap: 12px;
+    }
+    .order-item-row:last-child { border-bottom: none; }
+    .oi-info { flex: 1; }
+    .oi-name { font-size: 14px; font-weight: 600; color: var(--text); }
+    .oi-spec { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .oi-qty { font-family: 'Poppins', sans-serif; font-size: 13px; color: var(--muted); }
+    .oi-price { font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 700; color: var(--text); white-space: nowrap; }
+
+    /* 합계 */
+    .order-total-wrap {
+      border: 1px solid var(--border);
+      border-radius: 10px; padding: 16px 18px; margin-bottom: 20px;
+    }
+    .total-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .total-row:last-child { margin-bottom: 0; }
+    .total-lbl { font-size: 13px; color: var(--muted); }
+    .total-val { font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 500; color: var(--sub); }
+    .total-divider { height: 1px; background: var(--border); margin: 10px 0; }
+    .total-lbl-big { font-size: 14px; font-weight: 700; color: var(--text); }
+    .total-val-big { font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: bold; color: var(--cta); }
+
+    /* 배송 안내 */
+    .delivery-card {
+      border: 1px solid var(--border);
+      border-radius: 10px; padding: 16px 18px; margin-bottom: 24px;
+    }
+    .delivery-title { font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 6px; letter-spacing: .2px; text-transform: uppercase; }
+    .delivery-desc { font-size: 13px; color: var(--sub); line-height: 1.9; }
+
+    /* 버튼 */
+    .btn-group { display: flex; gap: 10px; }
+    .btn-back {
+      flex: 1; padding: 13px;
+      background: #fff; color: var(--sub); border: 1px solid var(--border);
+      border-radius: 8px; font-family: 'Noto Sans KR', sans-serif;
+      font-size: 14px; font-weight: 600; cursor: pointer; text-align: center;
+      transition: background .15s; text-decoration: none;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .btn-back:hover { background: var(--bg); }
+    .btn-history {
+      flex: 1; padding: 13px;
+      background: var(--cta); color: #fff; border: none;
+      border-radius: 8px; font-family: 'Noto Sans KR', sans-serif;
+      font-size: 14px; font-weight: 700; cursor: pointer;
+      transition: background .15s;
+    }
+    .btn-history:hover { background: var(--cta-h); }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════ SIDEBAR ═══════════════ -->
+<nav class="sidebar">
+  <div class="logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 14 14" fill="none">
+        <path d="M7 1l1.5 4h4.5L9.5 8l1.5 4-4-3-4 3 1.5-4-3.5-3H5.5L7 1z" fill="#fff" stroke="#fff" stroke-width=".5" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <span class="logo-text">vrink</span>
+  </div>
+  <div class="divider"></div>
+  <div class="nav">
+    <a class="nav-item" href="#">
+      <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2.5 8.5L10 3l7.5 5.5V17a1 1 0 01-1 1H13v-5H7v5H3.5a1 1 0 01-1-1V8.5z" stroke="#888" stroke-width="1.5" stroke-linejoin="round"/></svg></span>
+      <span class="nav-name">홈</span>
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="14" height="14" rx="2" stroke="#888" stroke-width="1.5"/><path d="M3 8h14M8 8v9" stroke="#888" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+      <span class="nav-name">지점 관리</span>
+      <svg class="nav-chev" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><polyline points="2,15 6,9 10,12 14,6 18,10" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span class="nav-name">매출</span>
+      <svg class="nav-chev" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7.5" r="3" stroke="#888" stroke-width="1.5"/><path d="M3.5 17c0-3.5 3-5.5 6.5-5.5s6.5 2 6.5 5.5" stroke="#888" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+      <span class="nav-name">회원</span>
+      <svg class="nav-chev" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <a class="nav-item shop-active" href="vrink-shop.html">
+      <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2 4h16l-1.5 9H3.5L2 4z" stroke="#66A6FF" stroke-width="1.5" stroke-linejoin="round"/><circle cx="7" cy="16.5" r="1.5" stroke="#66A6FF" stroke-width="1.5"/><circle cx="13" cy="16.5" r="1.5" stroke="#66A6FF" stroke-width="1.5"/></svg></span>
+      <span class="nav-name">자사몰</span>
+    </a>
+  </div>
+  <div class="divider"></div>
+  <div class="nav" style="flex:1">
+    <span class="nav-lbl-sm">Settings</span>
+    <a class="nav-item" href="#">
+      <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2.5" stroke="#888" stroke-width="1.5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2M5.05 5.05l1.41 1.41M13.54 13.54l1.41 1.41M5.05 14.95l1.41-1.41M13.54 6.46l1.41-1.41" stroke="#888" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+      <span class="nav-name">설정</span>
+      <svg class="nav-chev" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+  <div class="nav">
+    <a class="nav-item" href="#">
+      <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7.5" stroke="#888" stroke-width="1.5"/><path d="M10 9v5M10 7.5v.5" stroke="#888" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+      <span class="nav-name">도움말</span>
+    </a>
+    <a class="nav-item logout" href="#">
+      <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13 13l4-4-4-4M17 9.5H8" stroke="#ec3d3d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 17H4.5A1.5 1.5 0 013 15.5v-11A1.5 1.5 0 014.5 3H10" stroke="#ec3d3d" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+      <span class="nav-name">로그아웃</span>
+    </a>
+  </div>
+</nav>
+
+<!-- ═══════════════ MAIN ═══════════════ -->
+<div class="main">
+  <header class="header">
+    <div class="hdr-notif">
+      <svg width="22" height="26" viewBox="0 0 22 26" fill="none">
+        <path d="M11 2A7 7 0 004 9v8l-2 2.5h18L18 17V9a7 7 0 00-7-7z" stroke="#505050" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M9 22a2 2 0 004 0" stroke="#505050" stroke-width="1.5"/>
+      </svg>
+      <div class="hdr-badge">6</div>
+    </div>
+    <div class="hdr-branch">
+      <span>빌드업 피트니스 성수 지점</span>
+      <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="#646464" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="hdr-user">
+      <div class="hdr-avatar">총</div>
+      <div class="hdr-info">
+        <span class="hdr-name">총 관리자계정</span>
+        <span class="hdr-role">Admin</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="content">
+    <div class="confirm-wrap">
+
+      <!-- 체크 아이콘 -->
+      <div class="check-circle">
+        <svg viewBox="0 0 28 28" fill="none">
+          <path d="M6 14l6 6 10-12" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <div class="confirm-title">주문이 완료되었습니다</div>
+      <div class="confirm-sub">주문 내용을 확인해 주세요.<br>평일 오후 2시 이전 주문은 당일 출고됩니다.</div>
+
+      <!-- 주문 상품 카드 -->
+      <div class="order-card">
+        <div class="order-card-head">
+          <span class="order-card-head-lbl">주문 상품</span>
+          <div class="order-meta">
+            <span class="order-date" id="orderDate">—</span>
+            <span class="order-id" id="orderId">—</span>
+          </div>
+        </div>
+        <div class="order-items" id="orderItemsWrap">
+          <!-- JS로 채워짐 -->
+        </div>
+      </div>
+
+      <!-- 배송 정보 카드 -->
+      <div class="order-card" style="margin-bottom:12px">
+        <div class="order-card-head">
+          <span class="order-card-head-lbl">배송지</span>
+          <span class="order-date" id="arrivalBadge" style="font-weight:600;color:var(--text)">—</span>
+        </div>
+        <div style="padding:14px 18px">
+          <div style="font-size:14px;font-weight:600;color:var(--text)" id="branchName">—</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:3px" id="branchSub">—</div>
+        </div>
+      </div>
+
+      <!-- 합계 -->
+      <div class="order-total-wrap">
+        <div class="total-row">
+          <span class="total-lbl">상품 합계</span>
+          <span class="total-val" id="totalSub">—</span>
+        </div>
+        <div class="total-row">
+          <span class="total-lbl">배송비</span>
+          <span class="total-val">무료 (냉장배송)</span>
+        </div>
+        <div class="total-divider"></div>
+        <div class="total-row">
+          <span class="total-lbl-big">총 결제금액</span>
+          <span class="total-val-big" id="totalFinal">—</span>
+        </div>
+      </div>
+
+      <!-- 배송 안내 -->
+      <div class="delivery-card">
+        <div class="delivery-title">배송 안내</div>
+        <div class="delivery-desc">
+          평일 오후 2시 이전 주문 → 당일 출고<br>
+          배송 기간 1–2 영업일 (냉장 2–8°C 유지)<br>
+          배송 시작 시 문자로 운송장 번호가 발송됩니다.
+        </div>
+      </div>
+
+      <!-- 버튼 -->
+      <div class="btn-group">
+        <a class="btn-back" href="vrink-shop.html">쇼핑 계속하기</a>
+        <button class="btn-history" onclick="goHistory()">주문 내역 확인</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  function fmt(n) { return n.toLocaleString('ko-KR') + '원'; }
+
+  const raw = localStorage.getItem('vrinkOrder');
+  if (raw) {
+    const order = JSON.parse(raw);
+
+    document.getElementById('orderId').textContent = order.orderId;
+    document.getElementById('orderDate').textContent = order.date;
+    document.getElementById('totalSub').textContent  = fmt(order.total);
+    document.getElementById('totalFinal').textContent = fmt(order.total);
+
+    if (order.arrival) {
+      document.getElementById('arrivalBadge').textContent = '도착 예정 ' + order.arrival;
+    }
+    if (order.branch) {
+      document.getElementById('branchName').textContent = order.branch;
+      document.getElementById('branchSub').textContent  = (order.branchSub || '') + ' · 냉장 배송 (2–8°C)';
+    }
+
+    const wrap = document.getElementById('orderItemsWrap');
+    wrap.innerHTML = order.items.map(item => `
+      <div class="order-item-row">
+        <div class="oi-info">
+          <div class="oi-name">${item.name}${item.variant ? ' · ' + item.variant : ''}</div>
+          <div class="oi-spec">${item.spec}</div>
+        </div>
+        <div class="oi-qty">${item.qty}개</div>
+        <div class="oi-price">${fmt(item.price)}</div>
+      </div>
+    `).join('');
+  }
+
+  function goHistory() {
+    window.location.href = 'vrink-shop.html#history';
+  }
+</script>
+</body>
+</html>
