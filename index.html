@@ -494,87 +494,8 @@
 </head>
 <body>
 
-<!-- ═══════════════ ADMIN SIDEBAR ═══════════════ -->
-<nav class="sidebar">
-  <div class="logo">
-    <img class="logo-img" src="vrink-logo.png" alt="VRINK">
-  </div>
-  <div class="divider"></div>
-  <div class="nav">
-    <a class="nav-item" href="#">
-      <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2.5 8.5L10 3l7.5 5.5V17a1 1 0 01-1 1H13v-5H7v5H3.5a1 1 0 01-1-1V8.5z" stroke="#888" stroke-width="1.5" stroke-linejoin="round"/></svg></span>
-      <span class="nav-name">홈</span>
-    </a>
-    <a class="nav-item" href="#">
-      <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="14" height="14" rx="2" stroke="#888" stroke-width="1.5"/><path d="M3 8h14M8 8v9" stroke="#888" stroke-width="1.5" stroke-linecap="round"/></svg></span>
-      <span class="nav-name">지점 관리</span>
-      <svg class="nav-chev" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </a>
-    <a class="nav-item" href="#">
-      <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><polyline points="2,15 6,9 10,12 14,6 18,10" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-      <span class="nav-name">매출</span>
-      <svg class="nav-chev" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </a>
-    <a class="nav-item" href="#">
-      <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7.5" r="3" stroke="#888" stroke-width="1.5"/><path d="M3.5 17c0-3.5 3-5.5 6.5-5.5s6.5 2 6.5 5.5" stroke="#888" stroke-width="1.5" stroke-linecap="round"/></svg></span>
-      <span class="nav-name">회원</span>
-      <svg class="nav-chev" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </a>
-    <a class="nav-item shop-active" href="#">
-      <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2 4h16l-1.5 9H3.5L2 4z" stroke="#66A6FF" stroke-width="1.5" stroke-linejoin="round"/><circle cx="7" cy="16.5" r="1.5" stroke="#66A6FF" stroke-width="1.5"/><circle cx="13" cy="16.5" r="1.5" stroke="#66A6FF" stroke-width="1.5"/></svg></span>
-      <span class="nav-name">자사몰</span>
-    </a>
-  </div>
-  <div class="divider"></div>
-  <div class="nav" style="flex:1">
-    <span class="nav-lbl-sm">Settings</span>
-    <a class="nav-item" href="#">
-      <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2.5" stroke="#888" stroke-width="1.5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2M5.05 5.05l1.41 1.41M13.54 13.54l1.41 1.41M5.05 14.95l1.41-1.41M13.54 6.46l1.41-1.41" stroke="#888" stroke-width="1.5" stroke-linecap="round"/></svg></span>
-      <span class="nav-name">설정</span>
-      <svg class="nav-chev" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </a>
-  </div>
-  <div class="nav">
-    <a class="nav-item" href="#">
-      <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7.5" stroke="#888" stroke-width="1.5"/><path d="M10 9v5M10 7.5v.5" stroke="#888" stroke-width="1.5" stroke-linecap="round"/></svg></span>
-      <span class="nav-name">도움말</span>
-    </a>
-    <a class="nav-item logout" href="#">
-      <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13 13l4-4-4-4M17 9.5H8" stroke="#ec3d3d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 17H4.5A1.5 1.5 0 013 15.5v-11A1.5 1.5 0 014.5 3H10" stroke="#ec3d3d" stroke-width="1.5" stroke-linecap="round"/></svg></span>
-      <span class="nav-name">로그아웃</span>
-    </a>
-  </div>
-</nav>
-
 <!-- ═══════════════ MAIN ═══════════════ -->
 <div class="main">
-
-  <!-- Header -->
-  <header class="header">
-    <div class="hdr-notif">
-      <svg width="22" height="26" viewBox="0 0 22 26" fill="none">
-        <path d="M11 2A7 7 0 004 9v8l-2 2.5h18L18 17V9a7 7 0 00-7-7z" stroke="#505050" stroke-width="1.5" stroke-linejoin="round"/>
-        <path d="M9 22a2 2 0 004 0" stroke="#505050" stroke-width="1.5"/>
-      </svg>
-      <div class="hdr-badge">6</div>
-    </div>
-    <div class="hdr-branch">
-      <span>빌드업 피트니스 성수 지점</span>
-      <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="#646464" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </div>
-    <div class="hdr-user">
-      <div class="hdr-avatar">총</div>
-      <div class="hdr-info">
-        <span class="hdr-name">총 관리자계정</span>
-        <span class="hdr-role">Admin</span>
-      </div>
-      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-        <circle cx="9" cy="4" r="1.5" fill="#565656"/>
-        <circle cx="9" cy="9" r="1.5" fill="#565656"/>
-        <circle cx="9" cy="14" r="1.5" fill="#565656"/>
-      </svg>
-    </div>
-  </header>
 
   <!-- Content -->
   <div class="content">
@@ -587,16 +508,16 @@
           <!-- 기능 샷 -->
           <div class="prod-card" data-type="func">
             <div class="prod-img-wrap">
-              <img class="prod-img" src="vrink-box-nobg.png" alt="VRINK 기능 샷 5L" />
+              <img class="prod-img" src="vrink-box.png" alt="VRINK 기능 샷 5L" />
             </div>
             <div class="prod-name">기능 샷 (Functional Shot) 5L<br>슬림 · 컨디션 · 부스터 · 스트레스 샷</div>
             <div class="prod-price">
               <span class="prod-price-num">198,000원</span>
-              <span class="prod-price-sub">/ 5L · 약 250잔</span>
+              <span class="prod-price-sub">/ 5L · 약 500잔</span>
             </div>
             <div class="prod-badges">
               <span class="prod-badge">5리터</span>
-              <span class="prod-badge">약 250잔</span>
+              <span class="prod-badge">약 500잔</span>
               <span class="prod-badge free">냉장 무료배송</span>
             </div>
             <div class="variant-section">
@@ -621,16 +542,16 @@
           <!-- 맛 샷 -->
           <div class="prod-card" data-type="flav">
             <div class="prod-img-wrap">
-              <img class="prod-img" src="vrink-box-nobg.png" alt="VRINK 맛 샷 5L" />
+              <img class="prod-img" src="vrink-box.png" alt="VRINK 맛 샷 5L" />
             </div>
             <div class="prod-name">맛 샷 (Flavor Shot) 5L<br>리커버리 · 에너지 · 클렌즈 샷</div>
             <div class="prod-price">
               <span class="prod-price-num">128,000원</span>
-              <span class="prod-price-sub">/ 5L · 약 500잔</span>
+              <span class="prod-price-sub">/ 5L · 약 250잔</span>
             </div>
             <div class="prod-badges">
               <span class="prod-badge">5리터</span>
-              <span class="prod-badge">약 500잔</span>
+              <span class="prod-badge">약 250잔</span>
               <span class="prod-badge free">냉장 무료배송</span>
             </div>
             <div class="variant-section">
@@ -725,10 +646,10 @@
                   <td>
                     <div class="stock-bar-row">
                       <div class="stn-bar-track">
-                        <div class="stn-bar-fill danger" style="width:32%"></div>
+                        <div class="stn-bar-fill danger" style="width:16%"></div>
                       </div>
                       <span class="stn-remaining">80잔</span>
-                      <span class="stn-total">/ 250</span>
+                      <span class="stn-total">/ 500</span>
                     </div>
                   </td>
                   <td><span class="stt-badge">재고 부족</span></td>
@@ -743,10 +664,10 @@
                   <td>
                     <div class="stock-bar-row">
                       <div class="stn-bar-track">
-                        <div class="stn-bar-fill warn" style="width:42%"></div>
+                        <div class="stn-bar-fill warn" style="width:84%"></div>
                       </div>
                       <span class="stn-remaining">210잔</span>
-                      <span class="stn-total">/ 500</span>
+                      <span class="stn-total">/ 250</span>
                     </div>
                   </td>
                   <td><span class="stt-badge">주의</span></td>
@@ -819,7 +740,7 @@
 <script>
   const PRICE = { func: 198000, flav: 128000 };
   const NAME  = { func: '기능 샷', flav: '맛 샷' };
-  const SPEC  = { func: '5L · 약 250잔', flav: '5L · 약 500잔' };
+  const SPEC  = { func: '5L · 약 500잔', flav: '5L · 약 250잔' };
 
   // cart 키: 'func_슬림', 'flav_리커버리' 등
   let cart = {};
