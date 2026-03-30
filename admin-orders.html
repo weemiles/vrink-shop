@@ -338,6 +338,49 @@ function toggleGroup(el) {
   var sub = el.nextElementSibling;
   if (sub) sub.classList.toggle('show');
 }
+
+(function() {
+  const PAGE_SIZE = 5;
+  let currentPage = 1;
+
+  function renderPage() {
+    var rows = Array.from(document.querySelectorAll('tbody tr'));
+    var totalPages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+    if (currentPage > totalPages) currentPage = totalPages;
+
+    rows.forEach(function(row, i) {
+      row.style.display = (i >= (currentPage-1)*PAGE_SIZE && i < currentPage*PAGE_SIZE) ? '' : 'none';
+    });
+
+    var pag = document.querySelector('.pagination');
+    if (!pag) return;
+    pag.innerHTML = '';
+
+    var prev = document.createElement('button');
+    prev.className = 'page-btn';
+    prev.textContent = '‹';
+    prev.onclick = function() { if (currentPage > 1) { currentPage--; renderPage(); } };
+    pag.appendChild(prev);
+
+    for (var p = 1; p <= totalPages; p++) {
+      (function(pg) {
+        var btn = document.createElement('button');
+        btn.className = 'page-btn' + (pg === currentPage ? ' active' : '');
+        btn.textContent = pg;
+        btn.onclick = function() { currentPage = pg; renderPage(); };
+        pag.appendChild(btn);
+      })(p);
+    }
+
+    var next = document.createElement('button');
+    next.className = 'page-btn';
+    next.textContent = '›';
+    next.onclick = function() { if (currentPage < totalPages) { currentPage++; renderPage(); } };
+    pag.appendChild(next);
+  }
+
+  renderPage();
+})();
 </script>
 <div class="modal-overlay" id="orderDetailModal">
   <div class="modal" style="width:600px">

@@ -79,11 +79,14 @@ body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; co
 .realtime-card { background: #fff; border-radius: 20px; box-shadow: 0px 4px 20px rgba(238,238,238,.5); padding: 20px 24px; }
 .realtime-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
 .realtime-header-title { font-size: 16px; font-weight: 500; color: #111111; }
-.realtime-items { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
-.realtime-item { padding: 12px 16px; text-align: center; border-right: 1px solid #EDF2F6; }
-.realtime-item:last-child { border-right: none; }
-.realtime-label { font-size: 11px; color: #767676; margin-bottom: 6px; }
-.realtime-val { font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 500; color: #111111; }
+.realtime-items { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.realtime-item { padding: 16px; background: #F8F9FA; border-radius: 12px; cursor: pointer; transition: background .15s; }
+.realtime-item:hover { background: #EDF2F6; }
+.realtime-label { font-size: 12px; color: #767676; margin-bottom: 8px; }
+.realtime-val { font-family: 'Poppins', sans-serif; font-size: 24px; font-weight: 700; color: #111111; margin-bottom: 8px; }
+.realtime-compare-lbl { font-size: 11px; color: #767676; display: block; margin-bottom: 2px; }
+.compare-pos { font-size: 12px; font-weight: 500; color: #EC3D3D; }
+.compare-neg { font-size: 12px; font-weight: 500; color: #0095FF; }
 
 .issue-card { background: #fff; border-radius: 20px; box-shadow: 0px 4px 20px rgba(238,238,238,.5); padding: 20px 24px; }
 .issue-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
@@ -231,25 +234,39 @@ body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; co
     <div class="top-row">
       <div class="realtime-card">
         <div class="realtime-header">
-          <span class="realtime-header-title">실시간 현황 표</span>
-          <span style="font-size:11px;color:#767676;">2026년 3월 29일 기준</span>
+          <div>
+            <span class="realtime-header-title">실시간 현황 표</span>
+            <div style="font-size:12px;color:#767676;margin-top:3px;">각 버튼을 클릭하면 더 자세한 현황을 볼 수 있습니다</div>
+          </div>
+          <button class="btn btn-outline" onclick="alert('엑셀 파일을 추출합니다.')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            액셀로 추출하기
+          </button>
         </div>
         <div class="realtime-items">
-          <div class="realtime-item">
-            <div class="realtime-label">총 회원수</div>
-            <div class="realtime-val">16</div>
+          <div class="realtime-item" onclick="location.href='admin-members.html'">
+            <div class="realtime-label">총 회원 수</div>
+            <div class="realtime-val">16명</div>
+            <span class="realtime-compare-lbl">새로 유입된 회원 수</span>
+            <span class="compare-neg">어제로부터 -2명</span>
           </div>
-          <div class="realtime-item">
-            <div class="realtime-label">오늘 주문</div>
-            <div class="realtime-val">0잔</div>
+          <div class="realtime-item" onclick="location.href='admin-orders.html'">
+            <div class="realtime-label">오늘 주문 건수</div>
+            <div class="realtime-val">1잔</div>
+            <span class="realtime-compare-lbl">잔수 비교</span>
+            <span class="compare-pos">어제보다 +1건</span>
           </div>
-          <div class="realtime-item">
+          <div class="realtime-item" onclick="location.href='admin-sales.html'">
             <div class="realtime-label">오늘 매출</div>
             <div class="realtime-val">0원</div>
+            <span class="realtime-compare-lbl">매출 비교</span>
+            <span class="compare-pos">매출이 없습니다</span>
           </div>
-          <div class="realtime-item">
+          <div class="realtime-item" onclick="location.href='admin-sales.html'">
             <div class="realtime-label">이번달 매출</div>
-            <div class="realtime-val" style="font-size:17px;">46,800원</div>
+            <div class="realtime-val">46,800원</div>
+            <span class="realtime-compare-lbl">매출 비교</span>
+            <span class="compare-pos">지난달보다 +46,800원</span>
           </div>
         </div>
       </div>
