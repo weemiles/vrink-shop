@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VRINK Admin - 대시보드</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; color: #111111; display: flex; height: 100vh; overflow: hidden; }
+
+.sidebar { width: 256px; min-width: 256px; height: 100vh; background: #fff; border-right: 1px solid rgba(0,0,0,.1); display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
+.sidebar-logo { padding: 20px 20px 16px; border-bottom: 1px solid #EDF2F6; }
+.sidebar-nav { flex: 1; padding: 12px 12px; display: flex; flex-direction: column; gap: 2px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; text-decoration: none; color: #505050; font-size: 14px; font-weight: 500; cursor: pointer; transition: background .15s; }
+.nav-item:hover { background: #F6F6F6; }
+.nav-item.active { background: #EFF6FF; color: #0095FF; font-weight: 600; }
+.nav-item.nav-logout { color: #EC3D3D; }
+.nav-icon { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.nav-label { flex: 1; }
+.nav-group { display: flex; flex-direction: column; }
+.nav-group-trigger { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; color: #505050; font-size: 14px; font-weight: 500; cursor: pointer; }
+.nav-group-trigger:hover { background: #F6F6F6; }
+.nav-group-trigger.open { color: #111111; font-weight: 600; }
+.nav-arrow { margin-left: auto; font-size: 10px; color: #767676; }
+.nav-sub { display: none; flex-direction: column; padding-left: 32px; gap: 1px; }
+.nav-sub.show { display: flex; }
+.nav-sub-item { padding: 7px 12px; border-radius: 6px; font-size: 13px; color: #505050; text-decoration: none; font-weight: 400; }
+.nav-sub-item:hover { background: #F6F6F6; color: #111111; }
+.nav-sub-item.active { color: #0095FF; font-weight: 600; background: #EFF6FF; }
+.sidebar-bottom { padding: 12px 12px 16px; border-top: 1px solid #EDF2F6; display: flex; flex-direction: column; gap: 2px; }
+.sidebar-section-title { font-size: 11px; font-weight: 600; color: #A098AE; letter-spacing: .91px; padding: 4px 12px 8px; text-transform: uppercase; }
+
+.main-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { height: 64px; background: #fff; border-bottom: 1px solid #EDF2F6; display: flex; align-items: center; justify-content: flex-end; padding: 0 24px; gap: 12px; flex-shrink: 0; }
+.topbar-btn { background: none; border: 1px solid #EDF2F6; border-radius: 8px; padding: 8px; cursor: pointer; position: relative; display: flex; align-items: center; justify-content: center; }
+.notif-badge { position: absolute; top: -4px; right: -4px; background: #0095FF; color: #fff; font-size: 10px; font-weight: 700; border-radius: 9999px; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; }
+.topbar-branch { background: none; border: 1px solid #EDF2F6; border-radius: 8px; padding: 7px 12px; font-size: 13px; font-weight: 500; cursor: pointer; color: #505050; }
+.topbar-user { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 8px; border-radius: 8px; }
+.topbar-user:hover { background: #F6F6F6; }
+.user-avatar { width: 32px; height: 32px; background: #EDF2F6; border-radius: 9999px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: #505050; }
+.user-info { display: flex; flex-direction: column; }
+.user-name { font-size: 13px; font-weight: 600; color: #111111; }
+.user-role { font-size: 11px; color: #767676; }
+
+.page-content { flex: 1; overflow-y: auto; padding: 28px 28px; }
+.page-title { font-size: 24px; font-weight: 700; color: #111111; margin-bottom: 20px; }
+
+.card { background: #fff; border-radius: 20px; box-shadow: 0px 4px 20px rgba(238,238,238,.5); padding: 20px 24px; }
+.card-title { font-size: 16px; font-weight: 600; color: #111111; margin-bottom: 4px; }
+.card-sub { font-size: 12px; color: #767676; }
+
+.stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+.stat-card { background: #fff; border-radius: 16px; box-shadow: 0px 4px 20px rgba(238,238,238,.5); padding: 18px 20px; }
+.stat-label { font-size: 12px; color: #767676; margin-bottom: 6px; }
+.stat-value { font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 700; color: #111111; margin-bottom: 6px; }
+.stat-change { font-size: 11px; color: #767676; }
+.stat-change.up { color: #0095FF; }
+.stat-change.down { color: #EC3D3D; }
+
+.badge { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+.badge-success { background: #E6FBF4; color: #00B377; }
+.badge-warning { background: #FEF6E6; color: #E0A830; }
+.badge-error { background: #FDE8E8; color: #D32F2F; }
+.badge-primary { background: #E6F4FF; color: #0077CC; }
+
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; }
+.btn-primary { background: #0095FF; color: #fff; }
+.btn-outline { background: #fff; color: #505050; border: 1px solid #EDF2F6; }
+.btn-danger { background: #EC3D3D; color: #fff; }
+.btn-sm { padding: 5px 10px; font-size: 12px; border-radius: 4px; }
+
+/* Dashboard specific */
+.top-row { display: grid; grid-template-columns: 1fr 320px; gap: 16px; margin-bottom: 20px; }
+.chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+.donut-row { display: grid; grid-template-columns: 1fr; margin-bottom: 20px; }
+
+.realtime-card { background: #fff; border-radius: 20px; box-shadow: 0px 4px 20px rgba(238,238,238,.5); padding: 20px 24px; }
+.realtime-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.realtime-header-title { font-size: 16px; font-weight: 600; color: #111111; }
+.realtime-items { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
+.realtime-item { padding: 12px 16px; text-align: center; border-right: 1px solid #EDF2F6; }
+.realtime-item:last-child { border-right: none; }
+.realtime-label { font-size: 11px; color: #767676; margin-bottom: 6px; }
+.realtime-val { font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 700; color: #111111; }
+
+.issue-card { background: #fff; border-radius: 20px; box-shadow: 0px 4px 20px rgba(238,238,238,.5); padding: 20px 24px; }
+.issue-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.issue-count { font-size: 28px; font-weight: 700; color: #EC3D3D; font-family: 'Poppins', sans-serif; }
+.issue-label { font-size: 12px; color: #EC3D3D; font-weight: 500; margin-bottom: 14px; }
+.issue-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.issue-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #F8F8FA; border-radius: 8px; }
+.issue-text { font-size: 13px; color: #111111; font-weight: 500; }
+.issue-btn { padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer; border: none; }
+.issue-resolve-btn { background: #0095FF; color: #fff; border: none; border-radius: 6px; padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer; width: 100%; }
+
+.chart-card { background: #fff; border-radius: 20px; box-shadow: 0px 4px 20px rgba(238,238,238,.5); padding: 20px 24px; }
+.chart-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.chart-card-title { font-size: 15px; font-weight: 600; color: #111111; }
+.chart-card-sub { font-size: 11px; color: #767676; }
+.chart-canvas-wrap { height: 180px; position: relative; }
+
+.donut-card { background: #fff; border-radius: 20px; box-shadow: 0px 4px 20px rgba(238,238,238,.5); padding: 20px 24px; }
+.donut-inner { display: flex; align-items: center; gap: 32px; }
+.donut-canvas-wrap { width: 180px; height: 180px; flex-shrink: 0; position: relative; }
+.donut-legend { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 24px; }
+.legend-item { display: flex; align-items: center; gap: 8px; }
+.legend-dot { width: 10px; height: 10px; border-radius: 9999px; flex-shrink: 0; }
+.legend-text { font-size: 12px; color: #505050; }
+.legend-count { font-size: 12px; font-weight: 600; color: #111111; margin-left: auto; }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <svg width="82" height="24" viewBox="0 0 82.1538 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="logoGrad" x1="1.59" y1="6.06" x2="22.18" y2="17.94" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#89F7FE"/><stop offset="1" stop-color="#66A6FF"/>
+        </linearGradient>
+      </defs>
+      <path d="M11.885 0.115C5.321 0.115 0 5.437 0 12C0 18.563 5.321 23.885 11.885 23.885C18.448 23.885 23.769 18.563 23.769 12C23.769 5.437 18.448 0.115 11.885 0.115ZM11.885 20.879C6.98 20.879 3.004 16.903 3.004 11.999C3.004 7.094 6.98 3.118 11.885 3.118C16.789 3.118 20.765 7.094 20.765 11.999C20.765 16.903 16.789 20.879 11.885 20.879Z" fill="url(#logoGrad)"/>
+      <path d="M32.247 20.422L27 8.655H30.262L33.827 17.483L37.383 8.655H40.645L35.408 20.422H32.247Z" fill="#111111"/>
+      <path d="M42.91 20.422V8.656H45.196V10.283L45.338 10.073C46.014 9.077 47.314 8.484 48.81 8.484C49.147 8.484 49.707 8.506 50.004 8.537L50.123 8.549V10.926L49.942 10.882C49.745 10.836 49.111 10.751 48.543 10.751C46.658 10.751 45.288 11.805 45.288 13.259V20.424H42.911L42.91 20.422Z" fill="#111111"/>
+      <path d="M52.553 20.423V8.656H54.931V20.423H52.553ZM53.424 7.065C52.462 7.065 51.68 6.284 51.68 5.325C51.68 4.366 52.462 3.576 53.424 3.576C54.386 3.576 55.168 4.36 55.168 5.325C55.168 6.29 54.386 7.065 53.424 7.065Z" fill="#111111"/>
+      <path d="M66.477 20.422V13.235C66.477 11.618 65.403 10.653 63.602 10.653C61.647 10.653 60.432 11.725 60.432 13.454V20.422H57.392V8.655H59.659V10.423L59.802 10.225C60.592 9.116 62.041 8.505 63.884 8.505C66.997 8.505 68.857 10.173 68.857 12.965V20.424H66.48L66.477 20.422Z" fill="#111111"/>
+      <path d="M79.445 20.421L74.677 15.256L73.455 16.253V20.421H70.413V4.253L73.455 3.594V13.582L79.15 8.654H82.816L76.945 13.723L83.169 20.421H79.445Z" fill="#111111"/>
+    </svg>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="admin-index.html" class="nav-item active">
+      <span class="nav-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" fill="currentColor"/><rect x="14" y="3" width="7" height="7" rx="1.5" fill="currentColor" opacity=".5"/><rect x="3" y="14" width="7" height="7" rx="1.5" fill="currentColor" opacity=".5"/><rect x="14" y="14" width="7" height="7" rx="1.5" fill="currentColor" opacity=".5"/></svg>
+      </span>
+      <span class="nav-label">홈</span>
+    </a>
+    <div class="nav-group">
+      <div class="nav-group-trigger open">
+        <span class="nav-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 21V7l9-4 9 4v14H3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><rect x="9" y="13" width="6" height="8" rx="1" fill="currentColor" opacity=".4"/></svg>
+        </span>
+        <span class="nav-label">지점 관리</span>
+        <span class="nav-arrow">▾</span>
+      </div>
+      <div class="nav-sub show">
+        <a href="admin-branch.html" class="nav-sub-item">지점 목록</a>
+        <a href="#" class="nav-sub-item">메뉴 관리</a>
+        <a href="#" class="nav-sub-item">옵션 관리</a>
+        <a href="#" class="nav-sub-item">영양성분 관리</a>
+        <a href="#" class="nav-sub-item">재고 관리</a>
+        <a href="admin-orders.html" class="nav-sub-item">주문 내역</a>
+        <a href="#" class="nav-sub-item">광고 영상</a>
+        <a href="#" class="nav-sub-item">추천 조합</a>
+      </div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-trigger">
+        <span class="nav-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 4h16v3H4V4zm0 5h10v3H4V9zm0 5h7v3H4v-3z" fill="currentColor" opacity=".6"/></svg>
+        </span>
+        <span class="nav-label">콘텐츠 관리</span>
+        <span class="nav-arrow">▾</span>
+      </div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-trigger open">
+        <span class="nav-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 20V14h4v6H4zm6 0V9h4v11h-4zm6 0V4h4v16h-4z" fill="currentColor" opacity=".7"/></svg>
+        </span>
+        <span class="nav-label">매출</span>
+        <span class="nav-arrow">▾</span>
+      </div>
+      <div class="nav-sub show">
+        <a href="admin-sales.html" class="nav-sub-item">종합 매출 표</a>
+        <a href="#" class="nav-sub-item">지점 매출 순위</a>
+      </div>
+    </div>
+    <a href="admin-members.html" class="nav-item">
+      <span class="nav-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" fill="currentColor" opacity=".7"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </span>
+      <span class="nav-label">회원</span>
+    </a>
+    <div class="nav-group">
+      <div class="nav-group-trigger">
+        <span class="nav-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" fill="currentColor"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5.636 5.636l2.121 2.121M16.243 16.243l2.121 2.121M5.636 18.364l2.121-2.121M16.243 7.757l2.121-2.121" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+        <span class="nav-label">시스템 관리</span>
+        <span class="nav-arrow">▾</span>
+      </div>
+    </div>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="sidebar-section-title">SETTINGS</div>
+    <a href="#" class="nav-item">
+      <span class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5.636 5.636l1.414 1.414M16.95 16.95l1.414 1.414M5.636 18.364l1.414-1.414M16.95 7.05l1.414-1.414" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </span>
+      <span class="nav-label">설정</span>
+    </a>
+    <a href="#" class="nav-item">
+      <span class="nav-icon" style="font-size:13px;font-weight:700;color:#767676;border:1.5px solid #767676;border-radius:50%;width:18px;height:18px;">?</span>
+      <span class="nav-label">도움말</span>
+    </a>
+    <a href="#" class="nav-item nav-logout">
+      <span class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <span class="nav-label">로그아웃</span>
+    </a>
+  </div>
+</aside>
+
+<div class="main-wrapper">
+  <header class="topbar">
+    <button class="topbar-btn notif-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" stroke="#505050" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="notif-badge">2</span>
+    </button>
+    <button class="topbar-branch">성수빌드업 ▾</button>
+    <div class="topbar-user">
+      <div class="user-avatar">A</div>
+      <div class="user-info">
+        <span class="user-name">admin</span>
+        <span class="user-role">관리자</span>
+      </div>
+      <button style="background:none;border:none;cursor:pointer;color:#767676;font-size:11px;">▾</button>
+    </div>
+  </header>
+
+  <div class="page-content">
+    <div class="page-title">대시보드</div>
+
+    <!-- 상단 2컬럼: 실시간 현황 + 이슈 -->
+    <div class="top-row">
+      <div class="realtime-card">
+        <div class="realtime-header">
+          <span class="realtime-header-title">실시간 현황 표</span>
+          <span style="font-size:11px;color:#767676;">2026년 3월 29일 기준</span>
+        </div>
+        <div class="realtime-items">
+          <div class="realtime-item">
+            <div class="realtime-label">총 회원수</div>
+            <div class="realtime-val">16</div>
+          </div>
+          <div class="realtime-item">
+            <div class="realtime-label">오늘 주문</div>
+            <div class="realtime-val">0잔</div>
+          </div>
+          <div class="realtime-item">
+            <div class="realtime-label">오늘 매출</div>
+            <div class="realtime-val">0원</div>
+          </div>
+          <div class="realtime-item">
+            <div class="realtime-label">이번달 매출</div>
+            <div class="realtime-val" style="font-size:17px;">46,800원</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="issue-card">
+        <div class="issue-header">
+          <span style="font-size:15px;font-weight:600;color:#111;">이슈 현황</span>
+        </div>
+        <div class="issue-count">3건</div>
+        <div class="issue-label">해결이 필요한 이슈가 있어요</div>
+        <div class="issue-list">
+          <div class="issue-item">
+            <span class="issue-text">딸기 재고 소진 예정</span>
+            <span class="badge badge-warning">재고</span>
+          </div>
+          <div class="issue-item">
+            <span class="issue-text">POS 네트워크 간헐적 끊김</span>
+            <span class="badge badge-error">장애</span>
+          </div>
+          <div class="issue-item">
+            <span class="issue-text">블렌더 1번 소음 발생</span>
+            <span class="badge badge-warning">장비</span>
+          </div>
+        </div>
+        <button class="issue-resolve-btn">이슈 해결하기</button>
+      </div>
+    </div>
+
+    <!-- 차트 2컬럼 -->
+    <div class="chart-row">
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">총 매출</div>
+            <div class="chart-card-sub">최근 7일 매출 현황</div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:#767676;"><span style="width:8px;height:8px;background:#0095FF;border-radius:2px;display:inline-block;"></span>단건</span>
+            <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:#767676;"><span style="width:8px;height:8px;background:#00E096;border-radius:2px;display:inline-block;"></span>구독</span>
+          </div>
+        </div>
+        <div class="chart-canvas-wrap">
+          <canvas id="salesBarChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">매출 추이 분석</div>
+            <div class="chart-card-sub">최근 7일 누적 매출</div>
+          </div>
+        </div>
+        <div class="chart-canvas-wrap">
+          <canvas id="salesLineChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- 메뉴 판매 비중 -->
+    <div class="donut-card">
+      <div class="chart-card-header" style="margin-bottom:20px;">
+        <div>
+          <div class="chart-card-title">메뉴 판매 비중</div>
+          <div class="chart-card-sub">전체 주문 기준</div>
+        </div>
+      </div>
+      <div class="donut-inner">
+        <div class="donut-canvas-wrap">
+          <canvas id="donutChart"></canvas>
+        </div>
+        <div class="donut-legend">
+          <div class="legend-item"><span class="legend-dot" style="background:#0095FF;"></span><span class="legend-text">릴렉스샷</span><span class="legend-count">31건</span></div>
+          <div class="legend-item"><span class="legend-dot" style="background:#00E096;"></span><span class="legend-text">아미노샷</span><span class="legend-count">24건</span></div>
+          <div class="legend-item"><span class="legend-dot" style="background:#F4BE5E;"></span><span class="legend-text">아미노샷🏋️</span><span class="legend-count">23건</span></div>
+          <div class="legend-item"><span class="legend-dot" style="background:#9B8AFB;"></span><span class="legend-text">릴렉스샷+</span><span class="legend-count">19건</span></div>
+          <div class="legend-item"><span class="legend-dot" style="background:#EC3D3D;"></span><span class="legend-text">컷팅샷</span><span class="legend-count">17건</span></div>
+          <div class="legend-item"><span class="legend-dot" style="background:#38BDF8;"></span><span class="legend-text">부스터샷</span><span class="legend-count">17건</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// 총 매출 Bar Chart
+const barCtx = document.getElementById('salesBarChart').getContext('2d');
+new Chart(barCtx, {
+  type: 'bar',
+  data: {
+    labels: ['3/23', '3/24', '3/25', '3/26', '3/27', '3/28', '3/29'],
+    datasets: [
+      {
+        label: '단건',
+        data: [7800, 3900, 11700, 15600, 7800, 3900, 0],
+        backgroundColor: '#0095FF',
+        borderRadius: 4,
+        barPercentage: 0.5,
+        categoryPercentage: 0.7
+      },
+      {
+        label: '구독',
+        data: [0, 0, 0, 0, 0, 0, 0],
+        backgroundColor: '#00E096',
+        borderRadius: 4,
+        barPercentage: 0.5,
+        categoryPercentage: 0.7
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 11 }, color: '#767676' } },
+      y: {
+        grid: { color: '#F0F0F0' },
+        ticks: {
+          font: { size: 11 }, color: '#767676',
+          callback: v => v >= 1000 ? (v/1000)+'K' : v
+        }
+      }
+    }
+  }
+});
+
+// 매출 추이 Line Chart
+const lineCtx = document.getElementById('salesLineChart').getContext('2d');
+new Chart(lineCtx, {
+  type: 'line',
+  data: {
+    labels: ['3/23', '3/24', '3/25', '3/26', '3/27', '3/28', '3/29'],
+    datasets: [{
+      label: '누적 매출',
+      data: [7800, 11700, 23400, 39000, 46800, 50700, 50700],
+      borderColor: '#0095FF',
+      backgroundColor: 'rgba(0,149,255,0.08)',
+      fill: true,
+      tension: 0.4,
+      pointBackgroundColor: '#0095FF',
+      pointRadius: 4
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 11 }, color: '#767676' } },
+      y: {
+        grid: { color: '#F0F0F0' },
+        ticks: {
+          font: { size: 11 }, color: '#767676',
+          callback: v => v >= 1000 ? (v/1000)+'K' : v
+        }
+      }
+    }
+  }
+});
+
+// 도넛 차트
+const donutCtx = document.getElementById('donutChart').getContext('2d');
+new Chart(donutCtx, {
+  type: 'doughnut',
+  data: {
+    labels: ['릴렉스샷', '아미노샷', '아미노샷🏋️', '릴렉스샷+', '컷팅샷', '부스터샷'],
+    datasets: [{
+      data: [31, 24, 23, 19, 17, 17],
+      backgroundColor: ['#0095FF', '#00E096', '#F4BE5E', '#9B8AFB', '#EC3D3D', '#38BDF8'],
+      borderWidth: 0,
+      hoverOffset: 6
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    cutout: '68%',
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` ${ctx.label}: ${ctx.raw}건`
+        }
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>
