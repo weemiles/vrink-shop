@@ -120,15 +120,15 @@
 
   /* ─── Notification data ──────────────────────────────── */
   const notifications = [
-    { type: 'warn', icon: '⚠️', msg: '강남점 디스펜서 #3 재고 부족 (잔여 12%)', time: '5분 전', unread: true },
-    { type: 'info', icon: '📦', msg: '성수빌드업 재고 입고 완료 (단백질 파우더 외 3종)', time: '23분 전', unread: true },
-    { type: 'err',  icon: '🔴', msg: '홍대점 키오스크 K-02 연결 끊김', time: '1시간 전', unread: false },
+    { type: 'warn', icon: '⚠️', msg: '빌드업 강남점 디스펜서 #3 재고 부족 (잔여 12%)', time: '5분 전', unread: true },
+    { type: 'info', icon: '📦', msg: '빌드업 성수점 재고 입고 완료 (단백질 파우더 외 3종)', time: '23분 전', unread: true },
+    { type: 'err',  icon: '🔴', msg: '빌드업 서대문점 키오스크 K-02 연결 끊김', time: '1시간 전', unread: false },
     { type: 'info', icon: '🛒', msg: '자사몰 신규 주문 7건 접수', time: '2시간 전', unread: false },
     { type: 'warn', icon: '🔔', msg: '사전예약 오픈 D-1 알림', time: '어제', unread: false },
   ];
 
   const branches = [
-    '성수빌드업', '강남점', '홍대점', '잠실점', '분당점', '인천점',
+    '빌드업 성수점', '빌드업 강남점', '빌드업 서대문점', '빌드업 잠실점', '빌드업 분당점', '빌드업 인천점',
   ];
 
   /* ─── Build notification dropdown HTML ─────────────── */
@@ -153,7 +153,7 @@
   }
 
   function buildBranchDrop() {
-    const current = document.querySelector('.topbar-branch')?.textContent?.replace('▾','').trim() || '성수빌드업';
+    const current = document.querySelector('.topbar-branch')?.textContent?.replace('▾','').trim() || '빌드업 성수점';
     const items = branches.map(b => `
       <div class="branch-item ${b === current ? 'selected' : ''}" onclick="selectBranch(this,'${b}')">
         <div class="branch-check"></div>${b}
