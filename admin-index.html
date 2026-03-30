@@ -354,34 +354,57 @@ body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; co
       </div>
     </div>
 
-    <!-- 옵션 선택 비중 -->
-    <div class="donut-card" style="margin-bottom:20px;">
-      <div class="chart-card-header" style="margin-bottom:20px;">
-        <div>
-          <div class="chart-card-title">옵션 선택 비중</div>
-          <div class="chart-card-sub" id="optionSubtitle">전체 주문 기준 · 최근 하루</div>
+    <!-- 하단 2열: 옵션 선택 비중 + 시간대별 주문 현황 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+
+      <!-- 옵션 선택 비중 -->
+      <div class="donut-card">
+        <div class="chart-card-header" style="margin-bottom:20px;">
+          <div>
+            <div class="chart-card-title">옵션 선택 비중</div>
+            <div class="chart-card-sub" id="optionSubtitle">전체 주문 기준 · 최근 하루</div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <select id="optionCatSel" onchange="updateOptionChart()" style="font-size:12px;padding:5px 10px;border:1px solid #EDF2F6;border-radius:8px;color:#505050;background:#fff;cursor:pointer;outline:none;">
+              <option value="func">기능샷</option>
+              <option value="flavor">맛샷</option>
+              <option value="strength">농도</option>
+              <option value="carbonation">탄산옵션</option>
+            </select>
+            <select id="optionPeriodSel" onchange="updateOptionChart()" style="font-size:12px;padding:5px 10px;border:1px solid #EDF2F6;border-radius:8px;color:#505050;background:#fff;cursor:pointer;outline:none;">
+              <option value="day">하루</option>
+              <option value="week">일주일</option>
+              <option value="month">월</option>
+              <option value="year">년</option>
+            </select>
+          </div>
         </div>
-        <div style="display:flex;gap:8px;">
-          <select id="optionCatSel" onchange="updateOptionChart()" style="font-size:12px;padding:5px 10px;border:1px solid #EDF2F6;border-radius:8px;color:#505050;background:#fff;cursor:pointer;outline:none;">
-            <option value="func">기능샷</option>
-            <option value="flavor">맛샷</option>
-            <option value="strength">농도</option>
-            <option value="carbonation">탄산옵션</option>
-          </select>
-          <select id="optionPeriodSel" onchange="updateOptionChart()" style="font-size:12px;padding:5px 10px;border:1px solid #EDF2F6;border-radius:8px;color:#505050;background:#fff;cursor:pointer;outline:none;">
-            <option value="day">하루</option>
-            <option value="week">일주일</option>
-            <option value="month">월</option>
-            <option value="year">년</option>
-          </select>
+        <div class="donut-inner">
+          <div class="donut-canvas-wrap">
+            <canvas id="donutChartOption"></canvas>
+          </div>
+          <div class="donut-legend" id="optionLegend"></div>
         </div>
       </div>
-      <div class="donut-inner">
-        <div class="donut-canvas-wrap">
-          <canvas id="donutChartOption"></canvas>
+
+      <!-- 시간대별 주문 현황 -->
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">시간대별 주문 현황</div>
+            <div class="chart-card-sub">오늘 기준 시간대별 주문 건수</div>
+          </div>
+          <select id="hourlyPeriodSel" onchange="updateHourlyChart()" style="font-size:12px;padding:5px 10px;border:1px solid #EDF2F6;border-radius:8px;color:#505050;background:#fff;cursor:pointer;outline:none;">
+            <option value="today">오늘</option>
+            <option value="week">이번 주 평균</option>
+            <option value="month">이번 달 평균</option>
+          </select>
         </div>
-        <div class="donut-legend" id="optionLegend"></div>
+        <div class="chart-canvas-wrap" style="height:200px;">
+          <canvas id="hourlyBarChart"></canvas>
+        </div>
       </div>
+
     </div>
   </div>
 </div>
@@ -519,6 +542,46 @@ function updateOptionChart() {
   optionChart.update();
   renderOptionLegend(cat);
   document.getElementById('optionSubtitle').textContent = '전체 주문 기준 · ' + PERIOD_LABELS[period];
+}
+
+// 시간대별 주문 현황
+const HOURLY_DATA = {
+  today: [0, 0, 1, 2, 12, 18, 14, 8, 5, 10, 8, 6, 4, 5, 9, 15, 20, 17, 12, 6, 3, 1, 0, 0],
+  week:  [0, 0, 1, 2,  9, 15, 12, 7, 5,  8, 7, 5, 4, 5, 8, 13, 17, 15, 11, 5, 2, 1, 0, 0],
+  month: [0, 0, 1, 1,  7, 12, 11, 6, 4,  7, 6, 5, 4, 4, 7, 12, 15, 13, 10, 4, 2, 1, 0, 0]
+};
+const HOURLY_LABELS = Array.from({length:24}, (_, i) => i + '시');
+const HOURLY_PERIOD_LABELS = { today: '오늘', week: '이번 주 평균', month: '이번 달 평균' };
+
+const hourlyCtx = document.getElementById('hourlyBarChart').getContext('2d');
+const hourlyChart = new Chart(hourlyCtx, {
+  type: 'bar',
+  data: {
+    labels: HOURLY_LABELS,
+    datasets: [{
+      data: HOURLY_DATA.today,
+      backgroundColor: HOURLY_DATA.today.map(v => v >= 15 ? '#0095FF' : '#D1E9FF'),
+      borderRadius: 4,
+      barPercentage: 0.7
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.raw}건` } } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 10 }, color: '#767676',
+        callback: (_, i) => (i % 3 === 0 ? HOURLY_LABELS[i] : '') } },
+      y: { grid: { color: '#F0F0F0' }, ticks: { font: { size: 11 }, color: '#767676' }, beginAtZero: true }
+    }
+  }
+});
+
+function updateHourlyChart() {
+  const period = document.getElementById('hourlyPeriodSel').value;
+  const d = HOURLY_DATA[period];
+  hourlyChart.data.datasets[0].data = d;
+  hourlyChart.data.datasets[0].backgroundColor = d.map(v => v >= 15 ? '#0095FF' : '#D1E9FF');
+  hourlyChart.update();
 }
 </script>
 <script>
