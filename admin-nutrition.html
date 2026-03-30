@@ -190,7 +190,7 @@ input[type="checkbox"] { width: 15px; height: 15px; accent-color: #0095FF; curso
       <div class="page-title" style="margin-bottom:0;">영양성분 관리</div>
       <div style="display:flex;gap:8px;">
         <button class="btn btn-outline" onclick="openModal('colManageModal')">컬럼 관리</button>
-        <button class="btn btn-primary" onclick="openModal('nutritionAddModal')">영양성분 등록</button>
+        <button class="btn btn-primary" onclick="openNutrAdd()">영양성분 등록</button>
       </div>
     </div>
     <div class="table-wrap" id="nutritionTableWrap"></div>
@@ -215,7 +215,7 @@ input[type="checkbox"] { width: 15px; height: 15px; accent-color: #0095FF; curso
 <script>
 function toggleGroup(el){el.classList.toggle('open');var s=el.nextElementSibling;if(s)s.classList.toggle('show');}
 
-var nutritionCols = [
+var _defaultCols = [
   {name:'칼로리', unit:'kcal'},
   {name:'탄수화물', unit:'g'},
   {name:'단백질', unit:'g'},
@@ -223,8 +223,7 @@ var nutritionCols = [
   {name:'나트륨', unit:'mg'},
   {name:'당류', unit:'g'}
 ];
-
-var nutritionData = [
+var _defaultData = [
   {menu:'부스터샷', vals:[45,8,2,0,12,6]},
   {menu:'비타민샷', vals:[30,7,1,0,8,5]},
   {menu:'컷팅샷',   vals:[25,5,1,0,10,3]},
@@ -232,6 +231,22 @@ var nutritionData = [
   {menu:'아미노샷', vals:[55,6,8,0,15,2]},
   {menu:'레몬수',   vals:[20,5,0,0,4,4]}
 ];
+
+function loadFromStorage() {
+  try {
+    var c = localStorage.getItem('vrink_nutr_cols');
+    var d = localStorage.getItem('vrink_nutr_data');
+    return { cols: c ? JSON.parse(c) : _defaultCols, data: d ? JSON.parse(d) : _defaultData };
+  } catch(e) { return { cols: _defaultCols, data: _defaultData }; }
+}
+function saveToStorage() {
+  localStorage.setItem('vrink_nutr_cols', JSON.stringify(nutritionCols));
+  localStorage.setItem('vrink_nutr_data', JSON.stringify(nutritionData));
+}
+
+var _loaded = loadFromStorage();
+var nutritionCols = _loaded.cols;
+var nutritionData = _loaded.data;
 
 function renderTable() {
   var th = '<th>메뉴명</th>' + nutritionCols.map(function(c,i){
@@ -242,7 +257,7 @@ function renderTable() {
     tds += nutritionCols.map(function(c,ci){
       return '<td>'+(row.vals[ci] !== undefined ? row.vals[ci] : 0)+' '+c.unit+'</td>';
     }).join('');
-    tds += '<td><button class="btn btn-outline btn-sm" onclick="openNutrEdit('+ri+')">수정</button></td>';
+    tds += '<td style="display:flex;gap:6px;"><button class="btn btn-outline btn-sm" onclick="openNutrEdit('+ri+')">수정</button><button class="btn btn-danger btn-sm" onclick="deleteNutrRow('+ri+')">삭제</button></td>';
     return '<tr>'+tds+'</tr>';
   }).join('');
   document.getElementById('nutritionTableWrap').innerHTML =
@@ -284,6 +299,7 @@ function openNutrEdit(ri) {
       }
     });
     renderTable();
+    saveToStorage();
     alert('수정되었습니다.');
     closeModal('nutritionEditModal');
   };
@@ -332,7 +348,46 @@ function saveColManage() {
     }
   });
   renderTable();
+  saveToStorage();
   closeModal('colManageModal');
+}
+
+function deleteNutrRow(ri) {
+  if (!confirm(nutritionData[ri].menu + ' 영양성분을 삭제하시겠습니까?')) return;
+  nutritionData.splice(ri, 1);
+  renderTable();
+  saveToStorage();
+}
+
+function openNutrAdd() {
+  var html = '<div class="form-group"><label class="form-label">메뉴명 *</label>'
+    + '<input class="form-input" id="nutrAddMenuName" placeholder="메뉴명 입력" /></div>'
+    + '<div class="modal-divider"></div>'
+    + '<div class="modal-section-title" style="margin-bottom:8px;">영양 정보</div>'
+    + '<div class="nutr-row-editor" id="nutrAddFields">'
+    + nutritionCols.map(function(c, ci) {
+        return '<div class="nutr-field-row">'
+          + '<span class="fn-name" style="width:90px;font-size:12px;color:#505050;padding:5px 0;">' + c.name + '</span>'
+          + '<input class="fn-val" type="number" value="0" data-col="' + ci + '" style="width:80px;padding:5px 8px;border:1px solid #E2E8F0;border-radius:6px;font-size:12px;outline:none;" />'
+          + '<span style="font-size:12px;color:#767676;">' + c.unit + '</span>'
+          + '</div>';
+      }).join('')
+    + '</div>';
+  document.getElementById('nutritionAddModal').querySelector('.modal-body').innerHTML = html;
+  document.getElementById('nutritionAddModal').querySelector('.modal-footer .btn-primary').onclick = function() {
+    var menuName = document.getElementById('nutrAddMenuName').value.trim();
+    if (!menuName) { alert('메뉴명을 입력하세요.'); return; }
+    var vals = [];
+    document.querySelectorAll('#nutrAddFields .fn-val').forEach(function(inp) {
+      vals.push(parseFloat(inp.value) || 0);
+    });
+    nutritionData.push({ menu: menuName, vals: vals });
+    renderTable();
+    saveToStorage();
+    alert('등록되었습니다.');
+    closeModal('nutritionAddModal');
+  };
+  openModal('nutritionAddModal');
 }
 
 document.addEventListener('DOMContentLoaded', function(){ renderTable(); });
