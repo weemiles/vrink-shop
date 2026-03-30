@@ -5,7 +5,7 @@
 <link rel="icon" type="image/png" href="logo_spinner.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>브링크 지점관리 - 자사몰</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Noto+Sans+KR:wght@400;500&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Noto+Sans+KR:wght@400;500&family=Poppins:wght@500&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; color: #111111; display: flex; height: 100vh; overflow: hidden; }
@@ -22,7 +22,8 @@ body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; co
 .nav-group-trigger { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; color: #505050; font-size: 14px; font-weight: 500; cursor: pointer; }
 .nav-group-trigger:hover { background: #F6F6F6; }
 .nav-group-trigger.open { color: #111111; font-weight: 500; }
-.nav-arrow { margin-left: auto; font-size: 10px; color: #767676; }
+.nav-arrow { margin-left: auto; font-size: 10px; color: #767676; transition: transform .2s; display: inline-block; }
+.nav-group-trigger.open .nav-arrow { transform: rotate(180deg); }
 .nav-sub { display: none; flex-direction: column; padding-left: 32px; gap: 1px; }
 .nav-sub.show { display: flex; }
 .nav-sub-item { padding: 7px 12px; border-radius: 6px; font-size: 13px; color: #505050; text-decoration: none; font-weight: 400; }
@@ -39,65 +40,9 @@ body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; co
 .user-avatar { width: 32px; height: 32px; background: #EDF2F6; border-radius: 9999px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; color: #505050; }
 .user-name { font-size: 13px; font-weight: 500; color: #111; }
 .user-role { font-size: 11px; color: #767676; }
-.page-content { flex: 1; overflow-y: auto; padding: 28px; }
-.page-title { font-size: 24px; font-weight: 500; color: #111; margin-bottom: 0; }
-.page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-.badge { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; }
-.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; text-decoration: none; }
-.btn-primary { background: #0095FF; color: #fff; }
-.btn-outline { background: #fff; color: #505050; border: 1px solid #EDF2F6; }
-.btn-sm { padding: 5px 10px; font-size: 12px; border-radius: 4px; }
 .user-info { display: flex; flex-direction: column; }
-.nav-group-trigger.open .nav-arrow { transform: rotate(180deg); }
-.nav-arrow { transition: transform .2s; display: inline-block; }
-
-/* Shop layout */
-.shop-layout { display: grid; grid-template-columns: 1fr 340px; gap: 24px; align-items: start; }
-.products-area { display: flex; flex-direction: column; gap: 0; }
-.product-card-shop { background: #fff; border-radius: 20px; box-shadow: 0 4px 20px rgba(238,238,238,.5); overflow: hidden; margin-bottom: 20px; }
-.product-img-wrap { background: #F8F8FA; height: 220px; display: flex; align-items: center; justify-content: center; padding: 24px; }
-.product-img-wrap img { max-width: 100%; max-height: 180px; object-fit: contain; }
-.product-info { padding: 20px 24px 24px; }
-.product-shop-name { font-size: 15px; font-weight: 500; color: #111; margin-bottom: 4px; }
-.product-shop-price { font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 600; color: #111; margin-bottom: 4px; }
-.product-shop-price span { font-size: 13px; font-weight: 400; color: #767676; margin-left: 6px; }
-.product-tags { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
-.product-tag { border: 1px solid #EDF2F6; border-radius: 6px; padding: 3px 10px; font-size: 12px; color: #505050; }
-.product-tag-blue { border-color: #0095FF; color: #0095FF; }
-.product-select-wrap { margin-bottom: 14px; }
-.product-select { width: 100%; height: 44px; border: 1px solid #EDF2F6; border-radius: 8px; padding: 0 12px; font-size: 13px; background: #fff; outline: none; color: #505050; }
-.product-select:focus { border-color: #0095FF; }
-.qty-row { display: flex; align-items: center; gap: 12px; }
-.qty-ctrl { display: flex; align-items: center; gap: 0; border: 1px solid #EDF2F6; border-radius: 8px; overflow: hidden; }
-.qty-btn { width: 36px; height: 36px; background: #fff; border: none; font-size: 18px; cursor: pointer; color: #505050; display: flex; align-items: center; justify-content: center; }
-.qty-btn:hover { background: #F6F6F6; }
-.qty-num { width: 40px; text-align: center; font-size: 14px; font-weight: 500; color: #111; border-left: 1px solid #EDF2F6; border-right: 1px solid #EDF2F6; height: 36px; line-height: 36px; }
-.add-cart-btn { flex: 1; height: 44px; background: #0095FF; color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; }
-.add-cart-btn:hover { background: #007DE0; }
-
-/* Cart panel */
-.cart-panel { background: #fff; border-radius: 20px; box-shadow: 0 4px 20px rgba(238,238,238,.5); display: flex; flex-direction: column; position: sticky; top: 0; max-height: calc(100vh - 128px); overflow: hidden; }
-.cart-header { padding: 20px 20px 16px; border-bottom: 1px solid #EDF2F6; display: flex; align-items: center; justify-content: space-between; }
-.cart-title { font-size: 15px; font-weight: 500; color: #111; }
-.cart-count { background: #0095FF; color: #fff; font-size: 11px; font-weight: 500; border-radius: 9999px; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; }
-.cart-empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 40px 20px; }
-.cart-empty-icon { color: #CCC; }
-.cart-empty-text { font-size: 14px; font-weight: 500; color: #767676; }
-.cart-empty-sub { font-size: 12px; color: #A0A0A0; }
-.cart-items { flex: 1; overflow-y: auto; padding: 12px 20px; display: flex; flex-direction: column; gap: 12px; }
-.cart-item { display: flex; align-items: flex-start; gap: 10px; padding: 12px; background: #F8F8FA; border-radius: 10px; }
-.cart-item-info { flex: 1; }
-.cart-item-name { font-size: 13px; font-weight: 500; color: #111; margin-bottom: 2px; }
-.cart-item-sub { font-size: 12px; color: #767676; }
-.cart-item-price { font-size: 13px; font-weight: 500; color: #111; white-space: nowrap; }
-.cart-item-remove { background: none; border: none; cursor: pointer; color: #A0A0A0; font-size: 14px; padding: 2px; }
-.cart-footer { padding: 16px 20px 20px; border-top: 1px solid #EDF2F6; }
-.cart-total-row { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 16px; }
-.cart-total-label { color: #505050; }
-.cart-total-price { font-weight: 600; color: #111; font-family: 'Poppins', sans-serif; font-size: 16px; }
-.order-btn { width: 100%; height: 46px; background: #0095FF; color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; }
-.order-btn:hover { background: #007DE0; }
-.order-btn:disabled { background: #EDF2F6; color: #A0A0A0; cursor: not-allowed; }
+.storefront-wrap { flex: 1; overflow: hidden; position: relative; }
+.storefront-wrap iframe { width: 100%; height: 100%; border: none; display: block; }
 </style>
 </head>
 <body>
@@ -176,172 +121,12 @@ body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; co
     </div>
   </header>
 
-  <div class="page-content">
-    <div class="page-header" style="margin-bottom:20px;">
-      <div class="page-title">자사몰</div>
-    </div>
-
-    <div class="shop-layout">
-      <!-- 상품 목록 -->
-      <div class="products-area">
-        <!-- 기능샷 -->
-        <div class="product-card-shop">
-          <div class="product-img-wrap">
-            <img src="vrink-box.png" alt="기능샷">
-          </div>
-          <div class="product-info">
-            <div class="product-shop-name">기능 샷 (Functional Shot) 5L</div>
-            <div class="product-shop-price">198,000원<span>/ 5L · 약 500잔</span></div>
-            <div class="product-tags">
-              <span class="product-tag">5리터</span>
-              <span class="product-tag">약 500잔</span>
-              <span class="product-tag product-tag-blue">냉장 무료배송</span>
-            </div>
-            <div class="product-select-wrap">
-              <select class="product-select" id="shotSelect">
-                <option value="">샷 선택</option>
-                <option value="부스터샷">부스터샷</option>
-                <option value="비타민샷">비타민샷</option>
-                <option value="컷팅샷">컷팅샷</option>
-                <option value="릴렉스샷">릴렉스샷</option>
-                <option value="아미노샷">아미노샷</option>
-              </select>
-            </div>
-            <div class="qty-row">
-              <div class="qty-ctrl">
-                <button class="qty-btn" onclick="changeQty('shot',-1)">−</button>
-                <div class="qty-num" id="shotQty">1</div>
-                <button class="qty-btn" onclick="changeQty('shot',1)">+</button>
-              </div>
-              <button class="add-cart-btn" onclick="addToCart('shot')">장바구니 담기</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- 맛샷 -->
-        <div class="product-card-shop">
-          <div class="product-img-wrap">
-            <img src="vrink-box.png" alt="맛샷">
-          </div>
-          <div class="product-info">
-            <div class="product-shop-name">맛 (Flavor Shot) 5L</div>
-            <div class="product-shop-price">128,000원<span>/ 5L · 약 200잔</span></div>
-            <div class="product-tags">
-              <span class="product-tag">5리터</span>
-              <span class="product-tag">약 200잔</span>
-              <span class="product-tag product-tag-blue">냉장 무료배송</span>
-            </div>
-            <div class="product-select-wrap">
-              <select class="product-select" id="flavorSelect">
-                <option value="">맛 선택</option>
-                <option value="레몬">레몬</option>
-                <option value="청포도">청포도</option>
-                <option value="사과">사과</option>
-                <option value="체리">체리</option>
-                <option value="망고">망고</option>
-              </select>
-            </div>
-            <div class="qty-row">
-              <div class="qty-ctrl">
-                <button class="qty-btn" onclick="changeQty('flavor',-1)">−</button>
-                <div class="qty-num" id="flavorQty">1</div>
-                <button class="qty-btn" onclick="changeQty('flavor',1)">+</button>
-              </div>
-              <button class="add-cart-btn" onclick="addToCart('flavor')">장바구니 담기</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 장바구니 패널 -->
-      <div class="cart-panel">
-        <div class="cart-header">
-          <span class="cart-title">주문 내역</span>
-          <span class="cart-count" id="cartCount">0</span>
-        </div>
-        <div id="cartEmpty" class="cart-empty">
-          <svg class="cart-empty-icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.98 1.61h9.72a2 2 0 001.98-1.61L23 6H6"/></svg>
-          <div class="cart-empty-text">장바구니가 비어있습니다</div>
-          <div class="cart-empty-sub">상품을 선택해 담아주세요</div>
-        </div>
-        <div id="cartItems" class="cart-items" style="display:none;"></div>
-        <div id="cartFooter" class="cart-footer" style="display:none;">
-          <div class="cart-total-row">
-            <span class="cart-total-label">합계</span>
-            <span class="cart-total-price" id="cartTotal">0원</span>
-          </div>
-          <button class="order-btn" onclick="placeOrder()">주문하기</button>
-        </div>
-      </div>
-    </div>
+  <div class="storefront-wrap">
+    <iframe src="../index.html" title="VRINK 자사몰"></iframe>
   </div>
 </div>
 
 <script>
-var cart = [];
-var qtyMap = { shot: 1, flavor: 1 };
-var priceMap = { shot: 198000, flavor: 128000 };
-var nameMap = { shot: '기능샷', flavor: '맛샷' };
-
-function changeQty(type, delta) {
-  qtyMap[type] = Math.max(1, qtyMap[type] + delta);
-  document.getElementById(type + 'Qty').textContent = qtyMap[type];
-}
-
-function addToCart(type) {
-  var selectId = type === 'shot' ? 'shotSelect' : 'flavorSelect';
-  var variant = document.getElementById(selectId).value;
-  if (!variant) { showBranchToast('옵션을 선택해주세요', 'error'); return; }
-  var existing = cart.find(function(i){ return i.type === type && i.variant === variant; });
-  if (existing) {
-    existing.qty += qtyMap[type];
-  } else {
-    cart.push({ type: type, variant: variant, qty: qtyMap[type], price: priceMap[type] });
-  }
-  renderCart();
-  showBranchToast(nameMap[type] + ' ' + variant + ' 담겼습니다');
-}
-
-function removeCartItem(idx) {
-  cart.splice(idx, 1);
-  renderCart();
-}
-
-function renderCart() {
-  var total = cart.reduce(function(s, i){ return s + i.price * i.qty; }, 0);
-  var count = cart.reduce(function(s, i){ return s + i.qty; }, 0);
-  document.getElementById('cartCount').textContent = count;
-  if (!cart.length) {
-    document.getElementById('cartEmpty').style.display = 'flex';
-    document.getElementById('cartItems').style.display = 'none';
-    document.getElementById('cartFooter').style.display = 'none';
-    return;
-  }
-  document.getElementById('cartEmpty').style.display = 'none';
-  document.getElementById('cartItems').style.display = 'flex';
-  document.getElementById('cartFooter').style.display = 'block';
-  document.getElementById('cartItems').innerHTML = cart.map(function(item, idx){
-    return '<div class="cart-item">' +
-      '<div class="cart-item-info">' +
-        '<div class="cart-item-name">' + nameMap[item.type] + ' · ' + item.variant + '</div>' +
-        '<div class="cart-item-sub">5L × ' + item.qty + '개</div>' +
-      '</div>' +
-      '<div style="display:flex;align-items:center;gap:8px;">' +
-        '<span class="cart-item-price">' + (item.price * item.qty).toLocaleString() + '원</span>' +
-        '<button class="cart-item-remove" onclick="removeCartItem(' + idx + ')">✕</button>' +
-      '</div>' +
-    '</div>';
-  }).join('');
-  document.getElementById('cartTotal').textContent = total.toLocaleString() + '원';
-}
-
-function placeOrder() {
-  if (!cart.length) return;
-  showBranchToast('주문이 완료되었습니다!');
-  cart = [];
-  renderCart();
-}
-
 function toggleGroup(el){el.classList.toggle('open');var s=el.nextElementSibling;if(s)s.classList.toggle('show');}
 (function(){if(!sessionStorage.getItem('branchAuth')){location.href='branch-login.html';}})();
 </script>
