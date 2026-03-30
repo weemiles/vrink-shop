@@ -83,7 +83,13 @@
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .form-group { display: flex; flex-direction: column; gap: 6px; }
   .form-label { font-size: 12px; font-weight: 500; color: #505050; }
-  .form-input, .form-select, .form-textarea {
+  .form-input, .form-select {
+    padding: 0 12px; height: 42px; box-sizing: border-box;
+    border: 1.5px solid #E2E8F0; border-radius: 8px;
+    font-size: 13px; color: #111; outline: none; font-family: inherit;
+    background: #fff; transition: border-color .15s;
+  }
+  .form-textarea {
     padding: 10px 12px; border: 1.5px solid #E2E8F0; border-radius: 8px;
     font-size: 13px; color: #111; outline: none; font-family: inherit;
     background: #fff; transition: border-color .15s;
@@ -168,11 +174,11 @@
         </div>
       </div>
       <div class="user-drop-divider"></div>
-      <div class="user-drop-item" onclick="alert('프로필 설정 기능 준비중입니다.')">
+      <div class="user-drop-item" onclick="openProfileModal()">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         프로필 설정
       </div>
-      <div class="user-drop-item" onclick="alert('비밀번호 변경 기능 준비중입니다.')">
+      <div class="user-drop-item" onclick="openPasswordModal()">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
         비밀번호 변경
       </div>
@@ -230,6 +236,94 @@
         [notifDrop, branchDrop, userDrop].forEach(d => d && d.classList.remove('show'));
       }
     });
+
+    // ── Inject profile & password modals ──
+    const modalCSS = `
+    .cm-modal-overlay { position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px; }
+    .cm-modal-overlay.open { display:flex; }
+    .cm-modal { background:#fff;border-radius:20px;padding:28px;width:440px;max-width:100%;box-shadow:0 24px 64px rgba(0,0,0,.18);animation:modalIn .18s ease; }
+    .cm-modal-header { display:flex;align-items:center;justify-content:space-between;margin-bottom:22px; }
+    .cm-modal-title { font-size:18px;font-weight:500;color:#111; }
+    .cm-modal-close { background:#F4F5F7;border:none;cursor:pointer;color:#505050;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px; }
+    .cm-modal-close:hover { background:#EAEAEA; }
+    .cm-form-group { display:flex;flex-direction:column;gap:6px;margin-bottom:14px; }
+    .cm-form-label { font-size:12px;font-weight:500;color:#505050; }
+    .cm-form-input { padding:10px 12px;border:1.5px solid #E2E8F0;border-radius:8px;font-size:13px;color:#111;outline:none;font-family:inherit;transition:border-color .15s; }
+    .cm-form-input:focus { border-color:#0095FF; }
+    .cm-form-hint { font-size:11px;color:#A0A8B3; }
+    .cm-avatar-row { display:flex;align-items:center;gap:16px;margin-bottom:18px; }
+    .cm-avatar-big { width:64px;height:64px;background:#0095FF;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:500;color:#fff;flex-shrink:0; }
+    .cm-modal-footer { display:flex;justify-content:flex-end;gap:8px;margin-top:20px; }
+    .cm-btn { display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:inherit; }
+    .cm-btn-primary { background:#0095FF;color:#fff; }
+    .cm-btn-outline { background:#fff;color:#505050;border:1px solid #EDF2F6; }
+    `;
+    const st2 = document.createElement('style');
+    st2.textContent = modalCSS;
+    document.head.appendChild(st2);
+
+    const profileModalHTML = `
+    <div class="cm-modal-overlay" id="cmProfileModal">
+      <div class="cm-modal">
+        <div class="cm-modal-header">
+          <span class="cm-modal-title">프로필 설정</span>
+          <button class="cm-modal-close" onclick="document.getElementById('cmProfileModal').classList.remove('open')">✕</button>
+        </div>
+        <div class="cm-avatar-row">
+          <div class="cm-avatar-big" id="cmAvatarPreview">A</div>
+          <div>
+            <button class="cm-btn cm-btn-outline" style="font-size:12px;padding:7px 14px;" onclick="document.getElementById('cmAvatarInput').click()">사진 변경</button>
+            <input id="cmAvatarInput" type="file" accept="image/*" style="display:none" onchange="previewCmAvatar(this)">
+            <div style="font-size:11px;color:#A0A8B3;margin-top:5px;">JPG, PNG · 최대 2MB</div>
+          </div>
+        </div>
+        <div class="cm-form-group">
+          <label class="cm-form-label">이름</label>
+          <input class="cm-form-input" id="cmProfileName" value="admin" />
+        </div>
+        <div class="cm-form-group">
+          <label class="cm-form-label">이메일</label>
+          <input class="cm-form-input" id="cmProfileEmail" value="admin@vrink.com" type="email" />
+        </div>
+        <div class="cm-form-group">
+          <label class="cm-form-label">역할</label>
+          <input class="cm-form-input" value="관리자" readonly style="background:#F8F8FA;color:#767676;" />
+        </div>
+        <div class="cm-modal-footer">
+          <button class="cm-btn cm-btn-outline" onclick="document.getElementById('cmProfileModal').classList.remove('open')">취소</button>
+          <button class="cm-btn cm-btn-primary" onclick="saveCmProfile()">저장</button>
+        </div>
+      </div>
+    </div>`;
+
+    const pwModalHTML = `
+    <div class="cm-modal-overlay" id="cmPasswordModal">
+      <div class="cm-modal">
+        <div class="cm-modal-header">
+          <span class="cm-modal-title">비밀번호 변경</span>
+          <button class="cm-modal-close" onclick="document.getElementById('cmPasswordModal').classList.remove('open')">✕</button>
+        </div>
+        <div class="cm-form-group">
+          <label class="cm-form-label">현재 비밀번호</label>
+          <input class="cm-form-input" id="cmPwCurrent" type="password" placeholder="현재 비밀번호 입력" />
+        </div>
+        <div class="cm-form-group">
+          <label class="cm-form-label">새 비밀번호</label>
+          <input class="cm-form-input" id="cmPwNew" type="password" placeholder="8자 이상 영문+숫자" />
+        </div>
+        <div class="cm-form-group">
+          <label class="cm-form-label">새 비밀번호 확인</label>
+          <input class="cm-form-input" id="cmPwConfirm" type="password" placeholder="새 비밀번호 재입력" />
+          <span class="cm-form-hint" id="cmPwHint"></span>
+        </div>
+        <div class="cm-modal-footer">
+          <button class="cm-btn cm-btn-outline" onclick="document.getElementById('cmPasswordModal').classList.remove('open')">취소</button>
+          <button class="cm-btn cm-btn-primary" onclick="saveCmPassword()">변경</button>
+        </div>
+      </div>
+    </div>`;
+
+    document.body.insertAdjacentHTML('beforeend', profileModalHTML + pwModalHTML);
   });
 
   /* ─── Global helpers ────────────────────────────────── */
@@ -249,6 +343,56 @@
     const btn = document.querySelector('.topbar-branch');
     if (btn) btn.textContent = name + ' ▾';
     setTimeout(function() { document.getElementById('branchDrop').classList.remove('show'); }, 150);
+  };
+
+  window.openProfileModal = function () {
+    document.getElementById('cmProfileModal').classList.add('open');
+    document.getElementById('userDrop').classList.remove('show');
+  };
+
+  window.openPasswordModal = function () {
+    document.getElementById('cmPasswordModal').classList.add('open');
+    document.getElementById('userDrop').classList.remove('show');
+  };
+
+  window.previewCmAvatar = function (inp) {
+    if (!inp.files[0]) return;
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      var el = document.getElementById('cmAvatarPreview');
+      el.style.background = 'transparent';
+      el.innerHTML = '<img src="' + e.target.result + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+      document.querySelectorAll('.user-drop-avatar, .user-avatar').forEach(function(av) {
+        av.style.background = 'transparent';
+        av.innerHTML = '<img src="' + e.target.result + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+      });
+    };
+    reader.readAsDataURL(inp.files[0]);
+  };
+
+  window.saveCmProfile = function () {
+    var name = document.getElementById('cmProfileName').value.trim() || 'admin';
+    document.querySelectorAll('.user-drop-name, .user-name').forEach(function(el) { el.textContent = name; });
+    document.querySelectorAll('.user-drop-avatar, .user-avatar').forEach(function(el) {
+      if (!el.querySelector('img')) el.textContent = name.charAt(0).toUpperCase();
+    });
+    document.getElementById('cmAvatarPreview').innerHTML = name.charAt(0).toUpperCase();
+    document.getElementById('cmProfileModal').classList.remove('open');
+  };
+
+  window.saveCmPassword = function () {
+    var current = document.getElementById('cmPwCurrent').value;
+    var newPw = document.getElementById('cmPwNew').value;
+    var confirm = document.getElementById('cmPwConfirm').value;
+    var hint = document.getElementById('cmPwHint');
+    if (!current) { hint.textContent = '현재 비밀번호를 입력해주세요.'; hint.style.color = '#EC3D3D'; return; }
+    if (newPw.length < 8) { hint.textContent = '비밀번호는 8자 이상이어야 합니다.'; hint.style.color = '#EC3D3D'; return; }
+    if (newPw !== confirm) { hint.textContent = '새 비밀번호가 일치하지 않습니다.'; hint.style.color = '#EC3D3D'; return; }
+    hint.textContent = '비밀번호가 변경되었습니다.'; hint.style.color = '#00B377';
+    document.getElementById('cmPwCurrent').value = '';
+    document.getElementById('cmPwNew').value = '';
+    document.getElementById('cmPwConfirm').value = '';
+    setTimeout(function() { document.getElementById('cmPasswordModal').classList.remove('open'); hint.textContent = ''; }, 1200);
   };
 
 })();

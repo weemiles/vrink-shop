@@ -189,24 +189,155 @@ input[type="checkbox"] { width: 15px; height: 15px; accent-color: #0095FF; curso
   <div class="page-content">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
       <div class="page-title" style="margin-bottom:0;">영양성분 관리</div>
-      <button class="btn btn-primary" onclick="openModal('nutritionAddModal')">영양성분 등록</button>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-outline" onclick="openModal('colManageModal')">컬럼 관리</button>
+        <button class="btn btn-primary" onclick="openModal('nutritionAddModal')">영양성분 등록</button>
+      </div>
     </div>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>메뉴명</th><th>칼로리</th><th>탄수화물</th><th>단백질</th><th>지방</th><th>나트륨</th><th>당류</th><th>관리</th></tr></thead>
-        <tbody>
-          <tr><td><strong>부스터샷</strong></td><td>45 kcal</td><td>8g</td><td>2g</td><td>0g</td><td>12mg</td><td>6g</td><td><button class="btn btn-outline btn-sm" onclick="openModal('nutritionEditModal')">수정</button></td></tr>
-          <tr><td><strong>비타민샷</strong></td><td>30 kcal</td><td>7g</td><td>1g</td><td>0g</td><td>8mg</td><td>5g</td><td><button class="btn btn-outline btn-sm" onclick="openModal('nutritionEditModal')">수정</button></td></tr>
-          <tr><td><strong>컷팅샷</strong></td><td>25 kcal</td><td>5g</td><td>1g</td><td>0g</td><td>10mg</td><td>3g</td><td><button class="btn btn-outline btn-sm" onclick="openModal('nutritionEditModal')">수정</button></td></tr>
-          <tr><td><strong>릴렉스샷</strong></td><td>35 kcal</td><td>9g</td><td>0g</td><td>0g</td><td>6mg</td><td>7g</td><td><button class="btn btn-outline btn-sm" onclick="openModal('nutritionEditModal')">수정</button></td></tr>
-          <tr><td><strong>아미노샷</strong></td><td>55 kcal</td><td>6g</td><td>8g</td><td>0g</td><td>15mg</td><td>2g</td><td><button class="btn btn-outline btn-sm" onclick="openModal('nutritionEditModal')">수정</button></td></tr>
-          <tr><td><strong>레몬수</strong></td><td>20 kcal</td><td>5g</td><td>0g</td><td>0g</td><td>4mg</td><td>4g</td><td><button class="btn btn-outline btn-sm" onclick="openModal('nutritionEditModal')">수정</button></td></tr>
-        </tbody>
-      </table>
-    </div>
+    <div class="table-wrap" id="nutritionTableWrap"></div>
   </div>
 </div>
-<script>function toggleGroup(el){el.classList.toggle('open');var s=el.nextElementSibling;if(s)s.classList.toggle('show');}</script>
+<style>
+.nutr-col-name { cursor:pointer; user-select:none; }
+.nutr-col-name:hover { text-decoration:underline; color:#0095FF; }
+.nutr-row-editor { display:flex; flex-direction:column; gap:8px; }
+.nutr-row-editor .nutr-field-row { display:flex; align-items:center; gap:6px; }
+.nutr-field-row .fn-name { width:90px; padding:5px 8px; border:1px solid #E2E8F0; border-radius:6px; font-size:12px; outline:none; }
+.nutr-field-row .fn-val  { width:64px; padding:5px 8px; border:1px solid #E2E8F0; border-radius:6px; font-size:12px; outline:none; }
+.nutr-field-row .fn-unit { padding:5px 6px; border:1px solid #E2E8F0; border-radius:6px; font-size:12px; outline:none; background:#fff; }
+.nutr-field-row .fn-del  { background:none; border:none; color:#ccc; font-size:16px; cursor:pointer; line-height:1; }
+.nutr-field-row .fn-del:hover { color:#EC3D3D; }
+.col-manage-row { display:flex; align-items:center; gap:6px; margin-bottom:6px; }
+.col-manage-row .cm-name { flex:1; padding:6px 8px; border:1px solid #E2E8F0; border-radius:6px; font-size:13px; outline:none; }
+.col-manage-row .cm-unit { width:70px; padding:6px 6px; border:1px solid #E2E8F0; border-radius:6px; font-size:13px; outline:none; background:#fff; }
+.col-manage-row .cm-del  { background:none; border:none; color:#ccc; font-size:16px; cursor:pointer; line-height:1; }
+.col-manage-row .cm-del:hover { color:#EC3D3D; }
+</style>
+<script>
+function toggleGroup(el){el.classList.toggle('open');var s=el.nextElementSibling;if(s)s.classList.toggle('show');}
+
+var nutritionCols = [
+  {name:'칼로리', unit:'kcal'},
+  {name:'탄수화물', unit:'g'},
+  {name:'단백질', unit:'g'},
+  {name:'지방', unit:'g'},
+  {name:'나트륨', unit:'mg'},
+  {name:'당류', unit:'g'}
+];
+
+var nutritionData = [
+  {menu:'부스터샷', vals:[45,8,2,0,12,6]},
+  {menu:'비타민샷', vals:[30,7,1,0,8,5]},
+  {menu:'컷팅샷',   vals:[25,5,1,0,10,3]},
+  {menu:'릴렉스샷', vals:[35,9,0,0,6,7]},
+  {menu:'아미노샷', vals:[55,6,8,0,15,2]},
+  {menu:'레몬수',   vals:[20,5,0,0,4,4]}
+];
+
+function renderTable() {
+  var th = '<th>메뉴명</th>' + nutritionCols.map(function(c,i){
+    return '<th><span class="nutr-col-name" onclick="editColName('+i+',this)" title="클릭하여 컬럼명 수정">'+c.name+'</span></th>';
+  }).join('') + '<th>관리</th>';
+  var rows = nutritionData.map(function(row,ri){
+    var tds = '<td><strong>'+row.menu+'</strong></td>';
+    tds += nutritionCols.map(function(c,ci){
+      return '<td>'+(row.vals[ci] !== undefined ? row.vals[ci] : 0)+' '+c.unit+'</td>';
+    }).join('');
+    tds += '<td><button class="btn btn-outline btn-sm" onclick="openNutrEdit('+ri+')">수정</button></td>';
+    return '<tr>'+tds+'</tr>';
+  }).join('');
+  document.getElementById('nutritionTableWrap').innerHTML =
+    '<table><thead><tr>'+th+'</tr></thead><tbody>'+rows+'</tbody></table>';
+}
+
+function editColName(idx, el) {
+  var cur = nutritionCols[idx].name;
+  var val = prompt('컬럼명을 입력하세요:', cur);
+  if (val && val.trim()) {
+    nutritionCols[idx].name = val.trim();
+    renderTable();
+  }
+}
+
+function openNutrEdit(ri) {
+  var row = nutritionData[ri];
+  var html = nutritionCols.map(function(c,ci){
+    var v = row.vals[ci] !== undefined ? row.vals[ci] : 0;
+    return '<div class="nutr-field-row">'
+      +'<input class="fn-name" value="'+c.name+'" data-col="'+ci+'" onchange="nutritionCols['+ci+'].name=this.value;renderTable();" />'
+      +'<input class="fn-val" type="number" value="'+v+'" data-col="'+ci+'" />'
+      +'<select class="fn-unit" data-col="'+ci+'">'
+      +'<option value="g"'+(c.unit==='g'?' selected':'')+'>g</option>'
+      +'<option value="mg"'+(c.unit==='mg'?' selected':'')+'>mg</option>'
+      +'<option value="kcal"'+(c.unit==='kcal'?' selected':'')+'>kcal</option>'
+      +'</select>'
+      +'</div>';
+  }).join('');
+  document.getElementById('nutrEditMenuName').value = row.menu;
+  document.getElementById('nutrEditFields').innerHTML = html;
+  document.getElementById('nutrEditSaveBtn').onclick = function() {
+    var fields = document.querySelectorAll('#nutrEditFields .nutr-field-row');
+    fields.forEach(function(f,ci){
+      if(ci < nutritionCols.length){
+        nutritionCols[ci].name = f.querySelector('.fn-name').value || nutritionCols[ci].name;
+        nutritionCols[ci].unit = f.querySelector('.fn-unit').value;
+        row.vals[ci] = parseFloat(f.querySelector('.fn-val').value) || 0;
+      }
+    });
+    renderTable();
+    alert('수정되었습니다.');
+    closeModal('nutritionEditModal');
+  };
+  openModal('nutritionEditModal');
+}
+
+function openColManage() {
+  renderColManageList();
+  openModal('colManageModal');
+}
+
+function renderColManageList() {
+  var html = nutritionCols.map(function(c, i){
+    return '<div class="col-manage-row" data-ci="'+i+'">'
+      +'<input class="cm-name" value="'+c.name+'" />'
+      +'<select class="cm-unit">'
+      +'<option value="g"'+(c.unit==='g'?' selected':'')+'>g</option>'
+      +'<option value="mg"'+(c.unit==='mg'?' selected':'')+'>mg</option>'
+      +'<option value="kcal"'+(c.unit==='kcal'?' selected':'')+'>kcal</option>'
+      +'</select>'
+      +'<button class="cm-del" onclick="removeNutrCol('+i+')">✕</button>'
+      +'</div>';
+  }).join('');
+  document.getElementById('colManageList').innerHTML = html;
+}
+
+function addNutrCol() {
+  nutritionCols.push({name:'새 영양소', unit:'g'});
+  nutritionData.forEach(function(r){ r.vals.push(0); });
+  renderColManageList();
+}
+
+function removeNutrCol(idx) {
+  if (nutritionCols.length <= 1) { alert('최소 1개 컬럼이 필요합니다.'); return; }
+  nutritionCols.splice(idx, 1);
+  nutritionData.forEach(function(r){ r.vals.splice(idx, 1); });
+  renderColManageList();
+}
+
+function saveColManage() {
+  var rows = document.querySelectorAll('#colManageList .col-manage-row');
+  rows.forEach(function(row, i){
+    if (i < nutritionCols.length) {
+      nutritionCols[i].name = row.querySelector('.cm-name').value || nutritionCols[i].name;
+      nutritionCols[i].unit = row.querySelector('.cm-unit').value;
+    }
+  });
+  renderTable();
+  closeModal('colManageModal');
+}
+
+document.addEventListener('DOMContentLoaded', function(){ renderTable(); });
+</script>
 <div class="modal-overlay" id="nutritionAddModal">
   <div class="modal">
     <div class="modal-header">
@@ -218,10 +349,16 @@ input[type="checkbox"] { width: 15px; height: 15px; accent-color: #0095FF; curso
         <label class="form-label">메뉴 선택 *</label>
         <select class="form-select">
           <option value="">메뉴를 선택하세요</option>
-          <option>프리미엄 단백질 쉐이크</option>
-          <option>에너지 부스터</option>
-          <option>다이어트 쉐이크</option>
-          <option>리커버리 드링크</option>
+          <option>부스터샷</option>
+          <option>비타민샷</option>
+          <option>컷팅샷</option>
+          <option>릴렉스샷</option>
+          <option>아미노샷</option>
+          <option>맛샷 · 레몬</option>
+          <option>맛샷 · 청포도</option>
+          <option>맛샷 · 사과</option>
+          <option>맛샷 · 체리</option>
+          <option>맛샷 · 망고</option>
         </select>
       </div>
       <div class="modal-divider"></div>
@@ -283,44 +420,33 @@ input[type="checkbox"] { width: 15px; height: 15px; accent-color: #0095FF; curso
     <div class="modal-body">
       <div class="form-group">
         <label class="form-label">메뉴명</label>
-        <input class="form-input" value="부스터샷" readonly style="background:#F8F8FA;color:#767676;" />
+        <input class="form-input" id="nutrEditMenuName" readonly style="background:#F8F8FA;color:#767676;" />
       </div>
       <div class="modal-divider"></div>
-      <div class="modal-section-title">영양 정보 수정</div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">열량 (kcal)</label>
-          <input class="form-input" type="number" value="45" />
-        </div>
-        <div class="form-group">
-          <label class="form-label">단백질 (g)</label>
-          <input class="form-input" type="number" value="8" />
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">탄수화물 (g)</label>
-          <input class="form-input" type="number" value="2" />
-        </div>
-        <div class="form-group">
-          <label class="form-label">지방 (g)</label>
-          <input class="form-input" type="number" value="0" />
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">나트륨 (mg)</label>
-          <input class="form-input" type="number" value="12" />
-        </div>
-        <div class="form-group">
-          <label class="form-label">당류 (g)</label>
-          <input class="form-input" type="number" value="6" />
-        </div>
-      </div>
+      <div class="modal-section-title" style="margin-bottom:8px;">영양 정보 수정 <span style="font-size:11px;color:#A0A8B3;font-weight:400;">(이름·값·단위 모두 편집 가능)</span></div>
+      <div class="nutr-row-editor" id="nutrEditFields"></div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-outline" onclick="closeModal('nutritionEditModal')">취소</button>
-      <button class="btn btn-primary" onclick="alert('수정되었습니다.');closeModal('nutritionEditModal')">저장</button>
+      <button class="btn btn-primary" id="nutrEditSaveBtn">저장</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="colManageModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">컬럼 관리</span>
+      <button class="modal-close" onclick="closeModal('colManageModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section-title" style="margin-bottom:10px;">영양소 컬럼 이름 및 단위 편집</div>
+      <div id="colManageList"></div>
+      <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="addNutrCol()">+ 영양소 추가</button>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('colManageModal')">취소</button>
+      <button class="btn btn-primary" onclick="saveColManage()">저장</button>
     </div>
   </div>
 </div>
