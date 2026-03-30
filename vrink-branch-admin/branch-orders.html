@@ -61,11 +61,8 @@ tbody tr:hover td { background: #FAFAFA; }
 
 /* Filter bar */
 .filter-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-.filter-bar input[type="date"],
-.filter-bar select { height: 38px; border: 1px solid #EDF2F6; border-radius: 8px; padding: 0 10px; font-size: 13px; background: #fff; color: #111; outline: none; }
-.filter-bar input[type="date"]:focus,
-.filter-bar select:focus { border-color: #0095FF; font-weight: 500; }
 .filter-sep { color: #CCC; font-size: 13px; }
+select { appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23767676' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; padding-right: 28px !important; }
 
 /* Pagination */
 .pagination { display: flex; align-items: center; justify-content: center; gap: 4px; padding: 16px; }
@@ -169,24 +166,34 @@ tbody tr:hover td { background: #FAFAFA; }
       <div class="page-title">주문 내역</div>
       <button class="btn btn-outline btn-sm" onclick="exportOrdersCSV()">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        CSV 다운로드
+        엑셀로 추출하기
       </button>
     </div>
 
     <!-- Filter -->
-    <div class="filter-bar">
-      <input type="text" id="menuSearch" placeholder="메뉴명 검색" style="height:38px;border:1px solid #EDF2F6;border-radius:8px;padding:0 10px;font-size:13px;outline:none;min-width:140px;" oninput="applyFilter()">
-      <input type="date" id="dateFrom" value="2026-03-01">
-      <span class="filter-sep">~</span>
-      <input type="date" id="dateTo" value="2026-03-30">
-      <select id="statusFilter">
-        <option value="">전체</option>
-        <option value="완료">완료</option>
-        <option value="준비중">준비중</option>
-        <option value="취소">취소</option>
-      </select>
-      <button class="btn btn-primary btn-sm" onclick="applyFilter()">검색</button>
-      <button class="btn btn-outline btn-sm" onclick="resetFilter()">초기화</button>
+    <div class="filter-bar" style="margin-bottom:20px;justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <select id="dateFilter" onchange="applyFilter()" style="height:34px;border:1px solid #EDF2F6;border-radius:8px;padding:0 10px 0 8px;font-size:13px;background:#fff;outline:none;cursor:pointer;color:#505050;">
+          <option value="">날짜 전체</option>
+          <option value="today">오늘</option>
+          <option value="week">이번 주</option>
+          <option value="month">이번 달</option>
+        </select>
+        <select id="statusFilter" onchange="applyFilter()" style="height:34px;border:1px solid #EDF2F6;border-radius:8px;padding:0 10px 0 8px;font-size:13px;background:#fff;outline:none;cursor:pointer;color:#505050;">
+          <option value="">결제 상태 전체</option>
+          <option value="완료">완료</option>
+          <option value="준비중">준비중</option>
+          <option value="취소">취소</option>
+        </select>
+        <button class="btn btn-outline btn-sm" onclick="resetFilter()">초기화</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <input type="text" id="menuSearch" placeholder="주문번호, 메뉴 검색..." style="height:34px;border:1px solid #EDF2F6;border-radius:8px;padding:0 12px;font-size:13px;outline:none;min-width:200px;" oninput="applyFilter()">
+        <button class="btn btn-outline btn-sm" onclick="exportOrdersCSV()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          엑셀로 추출하기
+        </button>
+      </div>
     </div>
 
     <!-- Table -->
@@ -275,16 +282,23 @@ function goPage(n) {
 }
 
 function applyFilter() {
-  const from   = document.getElementById('dateFrom').value;
-  const to     = document.getElementById('dateTo').value;
+  const dateVal = document.getElementById('dateFilter').value;
   const status = document.getElementById('statusFilter').value;
-  const menu   = document.getElementById('menuSearch').value.trim();
-  filteredOrders = ALL_ORDERS.filter(o => {
+  const search = (document.getElementById('menuSearch').value || '').trim().toLowerCase();
+  const today = new Date().toISOString().split('T')[0];
+  filteredOrders = ALL_ORDERS.filter(function(o) {
     const d = o.dt.split(' ')[0];
-    if (from && d < from) return false;
-    if (to   && d > to)   return false;
+    if (dateVal === 'today' && d !== today) return false;
+    if (dateVal === 'week') {
+      const weekAgo = new Date(Date.now() - 7*24*60*60*1000).toISOString().split('T')[0];
+      if (d < weekAgo) return false;
+    }
+    if (dateVal === 'month') {
+      const monthStart = today.slice(0,7) + '-01';
+      if (d < monthStart) return false;
+    }
     if (status && o.status !== status) return false;
-    if (menu && !o.menu.includes(menu)) return false;
+    if (search && !o.no.toLowerCase().includes(search) && !o.menu.toLowerCase().includes(search)) return false;
     return true;
   });
   currentPage = 1;
@@ -292,9 +306,9 @@ function applyFilter() {
 }
 
 function resetFilter() {
-  document.getElementById('dateFrom').value = '2026-03-01';
-  document.getElementById('dateTo').value   = '2026-03-30';
+  document.getElementById('dateFilter').value = '';
   document.getElementById('statusFilter').value = '';
+  document.getElementById('menuSearch').value = '';
   filteredOrders = [...ALL_ORDERS];
   currentPage = 1;
   renderTable();

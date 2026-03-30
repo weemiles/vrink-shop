@@ -59,13 +59,6 @@ tbody tr:last-child td { border-bottom: none; }
 tbody tr:hover td { background: #FAFAFA; }
 .table-wrap { background: #fff; border-radius: 20px; box-shadow: 0 4px 20px rgba(238,238,238,.5); overflow: hidden; }
 
-/* Stat cards */
-.stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
-.stat-card { background: #fff; border-radius: 20px; box-shadow: 0 4px 20px rgba(238,238,238,.5); padding: 20px 24px; }
-.stat-label { font-size: 12px; color: #767676; margin-bottom: 8px; }
-.stat-value { font-size: 28px; font-weight: 600; color: #111; }
-.stat-unit { font-size: 14px; font-weight: 400; color: #767676; margin-left: 4px; }
-
 /* Modal */
 .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 999; align-items: center; justify-content: center; }
 .modal-overlay.open { display: flex; }
@@ -81,7 +74,6 @@ tbody tr:hover td { background: #FAFAFA; }
 .card-title { font-size: 16px; font-weight: 500; color: #111111; margin-bottom: 4px; }
 .card-sub { font-size: 12px; color: #767676; }
 .btn-danger { background: #EC3D3D; color: #fff; }
-.badge-gray { background: #F0F0F0; color: #505050; }
 .user-info { display: flex; flex-direction: column; }
 .stat-value { font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 500; color: #111111; margin-bottom: 6px; }
 .nav-group-trigger.open .nav-arrow { transform: rotate(180deg); }
@@ -172,22 +164,39 @@ tbody tr:hover td { background: #FAFAFA; }
   <div class="page-content">
     <div class="page-header">
       <div class="page-title">회원 관리</div>
-      <input class="search-input" id="memberSearch" type="text" placeholder="이름 또는 연락처 검색" oninput="filterMembers(this.value)">
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-outline btn-sm">멤버십 적용하기</button>
+        <button class="btn btn-outline btn-sm" onclick="exportMembersCSV()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          엑셀로 추출하기
+        </button>
+      </div>
     </div>
 
-    <!-- Stats -->
-    <div class="stat-row">
-      <div class="stat-card">
-        <div class="stat-label">전체 회원</div>
-        <div class="stat-value">142<span class="stat-unit">명</span></div>
+    <!-- Filter Bar -->
+    <div class="member-filter-bar" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px;">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <select id="mNameFilter" onchange="renderFilteredMembers()" style="height:34px;border:1px solid #EDF2F6;border-radius:8px;padding:0 28px 0 10px;font-size:13px;background:#fff;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2210%22 height=%226%22 viewBox=%220 0 10 6%22%3E%3Cpath d=%22M1 1l4 4 4-4%22 stroke=%22%23767676%22 stroke-width=%221.5%22 fill=%22none%22 stroke-linecap=%22round%22/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right 8px center;">
+          <option value="">이름 전체</option>
+        </select>
+        <select id="mMembershipFilter" onchange="renderFilteredMembers()" style="height:34px;border:1px solid #EDF2F6;border-radius:8px;padding:0 28px 0 10px;font-size:13px;background:#fff;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2210%22 height=%226%22 viewBox=%220 0 10 6%22%3E%3Cpath d=%22M1 1l4 4 4-4%22 stroke=%22%23767676%22 stroke-width=%221.5%22 fill=%22none%22 stroke-linecap=%22round%22/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right 8px center;">
+          <option value="">멤버십 전체</option>
+          <option value="구독제">구독제</option>
+          <option value="한잔권">한잔권</option>
+          <option value="자유이용권">자유이용권</option>
+          <option value="없음">없음</option>
+        </select>
+        <select id="mStatusFilter" onchange="renderFilteredMembers()" style="height:34px;border:1px solid #EDF2F6;border-radius:8px;padding:0 28px 0 10px;font-size:13px;background:#fff;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2210%22 height=%226%22 viewBox=%220 0 10 6%22%3E%3Cpath d=%22M1 1l4 4 4-4%22 stroke=%22%23767676%22 stroke-width=%221.5%22 fill=%22none%22 stroke-linecap=%22round%22/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right 8px center;">
+          <option value="">상태 전체</option>
+          <option value="활성">활성</option>
+          <option value="만료">만료</option>
+        </select>
+        <span id="mDeleteBtn" style="font-size:13px;font-weight:500;color:#EC3D3D;cursor:pointer;display:none;" onclick="deleteSelectedMembers()">삭제하기</span>
       </div>
-      <div class="stat-card">
-        <div class="stat-label">활성 멤버십</div>
-        <div class="stat-value">38<span class="stat-unit">명</span></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">이번달 신규</div>
-        <div class="stat-value">5<span class="stat-unit">명</span></div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <input type="date" id="mDateFrom" onchange="renderFilteredMembers()" style="height:34px;border:1px solid #EDF2F6;border-radius:8px;padding:0 8px;font-size:12px;color:#505050;outline:none;">
+        <span style="color:#CCC;font-size:12px;">—</span>
+        <input type="date" id="mDateTo" onchange="renderFilteredMembers()" style="height:34px;border:1px solid #EDF2F6;border-radius:8px;padding:0 8px;font-size:12px;color:#505050;outline:none;">
       </div>
     </div>
 
@@ -196,12 +205,14 @@ tbody tr:hover td { background: #FAFAFA; }
       <table>
         <thead>
           <tr>
+            <th style="width:40px;"><input type="checkbox" id="checkAll" onchange="toggleAllCheck(this)"></th>
+            <th>No</th>
             <th>이름</th>
             <th>연락처</th>
-            <th>가입일</th>
-            <th>멤버십</th>
-            <th>잔여 횟수</th>
+            <th>보유 멤버십</th>
+            <th>상태</th>
             <th>최근 이용일</th>
+            <th>가입일</th>
             <th>관리</th>
           </tr>
         </thead>
@@ -225,74 +236,117 @@ tbody tr:hover td { background: #FAFAFA; }
 
 <script>
 const MEMBERS = [
-  { name: '이서연', phone: '010-1234-5678', joinDate: '2025-08-14', membership: '구독 30잔', membershipType: '구독제', remaining: 18, lastUse: '2026-03-29' },
-  { name: '박준혁', phone: '010-2345-6789', joinDate: '2025-11-02', membership: '기능샷 10잔권', membershipType: '한잔권', remaining: 4, lastUse: '2026-03-28' },
-  { name: '김민지', phone: '010-3456-7890', joinDate: '2026-01-15', membership: '없음', membershipType: null, remaining: null, lastUse: '2026-03-20' },
-  { name: '최도윤', phone: '010-4567-8901', joinDate: '2025-06-30', membership: '구독 50잔', membershipType: '구독제', remaining: 33, lastUse: '2026-03-30' },
-  { name: '정하은', phone: '010-5678-9012', joinDate: '2026-02-03', membership: '7일 자유이용권', membershipType: '자유이용권', remaining: null, lastUse: '2026-03-27' },
-  { name: '한지우', phone: '010-6789-0123', joinDate: '2025-09-22', membership: '없음', membershipType: null, remaining: null, lastUse: '2026-03-15' },
-  { name: '오승현', phone: '010-7890-1234', joinDate: '2025-12-11', membership: '기능샷 10잔권', membershipType: '한잔권', remaining: 9, lastUse: '2026-03-30' },
-  { name: '윤나연', phone: '010-8901-2345', joinDate: '2026-03-05', membership: '구독 30잔', membershipType: '구독제', remaining: 27, lastUse: '2026-03-29' },
-  { name: '임태민', phone: '010-9012-3456', joinDate: '2026-03-18', membership: '없음', membershipType: null, remaining: null, lastUse: '2026-03-18' },
-  { name: '송예린', phone: '010-0123-4567', joinDate: '2025-07-08', membership: '맛샷 5잔권', membershipType: '한잔권', remaining: 2, lastUse: '2026-03-26' },
+  { name: '이서연', phone: '010-1234-5678', joinDate: '2025-08-14', membership: '구독 30잔', membershipType: '구독제', remaining: 18, lastUse: '2026-03-29', status: '활성' },
+  { name: '박준혁', phone: '010-2345-6789', joinDate: '2025-11-02', membership: '기능샷 10잔권', membershipType: '한잔권', remaining: 4, lastUse: '2026-03-28', status: '활성' },
+  { name: '김민지', phone: '010-3456-7890', joinDate: '2026-01-15', membership: '없음', membershipType: null, remaining: null, lastUse: '2026-03-20', status: '만료' },
+  { name: '최도윤', phone: '010-4567-8901', joinDate: '2025-06-30', membership: '구독 50잔', membershipType: '구독제', remaining: 33, lastUse: '2026-03-30', status: '활성' },
+  { name: '정하은', phone: '010-5678-9012', joinDate: '2026-02-03', membership: '7일 자유이용권', membershipType: '자유이용권', remaining: null, lastUse: '2026-03-27', status: '활성' },
+  { name: '한지우', phone: '010-6789-0123', joinDate: '2025-09-22', membership: '없음', membershipType: null, remaining: null, lastUse: '2026-03-15', status: '만료' },
+  { name: '오승현', phone: '010-7890-1234', joinDate: '2025-12-11', membership: '기능샷 10잔권', membershipType: '한잔권', remaining: 9, lastUse: '2026-03-30', status: '활성' },
+  { name: '윤나연', phone: '010-8901-2345', joinDate: '2026-03-05', membership: '구독 30잔', membershipType: '구독제', remaining: 27, lastUse: '2026-03-29', status: '활성' },
+  { name: '임태민', phone: '010-9012-3456', joinDate: '2026-03-18', membership: '없음', membershipType: null, remaining: null, lastUse: '2026-03-18', status: '만료' },
+  { name: '송예린', phone: '010-0123-4567', joinDate: '2025-07-08', membership: '맛샷 5잔권', membershipType: '한잔권', remaining: 2, lastUse: '2026-03-26', status: '활성' },
 ];
 
 function membershipBadge(type) {
-  if (type === '구독제')    return `<span class="badge badge-primary">${type}</span>`;
-  if (type === '한잔권')    return `<span class="badge badge-warning">${type}</span>`;
-  if (type === '자유이용권') return `<span class="badge badge-success">${type}</span>`;
-  return `<span class="badge badge-gray">없음</span>`;
+  if (type === '구독제')    return '<span class="badge badge-primary">' + type + '</span>';
+  if (type === '한잔권')    return '<span class="badge badge-warning">' + type + '</span>';
+  if (type === '자유이용권') return '<span class="badge badge-success">' + type + '</span>';
+  return '<span class="badge badge-gray">없음</span>';
 }
 
-function renderMembers() {
+function maskPhone(phone) {
+  return phone.replace(/(\d{3})-(\d{4})-(\d{4})/, function(_, a, b, c) {
+    return a + '-****-' + c.slice(-4);
+  });
+}
+
+function statusBadgeMember(s) {
+  if (s === '활성') return '<span class="badge" style="background:#E6FBF4;color:#00B377;">활성</span>';
+  return '<span class="badge" style="background:#FDE8E8;color:#D32F2F;">만료</span>';
+}
+
+function renderFilteredMembers() {
+  const membership = document.getElementById('mMembershipFilter').value;
+  const status = document.getElementById('mStatusFilter').value;
+  const dateFrom = document.getElementById('mDateFrom').value;
+  const dateTo = document.getElementById('mDateTo').value;
+
+  var filtered = MEMBERS.filter(function(m) {
+    if (membership) {
+      if (membership === '없음' && m.membershipType) return false;
+      if (membership !== '없음' && m.membershipType !== membership) return false;
+    }
+    if (status && m.status !== status) return false;
+    if (dateFrom && m.joinDate < dateFrom) return false;
+    if (dateTo && m.joinDate > dateTo) return false;
+    return true;
+  });
+
   const tbody = document.getElementById('memberTableBody');
-  tbody.innerHTML = MEMBERS.map((m, i) => `
-    <tr>
-      <td style="font-weight:500;">${m.name}</td>
-      <td style="color:#505050;">${m.phone}</td>
-      <td style="color:#767676;font-size:12px;">${m.joinDate}</td>
-      <td>${m.membershipType ? membershipBadge(m.membershipType) : '<span class="badge badge-gray">없음</span>'}</td>
-      <td>${m.remaining !== null ? `<strong>${m.remaining}</strong>잔` : (m.membershipType === '자유이용권' ? '무제한' : '<span style="color:#CCC">-</span>')}</td>
-      <td style="color:#767676;font-size:12px;">${m.lastUse}</td>
-      <td><button class="btn btn-outline btn-sm" onclick="openMemberModal(${i})">상세보기</button></td>
-    </tr>
-  `).join('');
+  if (!filtered.length) {
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:#767676;padding:32px;">검색 결과가 없습니다</td></tr>';
+    return;
+  }
+  tbody.innerHTML = filtered.map(function(m, idx) {
+    var origIdx = MEMBERS.indexOf(m);
+    return '<tr>' +
+      '<td><input type="checkbox" class="row-check" onchange="updateDeleteBtn()"></td>' +
+      '<td style="color:#767676;font-size:12px;">' + String(idx+1).padStart(2,'0') + '</td>' +
+      '<td style="font-weight:500;">' + m.name + '</td>' +
+      '<td style="color:#505050;">' + maskPhone(m.phone) + '</td>' +
+      '<td>' + (m.membershipType ? membershipBadge(m.membershipType) : '<span style="color:#CCC;">-</span>') + '</td>' +
+      '<td>' + statusBadgeMember(m.status) + '</td>' +
+      '<td style="color:#767676;font-size:12px;">' + (m.lastUse || '-') + '</td>' +
+      '<td style="color:#767676;font-size:12px;">' + m.joinDate + '</td>' +
+      '<td><button class="btn btn-outline btn-sm" onclick="openMemberModal(' + origIdx + ')">상세보기</button></td>' +
+    '</tr>';
+  }).join('');
+}
+
+function renderMembers() { renderFilteredMembers(); }
+
+function toggleAllCheck(cb) {
+  document.querySelectorAll('.row-check').forEach(function(c){ c.checked = cb.checked; });
+  updateDeleteBtn();
+}
+
+function updateDeleteBtn() {
+  var any = document.querySelectorAll('.row-check:checked').length > 0;
+  document.getElementById('mDeleteBtn').style.display = any ? 'inline' : 'none';
+}
+
+function deleteSelectedMembers() {
+  if (!confirm('선택한 회원을 삭제하시겠습니까?')) return;
+  showBranchToast('선택한 회원이 삭제되었습니다');
+  updateDeleteBtn();
+}
+
+function exportMembersCSV() {
+  var header = ['No','이름','연락처','멤버십','상태','가입일','최근 이용일'];
+  var rows = MEMBERS.map(function(m, i) {
+    return [i+1, m.name, m.phone, m.membership||'-', m.status||'-', m.joinDate, m.lastUse||'-'];
+  });
+  var csv = [header].concat(rows).map(function(r){ return r.join(','); }).join('\n');
+  var a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,\uFEFF' + encodeURIComponent(csv);
+  a.download = '회원목록.csv';
+  a.click();
 }
 
 function openMemberModal(idx) {
-  const m = MEMBERS[idx];
-  const remainingText = m.remaining !== null ? `${m.remaining}잔` : (m.membershipType === '자유이용권' ? '무제한' : '-');
-  document.getElementById('modalContent').innerHTML = `
-    <div class="info-row"><span class="info-key">이름</span><span class="info-val">${m.name}</span></div>
-    <div class="info-row"><span class="info-key">연락처</span><span class="info-val">${m.phone}</span></div>
-    <div class="info-row"><span class="info-key">가입일</span><span class="info-val">${m.joinDate}</span></div>
-    <div class="info-row"><span class="info-key">멤버십</span><span class="info-val">${m.membership}</span></div>
-    <div class="info-row"><span class="info-key">멤버십 유형</span><span class="info-val">${m.membershipType ? membershipBadge(m.membershipType) : '<span class="badge badge-gray">없음</span>'}</span></div>
-    <div class="info-row"><span class="info-key">잔여 횟수</span><span class="info-val">${remainingText}</span></div>
-    <div class="info-row"><span class="info-key">최근 이용일</span><span class="info-val">${m.lastUse}</span></div>
-  `;
+  var m = MEMBERS[idx];
+  var remainingText = m.remaining !== null ? m.remaining + '잔' : (m.membershipType === '자유이용권' ? '무제한' : '-');
+  document.getElementById('modalContent').innerHTML =
+    '<div class="info-row"><span class="info-key">이름</span><span class="info-val">' + m.name + '</span></div>' +
+    '<div class="info-row"><span class="info-key">연락처</span><span class="info-val">' + m.phone + '</span></div>' +
+    '<div class="info-row"><span class="info-key">가입일</span><span class="info-val">' + m.joinDate + '</span></div>' +
+    '<div class="info-row"><span class="info-key">멤버십</span><span class="info-val">' + m.membership + '</span></div>' +
+    '<div class="info-row"><span class="info-key">멤버십 유형</span><span class="info-val">' + (m.membershipType ? membershipBadge(m.membershipType) : '<span class="badge badge-gray">없음</span>') + '</span></div>' +
+    '<div class="info-row"><span class="info-key">잔여 횟수</span><span class="info-val">' + remainingText + '</span></div>' +
+    '<div class="info-row"><span class="info-key">상태</span><span class="info-val">' + statusBadgeMember(m.status) + '</span></div>' +
+    '<div class="info-row"><span class="info-key">최근 이용일</span><span class="info-val">' + m.lastUse + '</span></div>';
   document.getElementById('memberModal').classList.add('open');
-}
-
-function closeModal() {
-  document.getElementById('memberModal').classList.remove('open');
-}
-
-function filterMembers(q) {
-  const kw = q.trim().toLowerCase();
-  const filtered = kw ? MEMBERS.filter(m => m.name.includes(q) || m.phone.includes(q)) : MEMBERS;
-  const tbody = document.getElementById('memberTableBody');
-  tbody.innerHTML = filtered.map((m, i) => `
-    <tr>
-      <td style="font-weight:500;">${m.name}</td>
-      <td style="color:#505050;">${m.phone}</td>
-      <td style="color:#767676;font-size:12px;">${m.joinDate}</td>
-      <td>${m.membershipType ? membershipBadge(m.membershipType) : '<span class="badge badge-gray">없음</span>'}</td>
-      <td>${m.remaining !== null ? `<strong>${m.remaining}</strong>잔` : (m.membershipType === '자유이용권' ? '무제한' : '<span style="color:#CCC">-</span>')}</td>
-      <td style="color:#767676;font-size:12px;">${m.lastUse}</td>
-      <td><button class="btn btn-outline btn-sm" onclick="openMemberModal(${MEMBERS.indexOf(m)})">상세보기</button></td>
-    </tr>
-  `).join('');
 }
 
 function toggleGroup(el) {

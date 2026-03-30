@@ -75,6 +75,9 @@ tbody tr:hover td { background: #FAFAFA; }
 .filter-btn.active { background: #0095FF; color: #fff; border-color: #0095FF; font-weight: 500; }
 .stat-value { font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 500; color: #111111; margin-bottom: 6px; }
 
+.page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+select { appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23767676' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; padding-right: 28px !important; }
+
 /* 재고 바 */
 .stock-bar-wrap { width: 80px; background: #EDF2F6; border-radius: 4px; height: 6px; display: inline-block; }
 .stock-bar { height: 6px; border-radius: 4px; display: block; }
@@ -169,12 +172,15 @@ tbody tr:hover td { background: #FAFAFA; }
   </header>
 
   <div class="page-content">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
-      <div class="page-title" style="margin-bottom:0;">재고 관리</div>
-      <button class="btn btn-primary" onclick="document.getElementById('invInModal').classList.add('open')">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        재고 입고
-      </button>
+    <div class="page-header">
+      <div class="page-title">재고 관리</div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-outline btn-sm">재고 알림 설정</button>
+        <button class="btn btn-primary btn-sm" onclick="document.getElementById('invInModal').style.display='flex'">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          재고 입고
+        </button>
+      </div>
     </div>
 
     <!-- Summary Cards -->
@@ -209,10 +215,18 @@ tbody tr:hover td { background: #FAFAFA; }
     </div>
 
     <!-- Filter -->
-    <div class="filter-bar">
-      <button class="filter-btn active" onclick="filterInventory(this,'all')">전체</button>
-      <button class="filter-btn" onclick="filterInventory(this,'기능샷')">기능샷</button>
-      <button class="filter-btn" onclick="filterInventory(this,'맛샷')">맛샷</button>
+    <div class="filter-bar" style="align-items:center;gap:8px;">
+      <button class="filter-btn active" onclick="filterCat(this,'all')">전체</button>
+      <button class="filter-btn" onclick="filterCat(this,'기능샷')">기능샷</button>
+      <button class="filter-btn" onclick="filterCat(this,'맛샷')">맛샷</button>
+    </div>
+    <div class="filter-bar" style="margin-bottom:16px;">
+      <select id="stockStatusFilter" onchange="filterInventory()" style="height:34px;border:1px solid #EDF2F6;border-radius:8px;padding:0 10px;font-size:13px;background:#fff;outline:none;cursor:pointer;">
+        <option value="">재고 상태 전체</option>
+        <option value="양호">양호</option>
+        <option value="부족">부족</option>
+        <option value="위험">위험</option>
+      </select>
     </div>
 
     <!-- Inventory Table -->
@@ -229,6 +243,7 @@ tbody tr:hover td { background: #FAFAFA; }
             <th>재고 현황</th>
             <th>최소 재고</th>
             <th>상태</th>
+            <th>관리</th>
           </tr>
         </thead>
         <tbody>
@@ -238,7 +253,8 @@ tbody tr:hover td { background: #FAFAFA; }
             <td style="font-family:'Poppins',sans-serif;font-weight:500;">12<span style="font-size:11px;font-weight:400;color:#767676;"> 박스</span></td>
             <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:100%;background:#00E096;"></div></div><span style="font-size:11px;color:#505050;">100%</span></div></td>
             <td style="color:#767676;">8 박스</td>
-            <td><span class="badge badge-success">정상</span></td>
+            <td><span class="badge badge-success"><span class="stock-status-text">양호</span></span></td>
+            <td><button class="btn btn-outline btn-sm" onclick="openInvIn('기능샷 부스터')">입고</button></td>
           </tr>
           <tr data-category="기능샷">
             <td style="font-weight:500;color:#111;">기능샷 컷팅</td>
@@ -246,7 +262,8 @@ tbody tr:hover td { background: #FAFAFA; }
             <td style="font-family:'Poppins',sans-serif;font-weight:500;">5<span style="font-size:11px;font-weight:400;color:#767676;"> 박스</span></td>
             <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:62%;background:#F4BE5E;"></div></div><span style="font-size:11px;color:#505050;">62%</span></div></td>
             <td style="color:#767676;">8 박스</td>
-            <td><span class="badge badge-warning">주의</span></td>
+            <td><span class="badge badge-warning"><span class="stock-status-text">부족</span></span></td>
+            <td><button class="btn btn-primary btn-sm" onclick="openInvIn('기능샷 컷팅')">입고</button></td>
           </tr>
           <tr data-category="기능샷">
             <td style="font-weight:500;color:#111;">기능샷 비타민</td>
@@ -254,7 +271,8 @@ tbody tr:hover td { background: #FAFAFA; }
             <td style="font-family:'Poppins',sans-serif;font-weight:500;color:#D32F2F;">3<span style="font-size:11px;font-weight:400;color:#767676;"> 박스</span></td>
             <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:37%;background:#EC3D3D;"></div></div><span style="font-size:11px;color:#505050;">37%</span></div></td>
             <td style="color:#767676;">8 박스</td>
-            <td><span class="badge badge-error">부족</span></td>
+            <td><span class="badge badge-error"><span class="stock-status-text">위험</span></span></td>
+            <td><button class="btn btn-sm" style="background:#EC3D3D;color:#fff;" onclick="openInvIn('기능샷 비타민')">긴급입고</button></td>
           </tr>
           <tr data-category="기능샷">
             <td style="font-weight:500;color:#111;">기능샷 릴렉스</td>
@@ -262,7 +280,8 @@ tbody tr:hover td { background: #FAFAFA; }
             <td style="font-family:'Poppins',sans-serif;font-weight:500;">9<span style="font-size:11px;font-weight:400;color:#767676;"> 박스</span></td>
             <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:100%;background:#00E096;"></div></div><span style="font-size:11px;color:#505050;">100%</span></div></td>
             <td style="color:#767676;">8 박스</td>
-            <td><span class="badge badge-success">정상</span></td>
+            <td><span class="badge badge-success"><span class="stock-status-text">양호</span></span></td>
+            <td><button class="btn btn-outline btn-sm" onclick="openInvIn('기능샷 릴렉스')">입고</button></td>
           </tr>
           <tr data-category="기능샷">
             <td style="font-weight:500;color:#111;">기능샷 아미노</td>
@@ -270,7 +289,8 @@ tbody tr:hover td { background: #FAFAFA; }
             <td style="font-family:'Poppins',sans-serif;font-weight:500;">7<span style="font-size:11px;font-weight:400;color:#767676;"> 박스</span></td>
             <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:87%;background:#0095FF;"></div></div><span style="font-size:11px;color:#505050;">87%</span></div></td>
             <td style="color:#767676;">8 박스</td>
-            <td><span class="badge badge-warning">주의</span></td>
+            <td><span class="badge badge-success"><span class="stock-status-text">양호</span></span></td>
+            <td><button class="btn btn-outline btn-sm" onclick="openInvIn('기능샷 아미노')">입고</button></td>
           </tr>
           <tr data-category="맛샷">
             <td style="font-weight:500;color:#111;">맛샷 레몬</td>
@@ -278,7 +298,8 @@ tbody tr:hover td { background: #FAFAFA; }
             <td style="font-family:'Poppins',sans-serif;font-weight:500;">11<span style="font-size:11px;font-weight:400;color:#767676;"> 박스</span></td>
             <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:100%;background:#00E096;"></div></div><span style="font-size:11px;color:#505050;">100%</span></div></td>
             <td style="color:#767676;">6 박스</td>
-            <td><span class="badge badge-success">정상</span></td>
+            <td><span class="badge badge-success"><span class="stock-status-text">양호</span></span></td>
+            <td><button class="btn btn-outline btn-sm" onclick="openInvIn('맛샷 레몬')">입고</button></td>
           </tr>
           <tr data-category="맛샷">
             <td style="font-weight:500;color:#111;">맛샷 청포도</td>
@@ -286,7 +307,8 @@ tbody tr:hover td { background: #FAFAFA; }
             <td style="font-family:'Poppins',sans-serif;font-weight:500;">4<span style="font-size:11px;font-weight:400;color:#767676;"> 박스</span></td>
             <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:66%;background:#F4BE5E;"></div></div><span style="font-size:11px;color:#505050;">66%</span></div></td>
             <td style="color:#767676;">6 박스</td>
-            <td><span class="badge badge-warning">주의</span></td>
+            <td><span class="badge badge-warning"><span class="stock-status-text">부족</span></span></td>
+            <td><button class="btn btn-primary btn-sm" onclick="openInvIn('맛샷 청포도')">입고</button></td>
           </tr>
         </tbody>
       </table>
@@ -297,11 +319,11 @@ tbody tr:hover td { background: #FAFAFA; }
 <!-- 재고 입고 모달 -->
 <div class="inv-modal-overlay" id="invInModal">
   <div class="inv-modal">
-    <button class="inv-modal-close" onclick="document.getElementById('invInModal').classList.remove('open')">✕</button>
+    <button class="inv-modal-close" onclick="var m=document.getElementById('invInModal');m.classList.remove('open');m.style.display='none';">✕</button>
     <div class="inv-modal-title">재고 입고</div>
     <div class="inv-form-group">
       <label class="inv-form-label">상품명 *</label>
-      <select class="inv-form-select">
+      <select class="inv-form-select" id="invInProduct">
         <option>기능샷 부스터</option>
         <option>기능샷 컷팅</option>
         <option>기능샷 비타민</option>
@@ -333,27 +355,49 @@ tbody tr:hover td { background: #FAFAFA; }
       <input class="inv-form-input" type="text" placeholder="특이사항 입력">
     </div>
     <div class="inv-modal-footer">
-      <button class="btn btn-outline" onclick="document.getElementById('invInModal').classList.remove('open')">취소</button>
-      <button class="btn btn-primary" onclick="showBranchToast('재고 입고가 등록되었습니다.');document.getElementById('invInModal').classList.remove('open')">저장</button>
+      <button class="btn btn-outline" onclick="var m=document.getElementById('invInModal');m.classList.remove('open');m.style.display='none';">취소</button>
+      <button class="btn btn-primary" onclick="showBranchToast('재고 입고가 등록되었습니다.');var m=document.getElementById('invInModal');m.classList.remove('open');m.style.display='none';">저장</button>
     </div>
   </div>
 </div>
 
 <script>
 function toggleGroup(el){el.classList.toggle('open');var s=el.nextElementSibling;if(s)s.classList.toggle('show');}
-function filterInventory(btn, cat) {
+
+var _activeCat = 'all';
+function filterCat(btn, cat) {
+  _activeCat = cat;
   document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});
   btn.classList.add('active');
+  filterInventory();
+}
+
+function filterInventory() {
+  var status = document.getElementById('stockStatusFilter').value;
   var rows = document.querySelectorAll('#inventoryTable tbody tr');
   rows.forEach(function(row){
-    if(cat === 'all' || row.dataset.category === cat){
-      row.style.display = '';
-    } else {
-      row.style.display = 'none';
+    var catMatch = (_activeCat === 'all' || row.dataset.category === _activeCat);
+    var statusMatch = true;
+    if (status) {
+      var statusCell = row.querySelector('.stock-status-text');
+      statusMatch = statusCell && statusCell.textContent.trim() === status;
     }
+    row.style.display = (catMatch && statusMatch) ? '' : 'none';
   });
 }
-document.getElementById('invInModal').addEventListener('click', function(e){ if(e.target === this) this.classList.remove('open'); });
+
+function openInvIn(name) {
+  var sel = document.getElementById('invInProduct');
+  if (sel) {
+    for (var i = 0; i < sel.options.length; i++) {
+      if (sel.options[i].text.includes(name)) { sel.selectedIndex = i; break; }
+    }
+  }
+  var modal = document.getElementById('invInModal');
+  if (modal) { modal.style.display = 'flex'; modal.classList.add('open'); }
+}
+
+document.getElementById('invInModal').addEventListener('click', function(e){ if(e.target === this) { this.style.display='none'; this.classList.remove('open'); } });
 (function(){if(!sessionStorage.getItem('branchAuth')){location.href='branch-login.html';}})();
 </script>
 <script src="branch-common.js"></script>
