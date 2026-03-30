@@ -19,8 +19,8 @@
   /* ── Notification dropdown ── */
   .notif-drop { width: 340px; }
   .notif-drop-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 18px 12px; border-bottom: 1px solid #EDF2F6; }
-  .notif-drop-title { font-size: 15px; font-weight: 700; color: #111; }
-  .notif-read-all { background: none; border: none; font-size: 12px; color: #0095FF; font-weight: 600; cursor: pointer; }
+  .notif-drop-title { font-size: 15px; font-weight: 500; color: #111; }
+  .notif-read-all { background: none; border: none; font-size: 12px; color: #0095FF; font-weight: 500; cursor: pointer; }
   .notif-list { max-height: 320px; overflow-y: auto; }
   .notif-item { display: flex; gap: 12px; padding: 13px 18px; cursor: pointer; transition: background .12s; }
   .notif-item:hover { background: #F8F8FA; }
@@ -35,22 +35,22 @@
   .notif-time { font-size: 11px; color: #A0A8B3; margin-top: 3px; }
   .notif-dot { width: 6px; height: 6px; border-radius: 50%; background: #0095FF; margin-top: 6px; flex-shrink: 0; }
   .notif-drop-footer { padding: 10px 18px; border-top: 1px solid #EDF2F6; text-align: center; }
-  .notif-drop-footer a { font-size: 13px; color: #0095FF; font-weight: 600; text-decoration: none; }
+  .notif-drop-footer a { font-size: 13px; color: #0095FF; font-weight: 500; text-decoration: none; }
 
   /* ── Branch dropdown ── */
   .branch-drop { width: 220px; padding: 8px; }
-  .branch-drop-label { font-size: 11px; font-weight: 600; color: #A0A8B3; letter-spacing: .7px; text-transform: uppercase; padding: 4px 8px 8px; }
+  .branch-drop-label { font-size: 11px; font-weight: 500; color: #A0A8B3; letter-spacing: .7px; text-transform: uppercase; padding: 4px 8px 8px; }
   .branch-item { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 8px; cursor: pointer; font-size: 13px; color: #505050; transition: background .12s; }
   .branch-item:hover { background: #F6F6F6; }
-  .branch-item.selected { background: #EFF6FF; color: #0095FF; font-weight: 600; }
+  .branch-item.selected { background: #EFF6FF; color: #0095FF; font-weight: 500; }
   .branch-check { width: 16px; height: 16px; border-radius: 50%; border: 2px solid #D0D6DF; flex-shrink: 0; }
   .branch-item.selected .branch-check { border-color: #0095FF; background: #0095FF; }
 
   /* ── User dropdown ── */
   .user-drop { width: 200px; padding: 8px; }
   .user-drop-header { display: flex; align-items: center; gap: 10px; padding: 8px 10px 10px; }
-  .user-drop-avatar { width: 36px; height: 36px; background: #0095FF; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #fff; flex-shrink: 0; }
-  .user-drop-name { font-size: 13px; font-weight: 700; color: #111; }
+  .user-drop-avatar { width: 36px; height: 36px; background: #0095FF; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 500; color: #fff; flex-shrink: 0; }
+  .user-drop-name { font-size: 13px; font-weight: 500; color: #111; }
   .user-drop-role { font-size: 11px; color: #767676; }
   .user-drop-divider { height: 1px; background: #EDF2F6; margin: 4px 0; }
   .user-drop-item { display: flex; align-items: center; gap: 9px; padding: 9px 10px; border-radius: 8px; cursor: pointer; font-size: 13px; color: #505050; transition: background .12s; }
@@ -72,7 +72,7 @@
   }
   @keyframes modalIn { from { opacity:0; transform: scale(.96) translateY(8px); } to { opacity:1; transform: none; } }
   .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
-  .modal-title { font-size: 18px; font-weight: 700; color: #111; }
+  .modal-title { font-size: 18px; font-weight: 500; color: #111; }
   .modal-close {
     background: #F4F5F7; border: none; cursor: pointer; color: #505050;
     width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
@@ -82,7 +82,7 @@
   .modal-body { display: flex; flex-direction: column; gap: 16px; }
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .form-group { display: flex; flex-direction: column; gap: 6px; }
-  .form-label { font-size: 12px; font-weight: 600; color: #505050; }
+  .form-label { font-size: 12px; font-weight: 500; color: #505050; }
   .form-input, .form-select, .form-textarea {
     padding: 10px 12px; border: 1.5px solid #E2E8F0; border-radius: 8px;
     font-size: 13px; color: #111; outline: none; font-family: inherit;
@@ -93,7 +93,7 @@
   .form-hint { font-size: 11px; color: #A0A8B3; }
   .modal-divider { height: 1px; background: #EDF2F6; }
   .modal-footer { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
-  .modal-section-title { font-size: 13px; font-weight: 700; color: #505050; margin-bottom: -4px; }
+  .modal-section-title { font-size: 13px; font-weight: 500; color: #505050; margin-bottom: -4px; }
   .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #F6F6F6; }
   .toggle-label { font-size: 13px; color: #111; }
   .toggle-sub  { font-size: 11px; color: #A0A8B3; margin-top: 1px; }
@@ -103,6 +103,10 @@
   .toggle-slider:before { content:''; position:absolute; left:3px; top:3px; width:16px; height:16px; background:#fff; border-radius:50%; transition:transform .2s; }
   .toggle-switch input:checked + .toggle-slider { background:#0095FF; }
   .toggle-switch input:checked + .toggle-slider:before { transform:translateX(16px); }
+
+  /* ── Typography: Regular(400) + Medium(500) only ── */
+  b, strong { font-weight: 500; }
+  th { font-weight: 500; }
   `;
   const st = document.createElement('style');
   st.textContent = css;
