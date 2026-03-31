@@ -359,7 +359,7 @@ function ordSetFilter(type, val, label, btnId, dropId) {
   ordFilters[type] = val;
   var btn = document.getElementById(btnId);
   var defaultLabels = { date: '날짜', pay: '결제 수단', status: '결제 상태' };
-  btn.childNodes[0].textContent = (val ? label : defaultLabels[type]) + ' ▾';
+  setFilterBtnLabel(btn, val ? label : defaultLabels[type]);
   btn.classList.toggle('active', !!val);
   document.querySelectorAll('#' + dropId + ' .dropdown-item').forEach(function(el) {
     el.classList.toggle('active', el.textContent === label || (!val && el.textContent === '전체'));

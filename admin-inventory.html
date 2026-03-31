@@ -343,9 +343,9 @@ renderAdminInv();
 window.invSelectFilter = function(dropId, val) {
   document.getElementById(dropId).classList.remove('show');
   if (dropId === 'invBranchDrop') {
-    document.getElementById('invBranchBtn').textContent = (val === '전체' ? '전체 지점' : val) + ' ▾';
+    setFilterBtnLabel('invBranchBtn', val === '전체' ? '전체 지점' : val);
   } else {
-    document.getElementById('invStatusBtn').textContent = (val === '전체' ? '재고 상태' : val) + ' ▾';
+    setFilterBtnLabel('invStatusBtn', val === '전체' ? '재고 상태' : val);
     window._adminInvStatusFilter = (val === '전체') ? '' : val;
     renderAdminInv();
   }

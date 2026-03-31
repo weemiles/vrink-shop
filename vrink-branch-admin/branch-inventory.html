@@ -68,6 +68,9 @@ tbody tr:hover td { background: #FAFAFA; }
 .filter-bar { display: flex; gap: 8px; margin-bottom: 16px; }
 .filter-btn { padding: 6px 14px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid #EDF2F6; background: #fff; color: #505050; transition: all .15s; }
 .filter-btn.active { background: #0095FF; color: #fff; border-color: #0095FF; font-weight: 500; }
+.filter-select-btn { display:inline-flex; align-items:center; gap:6px; padding:7px 14px; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; border:1px solid #EDF2F6; background:#fff; color:#505050; position:relative; }
+.inv-drop-item { padding:8px 12px; border-radius:6px; font-size:13px; color:#505050; cursor:pointer; }
+.inv-drop-item:hover { background:#F6F6F6; }
 .stat-value { font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 500; color: #111111; margin-bottom: 6px; }
 
 .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
@@ -192,16 +195,24 @@ select { appearance: none; -webkit-appearance: none; background-image: url("data
 
     <!-- Filter -->
     <div class="filter-bar" style="margin-bottom:16px;">
-      <select id="branchFilter" onchange="filterInventory()" style="height:34px;border:1px solid #EDF2F6;border-radius:8px;padding:0 28px 0 10px;font-size:13px;background:#fff;outline:none;cursor:pointer;">
-        <option value="">전체 지점</option>
-        <option value="성수점">성수점</option>
-      </select>
-      <select id="stockStatusFilter" onchange="filterInventory()" style="height:34px;border:1px solid #EDF2F6;border-radius:8px;padding:0 28px 0 10px;font-size:13px;background:#fff;outline:none;cursor:pointer;">
-        <option value="">재고 상태</option>
-        <option value="양호">양호</option>
-        <option value="부족">부족</option>
-        <option value="위험">위험</option>
-      </select>
+      <div style="position:relative;display:inline-block;">
+        <button class="filter-select-btn" id="branchFilterBtn">전체 지점
+          <div class="inv-dropdown" id="branchFilterDrop" style="position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #EDF2F6;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.08);min-width:140px;padding:4px;z-index:100;display:none;">
+            <div class="inv-drop-item" onclick="setBranchFilter('','전체 지점')">전체 지점</div>
+            <div class="inv-drop-item" onclick="setBranchFilter('성수점','성수점')">성수점</div>
+          </div>
+        </button>
+      </div>
+      <div style="position:relative;display:inline-block;">
+        <button class="filter-select-btn" id="stockStatusFilterBtn">재고 상태
+          <div class="inv-dropdown" id="stockStatusFilterDrop" style="position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #EDF2F6;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.08);min-width:120px;padding:4px;z-index:100;display:none;">
+            <div class="inv-drop-item" onclick="setStatusFilter('','재고 상태')">전체</div>
+            <div class="inv-drop-item" onclick="setStatusFilter('양호','양호')">양호</div>
+            <div class="inv-drop-item" onclick="setStatusFilter('부족','부족')">부족</div>
+            <div class="inv-drop-item" onclick="setStatusFilter('위험','위험')">위험</div>
+          </div>
+        </button>
+      </div>
     </div>
 
     <!-- Inventory Table -->
@@ -307,8 +318,11 @@ function barColor(st) {
   return '#EC3D3D';
 }
 
+var _branchFilter = '';
+var _statusFilter = '';
+
 function renderInv() {
-  var filter = document.getElementById('stockStatusFilter') ? document.getElementById('stockStatusFilter').value : '';
+  var filter = _statusFilter;
   var tbody = document.getElementById('invTableBody');
   tbody.innerHTML = invData.filter(function(row){
     return !filter || getStatus(row.current, row.safe) === filter;
@@ -332,6 +346,29 @@ function renderInv() {
 }
 
 function filterInventory() { renderInv(); }
+
+function setBranchFilter(val, label) {
+  _branchFilter = val;
+  setFilterBtnLabel('branchFilterBtn', label);
+  document.getElementById('branchFilterDrop').style.display = 'none';
+  renderInv();
+}
+
+function setStatusFilter(val, label) {
+  _statusFilter = val;
+  setFilterBtnLabel('stockStatusFilterBtn', val ? label : '재고 상태');
+  document.getElementById('stockStatusFilterDrop').style.display = 'none';
+  renderInv();
+}
+
+document.addEventListener('click', function(e) {
+  var btn = e.target.closest('.filter-select-btn');
+  document.querySelectorAll('.inv-dropdown').forEach(function(d) { d.style.display = 'none'; });
+  if (btn) {
+    var drop = btn.querySelector('.inv-dropdown');
+    if (drop) drop.style.display = drop.style.display === 'none' ? 'block' : 'none';
+  }
+});
 
 function openInvIn(name) {
   var sel = document.getElementById('invInProduct');

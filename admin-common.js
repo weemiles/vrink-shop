@@ -397,4 +397,26 @@
     setTimeout(function() { document.getElementById('cmPasswordModal').classList.remove('open'); hint.textContent = ''; }, 1200);
   };
 
+  // filter-select-btn 화살표 자동 처리
+  document.addEventListener('DOMContentLoaded', function() {
+    var arrowSVG = '<svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M1 1l4 4 4-4"/></svg>';
+    document.querySelectorAll('.filter-select-btn').forEach(function(btn) {
+      if (btn.querySelector('svg')) return;
+      btn.childNodes.forEach(function(node) {
+        if (node.nodeType === 3) node.textContent = node.textContent.replace(/\s*▾\s*$/, '').replace(/\s*▼\s*$/, '');
+      });
+      btn.insertAdjacentHTML('beforeend', arrowSVG);
+      btn.style.cssText += 'display:inline-flex!important;align-items:center!important;gap:6px!important;';
+    });
+  });
+
+  // SVG 유지하며 filter-select-btn 텍스트만 변경하는 전역 함수
+  window.setFilterBtnLabel = function(btn, label) {
+    if (typeof btn === 'string') btn = document.getElementById(btn);
+    if (!btn) return;
+    var svg = btn.querySelector('svg');
+    btn.textContent = label;
+    if (svg) btn.appendChild(svg);
+  };
+
 })();
