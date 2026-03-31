@@ -160,7 +160,7 @@ body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; co
     </div>
     <div class="nav-group">
       <div class="nav-group-trigger" onclick="toggleGroup(this)">
-        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 2h10l1.5 16A2 2 0 0116.5 20h-9a2 2 0 01-2-2L7 2z"/><path d="M5 2h14"/></svg></span>
+        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></span>
         <span class="nav-label">메뉴 관리</span>
         <span class="nav-arrow">▾</span>
       </div>
@@ -363,13 +363,13 @@ body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; co
             <div class="chart-card-sub" id="optionSubtitle">전체 주문 기준 · 최근 하루</div>
           </div>
           <div style="display:flex;gap:8px;">
-            <select id="optionCatSel" onchange="updateOptionChart()" style="font-size:12px;padding:5px 10px;border:1px solid #EDF2F6;border-radius:8px;color:#505050;background:#fff;cursor:pointer;outline:none;">
+            <select id="optionCatSel" onchange="updateOptionChart()" style="font-size:12px;height:32px;padding:0 10px;border:1px solid #EDF2F6;border-radius:8px;color:#505050;background:#fff;cursor:pointer;outline:none;">
               <option value="func">기능샷</option>
               <option value="flavor">맛</option>
               <option value="strength">농도</option>
               <option value="carbonation">탄산옵션</option>
             </select>
-            <select id="optionPeriodSel" onchange="updateOptionChart()" style="font-size:12px;padding:5px 10px;border:1px solid #EDF2F6;border-radius:8px;color:#505050;background:#fff;cursor:pointer;outline:none;">
+            <select id="optionPeriodSel" onchange="updateOptionChart()" style="font-size:12px;height:32px;padding:0 10px;border:1px solid #EDF2F6;border-radius:8px;color:#505050;background:#fff;cursor:pointer;outline:none;">
               <option value="day">하루</option>
               <option value="week">일주일</option>
               <option value="month">월</option>
@@ -392,7 +392,7 @@ body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; co
             <div class="chart-card-title">시간대별 주문 현황</div>
             <div class="chart-card-sub">오늘 기준 시간대별 주문 건수</div>
           </div>
-          <select id="hourlyPeriodSel" onchange="updateHourlyChart()" style="font-size:12px;padding:5px 10px;border:1px solid #EDF2F6;border-radius:8px;color:#505050;background:#fff;cursor:pointer;outline:none;">
+          <select id="hourlyPeriodSel" onchange="updateHourlyChart()" style="font-size:12px;height:32px;padding:0 10px;border:1px solid #EDF2F6;border-radius:8px;color:#505050;background:#fff;cursor:pointer;outline:none;">
             <option value="today">오늘</option>
             <option value="week">이번 주 평균</option>
             <option value="month">이번 달 평균</option>

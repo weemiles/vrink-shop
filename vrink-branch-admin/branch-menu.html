@@ -161,21 +161,14 @@ select.shot-select:focus { border-color: #0095FF; font-weight: 500; }
       <button class="btn btn-primary" onclick="saveMenuSettings()">설정 저장</button>
     </div>
 
-    <div class="info-banner">
-      <span style="flex-shrink:0;">ℹ️</span>
-      <span>원액(메뉴) 품목은 본사에서 관리합니다. 지점에서는 판매가, 샷 추가 정책, 판매 상태만 설정할 수 있습니다.</span>
-    </div>
-
     <div class="table-wrap">
       <table id="menuTable">
         <thead>
           <tr>
             <th>메뉴명</th>
             <th>카테고리</th>
-            <th>본사기준가</th>
             <th>판매가</th>
             <th>샷 추가가격</th>
-            <th>최대 샷 수</th>
             <th>판매 상태</th>
           </tr>
         </thead>
@@ -224,10 +217,8 @@ function renderTable() {
     tr.innerHTML =
       '<td style="font-weight:500;color:#111;">' + item.name + '</td>' +
       '<td>' + catBadge + '</td>' +
-      '<td style="color:#767676;">' + item.basePrice + '</td>' +
       '<td><input type="number" class="price-input" data-field="price" data-idx="' + i + '" value="' + item.price + '"> 원</td>' +
       '<td><input type="number" class="price-input" data-field="shotPrice" data-idx="' + i + '" value="' + item.shotPrice + '"> 원</td>' +
-      '<td><select class="shot-select" data-field="maxShot" data-idx="' + i + '">' + shotOptions + '</select></td>' +
       '<td><button class="' + toggleClass + '" data-idx="' + i + '" onclick="toggleStatus(this)"></button></td>';
     tbody.appendChild(tr);
   });

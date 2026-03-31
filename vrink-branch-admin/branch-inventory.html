@@ -180,14 +180,13 @@ select { appearance: none; -webkit-appearance: none; background-image: url("data
 
 
     <!-- Filter -->
-    <div class="filter-bar" style="align-items:center;gap:8px;">
-      <button class="filter-btn active" onclick="filterCat(this,'all')">전체</button>
-      <button class="filter-btn" onclick="filterCat(this,'기능샷')">기능샷</button>
-      <button class="filter-btn" onclick="filterCat(this,'맛샷')">맛샷</button>
-    </div>
     <div class="filter-bar" style="margin-bottom:16px;">
-      <select id="stockStatusFilter" onchange="filterInventory()" style="height:34px;border:1px solid #EDF2F6;border-radius:8px;padding:0 10px;font-size:13px;background:#fff;outline:none;cursor:pointer;">
-        <option value="">재고 상태 전체</option>
+      <select id="branchFilter" onchange="filterInventory()" style="height:34px;border:1px solid #EDF2F6;border-radius:8px;padding:0 28px 0 10px;font-size:13px;background:#fff;outline:none;cursor:pointer;">
+        <option value="">전체 지점</option>
+        <option value="성수점">성수점</option>
+      </select>
+      <select id="stockStatusFilter" onchange="filterInventory()" style="height:34px;border:1px solid #EDF2F6;border-radius:8px;padding:0 28px 0 10px;font-size:13px;background:#fff;outline:none;cursor:pointer;">
+        <option value="">재고 상태</option>
         <option value="양호">양호</option>
         <option value="부족">부족</option>
         <option value="위험">위험</option>
@@ -196,84 +195,72 @@ select { appearance: none; -webkit-appearance: none; background-image: url("data
 
     <!-- Inventory Table -->
     <div class="table-wrap">
-      <div class="section-header">
-        <div class="section-title">재고 현황</div>
-      </div>
       <table id="inventoryTable">
         <thead>
           <tr>
-            <th>상품명</th>
-            <th>카테고리</th>
+            <th>원료명</th>
             <th>현재 재고</th>
+            <th>안전 재고</th>
             <th>재고 현황</th>
-            <th>최소 재고</th>
             <th>상태</th>
+            <th>마지막 입고일</th>
             <th>관리</th>
           </tr>
         </thead>
         <tbody>
-          <tr data-category="기능샷">
-            <td style="font-weight:500;color:#111;">기능샷 부스터</td>
-            <td><span class="badge badge-primary">기능샷</span></td>
-            <td style="font-family:'Poppins',sans-serif;font-weight:500;">12<span style="font-size:11px;font-weight:400;color:#767676;"> 박스</span></td>
-            <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:100%;background:#00E096;"></div></div><span style="font-size:11px;color:#505050;">100%</span></div></td>
-            <td style="color:#767676;">8 박스</td>
+          <tr data-status="양호">
+            <td style="font-weight:500;color:#111;">부스터 원액</td>
+            <td style="font-weight:500;">24박스</td>
+            <td style="color:#767676;">10박스</td>
+            <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap" style="width:120px;"><div class="stock-bar" style="width:70%;background:#0095FF;"></div></div><span style="font-size:12px;color:#505050;">70%</span></div></td>
             <td><span class="badge badge-success"><span class="stock-status-text">양호</span></span></td>
-            <td><button class="btn btn-outline btn-sm" onclick="openInvIn('기능샷 부스터')">입고</button></td>
+            <td style="color:#505050;font-size:13px;">2026-03-25</td>
+            <td><button class="btn btn-outline btn-sm" onclick="openInvIn('부스터 원액')">입고</button></td>
           </tr>
-          <tr data-category="기능샷">
-            <td style="font-weight:500;color:#111;">기능샷 컷팅</td>
-            <td><span class="badge badge-primary">기능샷</span></td>
-            <td style="font-family:'Poppins',sans-serif;font-weight:500;">5<span style="font-size:11px;font-weight:400;color:#767676;"> 박스</span></td>
-            <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:62%;background:#F4BE5E;"></div></div><span style="font-size:11px;color:#505050;">62%</span></div></td>
-            <td style="color:#767676;">8 박스</td>
+          <tr data-status="부족">
+            <td style="font-weight:500;color:#111;">비타민 원액</td>
+            <td style="font-weight:500;">8박스</td>
+            <td style="color:#767676;">10박스</td>
+            <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap" style="width:120px;"><div class="stock-bar" style="width:30%;background:#F4BE5E;"></div></div><span style="font-size:12px;color:#505050;">30%</span></div></td>
             <td><span class="badge badge-warning"><span class="stock-status-text">부족</span></span></td>
-            <td><button class="btn btn-primary btn-sm" onclick="openInvIn('기능샷 컷팅')">입고</button></td>
+            <td style="color:#505050;font-size:13px;">2026-03-20</td>
+            <td><button class="btn btn-primary btn-sm" onclick="openInvIn('비타민 원액')">입고</button></td>
           </tr>
-          <tr data-category="기능샷">
-            <td style="font-weight:500;color:#111;">기능샷 비타민</td>
-            <td><span class="badge badge-primary">기능샷</span></td>
-            <td style="font-family:'Poppins',sans-serif;font-weight:500;color:#D32F2F;">3<span style="font-size:11px;font-weight:400;color:#767676;"> 박스</span></td>
-            <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:37%;background:#EC3D3D;"></div></div><span style="font-size:11px;color:#505050;">37%</span></div></td>
-            <td style="color:#767676;">8 박스</td>
+          <tr data-status="위험">
+            <td style="font-weight:500;color:#111;">컷팅 원액</td>
+            <td style="font-weight:500;color:#D32F2F;">3박스</td>
+            <td style="color:#767676;">10박스</td>
+            <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap" style="width:120px;"><div class="stock-bar" style="width:15%;background:#EC3D3D;"></div></div><span style="font-size:12px;color:#505050;">15%</span></div></td>
             <td><span class="badge badge-error"><span class="stock-status-text">위험</span></span></td>
-            <td><button class="btn btn-sm" style="background:#EC3D3D;color:#fff;" onclick="openInvIn('기능샷 비타민')">긴급입고</button></td>
+            <td style="color:#505050;font-size:13px;">2026-03-15</td>
+            <td><button class="btn btn-sm" style="background:#EC3D3D;color:#fff;" onclick="openInvIn('컷팅 원액')">긴급입고</button></td>
           </tr>
-          <tr data-category="기능샷">
-            <td style="font-weight:500;color:#111;">기능샷 릴렉스</td>
-            <td><span class="badge badge-primary">기능샷</span></td>
-            <td style="font-family:'Poppins',sans-serif;font-weight:500;">9<span style="font-size:11px;font-weight:400;color:#767676;"> 박스</span></td>
-            <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:100%;background:#00E096;"></div></div><span style="font-size:11px;color:#505050;">100%</span></div></td>
-            <td style="color:#767676;">8 박스</td>
+          <tr data-status="양호">
+            <td style="font-weight:500;color:#111;">릴렉스 원액</td>
+            <td style="font-weight:500;">18박스</td>
+            <td style="color:#767676;">10박스</td>
+            <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap" style="width:120px;"><div class="stock-bar" style="width:85%;background:#00B377;"></div></div><span style="font-size:12px;color:#505050;">85%</span></div></td>
             <td><span class="badge badge-success"><span class="stock-status-text">양호</span></span></td>
-            <td><button class="btn btn-outline btn-sm" onclick="openInvIn('기능샷 릴렉스')">입고</button></td>
+            <td style="color:#505050;font-size:13px;">2026-03-28</td>
+            <td><button class="btn btn-outline btn-sm" onclick="openInvIn('릴렉스 원액')">입고</button></td>
           </tr>
-          <tr data-category="기능샷">
-            <td style="font-weight:500;color:#111;">기능샷 아미노</td>
-            <td><span class="badge badge-primary">기능샷</span></td>
-            <td style="font-family:'Poppins',sans-serif;font-weight:500;">7<span style="font-size:11px;font-weight:400;color:#767676;"> 박스</span></td>
-            <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:87%;background:#0095FF;"></div></div><span style="font-size:11px;color:#505050;">87%</span></div></td>
-            <td style="color:#767676;">8 박스</td>
+          <tr data-status="양호">
+            <td style="font-weight:500;color:#111;">아미노 원액</td>
+            <td style="font-weight:500;">12박스</td>
+            <td style="color:#767676;">10박스</td>
+            <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap" style="width:120px;"><div class="stock-bar" style="width:60%;background:#0095FF;"></div></div><span style="font-size:12px;color:#505050;">60%</span></div></td>
             <td><span class="badge badge-success"><span class="stock-status-text">양호</span></span></td>
-            <td><button class="btn btn-outline btn-sm" onclick="openInvIn('기능샷 아미노')">입고</button></td>
+            <td style="color:#505050;font-size:13px;">2026-03-22</td>
+            <td><button class="btn btn-outline btn-sm" onclick="openInvIn('아미노 원액')">입고</button></td>
           </tr>
-          <tr data-category="맛샷">
-            <td style="font-weight:500;color:#111;">맛샷 레몬</td>
-            <td><span class="badge badge-warning">맛샷</span></td>
-            <td style="font-family:'Poppins',sans-serif;font-weight:500;">11<span style="font-size:11px;font-weight:400;color:#767676;"> 박스</span></td>
-            <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:100%;background:#00E096;"></div></div><span style="font-size:11px;color:#505050;">100%</span></div></td>
-            <td style="color:#767676;">6 박스</td>
+          <tr data-status="양호">
+            <td style="font-weight:500;color:#111;">레몬 농축액</td>
+            <td style="font-weight:500;">30박스</td>
+            <td style="color:#767676;">15박스</td>
+            <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap" style="width:120px;"><div class="stock-bar" style="width:100%;background:#00B377;"></div></div><span style="font-size:12px;color:#505050;">100%</span></div></td>
             <td><span class="badge badge-success"><span class="stock-status-text">양호</span></span></td>
-            <td><button class="btn btn-outline btn-sm" onclick="openInvIn('맛샷 레몬')">입고</button></td>
-          </tr>
-          <tr data-category="맛샷">
-            <td style="font-weight:500;color:#111;">맛샷 청포도</td>
-            <td><span class="badge badge-warning">맛샷</span></td>
-            <td style="font-family:'Poppins',sans-serif;font-weight:500;">4<span style="font-size:11px;font-weight:400;color:#767676;"> 박스</span></td>
-            <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:66%;background:#F4BE5E;"></div></div><span style="font-size:11px;color:#505050;">66%</span></div></td>
-            <td style="color:#767676;">6 박스</td>
-            <td><span class="badge badge-warning"><span class="stock-status-text">부족</span></span></td>
-            <td><button class="btn btn-primary btn-sm" onclick="openInvIn('맛샷 청포도')">입고</button></td>
+            <td style="color:#505050;font-size:13px;">2026-03-29</td>
+            <td><button class="btn btn-outline btn-sm" onclick="openInvIn('레몬 농축액')">입고</button></td>
           </tr>
         </tbody>
       </table>
@@ -329,25 +316,12 @@ select { appearance: none; -webkit-appearance: none; background-image: url("data
 <script>
 function toggleGroup(el){el.classList.toggle('open');var s=el.nextElementSibling;if(s)s.classList.toggle('show');}
 
-var _activeCat = 'all';
-function filterCat(btn, cat) {
-  _activeCat = cat;
-  document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});
-  btn.classList.add('active');
-  filterInventory();
-}
-
 function filterInventory() {
   var status = document.getElementById('stockStatusFilter').value;
   var rows = document.querySelectorAll('#inventoryTable tbody tr');
   rows.forEach(function(row){
-    var catMatch = (_activeCat === 'all' || row.dataset.category === _activeCat);
-    var statusMatch = true;
-    if (status) {
-      var statusCell = row.querySelector('.stock-status-text');
-      statusMatch = statusCell && statusCell.textContent.trim() === status;
-    }
-    row.style.display = (catMatch && statusMatch) ? '' : 'none';
+    var statusMatch = !status || row.dataset.status === status;
+    row.style.display = statusMatch ? '' : 'none';
   });
 }
 
