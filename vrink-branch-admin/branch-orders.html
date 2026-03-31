@@ -63,15 +63,19 @@ body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; co
 .btn-outline { background: #fff; color: #505050; border: 1px solid #EDF2F6; }
 .btn-sm { padding: 5px 10px; font-size: 12px; border-radius: 4px; }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
-thead th { padding: 10px 12px; background: #FAFAFA; border-bottom: 1px solid #EDF2F6; font-weight: 500; color: #767676; text-align: left; font-size: 12px; }
-tbody td { padding: 12px; border-bottom: 1px solid #EDF2F6; vertical-align: middle; }
+thead th { padding: 12px 16px; background: #fff; border-bottom: 1px solid #EDF2F6; font-weight: 500; color: #999; text-align: left; font-size: 12px; }
+tbody td { padding: 16px; border-bottom: 1px solid #EDF2F6; vertical-align: middle; }
 tbody tr:last-child td { border-bottom: none; }
-tbody tr:hover td { background: #FAFAFA; }
+tbody tr:hover td { background: #FAFBFC; }
 .table-wrap { background: #fff; border-radius: 20px; box-shadow: 0 4px 20px rgba(238,238,238,.5); overflow: hidden; }
 
 /* Filter bar */
 .filter-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
 .filter-sep { color: #CCC; font-size: 13px; }
+.filter-select-btn { display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border-radius:8px; font-size:13px; font-weight:500; cursor:pointer; border:1px solid #D9D9D9; background:#fff; color:#333; position:relative; }
+.filter-select-btn:hover { background:#F6F6F6; }
+.inv-drop-item { padding:8px 12px; border-radius:6px; font-size:13px; color:#505050; cursor:pointer; }
+.inv-drop-item:hover { background:#F6F6F6; }
 select { appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23767676' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; padding-right: 28px !important; }
 
 /* Pagination */
@@ -189,7 +193,6 @@ select { appearance: none; -webkit-appearance: none; background-image: url("data
     <!-- Filter -->
     <div class="filter-bar" style="margin-bottom:20px;justify-content:space-between;">
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#767676" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
         <div style="position:relative;display:inline-block;">
           <button class="filter-select-btn" id="dateFilterBtn">
             <span id="dateFilterLabel">날짜</span>
@@ -225,13 +228,7 @@ select { appearance: none; -webkit-appearance: none; background-image: url("data
           </button>
         </div>
       </div>
-      <div style="display:flex;align-items:center;gap:8px;">
-        <input type="text" id="menuSearch" placeholder="주문번호, 회원 검색..." style="height:34px;border:1px solid #EDF2F6;border-radius:8px;padding:0 12px;font-size:13px;outline:none;min-width:220px;" oninput="applyFilter()">
-        <button class="btn btn-outline btn-sm" onclick="showBranchToast('엑셀 다운로드가 시작되었습니다.')">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          엑셀 다운로드
-        </button>
-      </div>
+      <input type="text" id="menuSearch" placeholder="주문번호, 회원 검색..." style="height:36px;border:1px solid #D9D9D9;border-radius:8px;padding:0 14px;font-size:13px;outline:none;min-width:240px;color:#333;" oninput="applyFilter()">
     </div>
 
     <!-- Table -->
@@ -298,7 +295,7 @@ function renderTable() {
       <td>${statusBadge(o.status)}</td>
       <td style="font-size:12px;color:#505050;">${o.channel === '-' ? '<span style="color:#CCC">-</span>' : o.channel}</td>
       <td style="font-family:monospace;font-size:12px;color:#505050;">${o.kiosk === '-' ? '<span style="color:#CCC">-</span>' : o.kiosk}</td>
-      <td>${o.status === '결제 완료' ? '<button class="btn btn-outline btn-sm" style="font-size:11px;padding:3px 8px;color:#EC3D3D;border-color:#EC3D3D;">취소</button>' : '<span style="color:#CCC">-</span>'}</td>
+      <td>${o.status === '결제 완료' ? '<button onclick="showBranchToast(\'주문이 취소되었습니다.\')" style="background:none;border:none;cursor:pointer;font-size:13px;color:#505050;padding:0;">취소</button>' : '<span style="color:#CCC">-</span>'}</td>
     </tr>
   `).join('');
   renderPagination();
