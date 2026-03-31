@@ -5,10 +5,14 @@
 <link rel="icon" type="image/png" href="logo_spinner.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>브링크 관리자 - 재고 관리</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Noto+Sans+KR:wght@400;500&family=Poppins:wght@500&display=swap" rel="stylesheet">
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; color: #111111; display: flex; height: 100vh; overflow: hidden; }
+@font-face { font-family: 'Pretendard'; src: url('pretendard/Pretendard-Regular.woff2') format('woff2'); font-weight: 400; }
+@font-face { font-family: 'Pretendard'; src: url('pretendard/Pretendard-Medium.woff2') format('woff2'); font-weight: 500; }
+@font-face { font-family: 'Pretendard'; src: url('pretendard/Pretendard-Bold.woff2') format('woff2'); font-weight: 700; }
+</style>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; line-height: 1.2; }
+body { font-family: 'Pretendard', sans-serif; background: #F8F8FA; color: #111111; display: flex; height: 100vh; overflow: hidden; }
 .sidebar { width: 256px; min-width: 256px; height: 100vh; background: #fff; border-right: 1px solid rgba(0,0,0,.1); display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
 .sidebar-logo { padding: 20px 20px 16px; border-bottom: 1px solid #EDF2F6; }
 .sidebar-nav { flex: 1; padding: 12px 12px; display: flex; flex-direction: column; gap: 2px; }
@@ -460,5 +464,44 @@ window.invSelectFilter = function(dropId, val) {
 </div>
 
 <script src="admin-common.js"></script>
+<script>
+(async function() {
+  document.body.style.height = 'auto';
+  document.body.style.overflow = 'visible';
+  document.documentElement.style.height = 'auto';
+  document.querySelectorAll('*').forEach(function(el) {
+    var cs = getComputedStyle(el);
+    if (['hidden','auto','scroll'].indexOf(cs.overflow) > -1 ||
+        ['hidden','auto','scroll'].indexOf(cs.overflowY) > -1) {
+      el.style.overflow = 'visible';
+      if (el.scrollHeight > 0) el.style.height = el.scrollHeight + 'px';
+    }
+  });
+  var files = [
+    { weight: '400', url: 'pretendard/Pretendard-Regular.woff2' },
+    { weight: '500', url: 'pretendard/Pretendard-Medium.woff2' },
+    { weight: '700', url: 'pretendard/Pretendard-Bold.woff2' },
+  ];
+  var promises = files.map(function(f) {
+    var ff = new FontFace('Pretendard', "url('" + f.url + "') format('woff2')", { weight: f.weight });
+    document.fonts.add(ff);
+    return ff.load();
+  });
+  await Promise.all(promises);
+  await new Promise(function(r) { requestAnimationFrame(function() { requestAnimationFrame(r); }); });
+  var script = document.createElement('script');
+  script.src = 'https://mcp.figma.com/mcp/html-to-design/capture.js';
+  script.onload = function() {
+    setTimeout(function() {
+      window.figma.captureForDesign({
+        captureId: '794fa126-2d38-47bc-8cd5-2a51f29ae126',
+        endpoint: 'https://mcp.figma.com/mcp/capture/794fa126-2d38-47bc-8cd5-2a51f29ae126/submit',
+        selector: 'body'
+      });
+    }, 500);
+  };
+  document.head.appendChild(script);
+})();
+</script>
 </body>
 </html>

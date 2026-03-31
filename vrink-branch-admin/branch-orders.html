@@ -30,11 +30,16 @@ body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; co
 .sidebar-bottom { padding: 12px 12px 16px; border-top: 1px solid #EDF2F6; display: flex; flex-direction: column; gap: 2px; }
 .sidebar-section-title { font-size: 11px; font-weight: 500; color: #A098AE; letter-spacing: .91px; padding: 4px 12px 8px; text-transform: uppercase; }
 .main-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-.topbar { height: 64px; background: #fff; border-bottom: 1px solid #EDF2F6; display: flex; align-items: center; justify-content: flex-end; padding: 0 24px; gap: 12px; flex-shrink: 0; }
-.topbar-btn { background: none; border: 1px solid #EDF2F6; border-radius: 8px; padding: 8px; cursor: pointer; position: relative; display: flex; align-items: center; justify-content: center; }
-.notif-badge { position: absolute; top: -4px; right: -4px; background: #0095FF; color: #fff; font-size: 10px; font-weight: 500; border-radius: 9999px; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; }
-.topbar-user { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 8px; border-radius: 8px; }
-.topbar-user:hover { background: #F6F6F6; }
+.topbar { height: 64px; background: #fff; border-bottom: 1px solid #EDF2F6; display: flex; align-items: center; justify-content: flex-end; padding: 0 24px; gap: 8px; flex-shrink: 0; }
+.topbar-branch-btn, .topbar-admin-btn { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid #EDF2F6; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 500; color: #111; background: #fff; position: relative; user-select: none; }
+.topbar-branch-btn:hover, .topbar-admin-btn:hover { background: #F6F6F6; }
+.user-avatar-sm { width: 24px; height: 24px; border-radius: 50%; background: #0095FF; color: #fff; font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.tb-dropdown { display: none; position: absolute; top: calc(100% + 6px); right: 0; background: #fff; border: 1px solid #EDF2F6; border-radius: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.10); min-width: 140px; z-index: 200; overflow: hidden; }
+.tb-dropdown.open { display: block; }
+.tb-dd-item { padding: 10px 14px; font-size: 13px; color: #333; cursor: pointer; }
+.tb-dd-item:hover { background: #F6F6F6; }
+.tb-dd-item.active { color: #0095FF; font-weight: 600; }
+.tb-dd-logout { color: #EC3D3D; }
 .user-avatar { width: 32px; height: 32px; background: #EDF2F6; border-radius: 9999px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; color: #505050; }
 .user-name { font-size: 13px; font-weight: 500; color: #111; }
 .user-role { font-size: 11px; color: #767676; }
@@ -60,19 +65,9 @@ tbody tr:hover td { background: #FAFAFA; }
 .table-wrap { background: #fff; border-radius: 20px; box-shadow: 0 4px 20px rgba(238,238,238,.5); overflow: hidden; }
 
 /* Filter bar */
-.filter-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; justify-content: space-between; }
-.filter-select-btn { padding: 7px 14px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid #EDF2F6; background: #fff; color: #505050; display: flex; align-items: center; gap: 6px; position: relative; }
-.filter-select-btn.active { border-color: #0095FF; color: #0095FF; }
-.search-input { padding: 7px 12px; border-radius: 6px; border: 1px solid #EDF2F6; font-size: 13px; color: #111; background: #fff; outline: none; width: 200px; }
-.dropdown-menu { position: absolute; top: calc(100% + 4px); left: 0; background: #fff; border: 1px solid #EDF2F6; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,.08); min-width: 140px; padding: 4px; z-index: 100; display: none; }
-.dropdown-menu.show { display: block; }
-.dropdown-item { padding: 8px 12px; border-radius: 6px; font-size: 13px; color: #505050; cursor: pointer; }
-.dropdown-item:hover { background: #F6F6F6; }
-.dropdown-item.active { color: #0095FF; font-weight: 500; }
-.member-id { font-size: 11px; color: #767676; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.cancel-btn { background: none; border: 1px solid #EDF2F6; border-radius: 4px; padding: 4px 10px; font-size: 11px; font-weight: 500; color: #505050; cursor: pointer; }
-.cancel-btn:hover { border-color: #EC3D3D; color: #EC3D3D; }
-.text-muted { color: #C0C0C0; }
+.filter-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+.filter-sep { color: #CCC; font-size: 13px; }
+select { appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23767676' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; padding-right: 28px !important; }
 
 /* Pagination */
 .pagination { display: flex; align-items: center; justify-content: center; gap: 4px; padding: 16px; }
@@ -88,18 +83,6 @@ tbody tr:hover td { background: #FAFAFA; }
 .stat-value { font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 500; color: #111111; margin-bottom: 6px; }
 .nav-group-trigger.open .nav-arrow { transform: rotate(180deg); }
 .nav-arrow { transition: transform .2s; display: inline-block; }
-.topbar-branch-btn { display:flex; align-items:center; gap:6px; height:36px; padding:0 12px; border:1px solid #EDF2F6; border-radius:8px; font-size:13px; font-weight:500; color:#111; cursor:pointer; background:#fff; white-space:nowrap; }
-.topbar-branch-btn:hover { background:#F6F6F6; }
-.topbar-user-wrap { display:flex; align-items:center; gap:8px; cursor:pointer; padding:4px 8px; border-radius:8px; }
-.topbar-user-wrap:hover { background:#F6F6F6; }
-.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:999; align-items:center; justify-content:center; }
-.modal-overlay.open { display:flex; }
-.modal { background:#fff; border-radius:16px; width:480px; max-width:95vw; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,.15); }
-.modal-header { display:flex; align-items:center; justify-content:space-between; padding:20px 24px 16px; border-bottom:1px solid #EDF2F6; }
-.modal-title { font-size:16px; font-weight:500; color:#111; }
-.modal-close { background:none; border:none; font-size:16px; color:#767676; cursor:pointer; padding:4px; }
-.modal-body { padding:20px 24px; }
-.modal-footer { padding:16px 24px; border-top:1px solid #EDF2F6; display:flex; justify-content:flex-end; gap:8px; }
 </style>
 </head>
 <body>
@@ -134,7 +117,7 @@ tbody tr:hover td { background: #FAFAFA; }
       </div>
     </div>
     <a href="branch-menu.html" class="nav-item">
-      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 2h10l1.5 16A2 2 0 0116.5 20h-9a2 2 0 01-2-2L7 2z"/><path d="M5 2h14"/></svg></span>
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></span>
       <span class="nav-label">메뉴 설정</span>
     </a>
     <div class="nav-group">
@@ -156,7 +139,7 @@ tbody tr:hover td { background: #FAFAFA; }
       <span class="nav-label">지점 설정</span>
     </a>
     <a href="branch-help.html" class="nav-item">
-      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></span>
       <span class="nav-label">도움말</span>
     </a>
     <button class="nav-item nav-logout" style="background:none;border:none;width:100%;text-align:left;cursor:pointer;" onclick="if(confirm('로그아웃 하시겠습니까?')){sessionStorage.removeItem('branchAuth');location.href='branch-login.html';}">
@@ -168,57 +151,60 @@ tbody tr:hover td { background: #FAFAFA; }
 
 <!-- Main -->
 <div class="main-wrapper">
-  <div class="topbar">
-    <button class="topbar-btn">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#505050" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
-      <span class="notif-badge">2</span>
-    </button>
-    <button class="topbar-branch-btn">
-      빌드업 성수점
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-    </button>
-    <div class="topbar-user-wrap">
-      <div class="user-avatar">A</div>
-      <div class="user-info">
-        <div class="user-name">admin</div>
-        <div class="user-role">관리자</div>
+  <header class="topbar">
+    <div class="topbar-branch-btn" onclick="toggleTBDrop('tb-branch-dd')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+      <span>빌드업성수점</span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      <div class="tb-dropdown" id="tb-branch-dd">
+        <div class="tb-dd-item active">빌드업성수점</div>
+        <div class="tb-dd-item">강남점</div>
+        <div class="tb-dd-item">홍대점</div>
       </div>
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
-  </div>
+    <div class="topbar-admin-btn" onclick="toggleTBDrop('tb-admin-dd')">
+      <div class="user-avatar-sm">박</div>
+      <span>박지영</span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      <div class="tb-dropdown" id="tb-admin-dd">
+        <div class="tb-dd-item">프로필 설정</div>
+        <div class="tb-dd-item tb-dd-logout" onclick="if(confirm('로그아웃 하시겠습니까?')){sessionStorage.removeItem('branchAuth');location.href='branch-login.html';}">로그아웃</div>
+      </div>
+    </div>
+  </header>
 
   <div class="page-content">
-    <div class="page-title">주문 내역</div>
+    <div class="page-header">
+      <div class="page-title">주문 내역</div>
+      <button class="btn btn-outline btn-sm" onclick="exportOrdersCSV()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        엑셀로 추출하기
+      </button>
+    </div>
 
     <!-- Filter -->
-    <div class="filter-bar">
-      <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <button class="filter-select-btn" id="ordDateBtn">날짜 ▾
-          <div class="dropdown-menu" id="ordDateDrop">
-            <div class="dropdown-item active" onclick="ordSetFilter('date','','날짜','ordDateBtn','ordDateDrop')">전체</div>
-            <div class="dropdown-item" onclick="ordSetFilter('date','today','오늘','ordDateBtn','ordDateDrop')">오늘</div>
-            <div class="dropdown-item" onclick="ordSetFilter('date','week','이번 주','ordDateBtn','ordDateDrop')">이번 주</div>
-            <div class="dropdown-item" onclick="ordSetFilter('date','month','이번 달','ordDateBtn','ordDateDrop')">이번 달</div>
-          </div>
-        </button>
-        <button class="filter-select-btn" id="ordPayBtn">결제 수단 ▾
-          <div class="dropdown-menu" id="ordPayDrop">
-            <div class="dropdown-item active" onclick="ordSetFilter('pay','','결제 수단','ordPayBtn','ordPayDrop')">전체</div>
-            <div class="dropdown-item" onclick="ordSetFilter('pay','카드 결제','카드 결제','ordPayBtn','ordPayDrop')">카드 결제</div>
-            <div class="dropdown-item" onclick="ordSetFilter('pay','간편 결제','간편 결제','ordPayBtn','ordPayDrop')">간편 결제</div>
-          </div>
-        </button>
-        <button class="filter-select-btn" id="ordStatusBtn">결제 상태 ▾
-          <div class="dropdown-menu" id="ordStatusDrop">
-            <div class="dropdown-item active" onclick="ordSetFilter('status','','결제 상태','ordStatusBtn','ordStatusDrop')">전체</div>
-            <div class="dropdown-item" onclick="ordSetFilter('status','결제완료','결제완료','ordStatusBtn','ordStatusDrop')">결제완료</div>
-            <div class="dropdown-item" onclick="ordSetFilter('status','결제대기','결제대기','ordStatusBtn','ordStatusDrop')">결제대기</div>
-            <div class="dropdown-item" onclick="ordSetFilter('status','취소','취소','ordStatusBtn','ordStatusDrop')">취소</div>
-          </div>
-        </button>
+    <div class="filter-bar" style="margin-bottom:20px;justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <select id="dateFilter" onchange="applyFilter()" style="height:34px;border:1px solid #EDF2F6;border-radius:8px;padding:0 10px 0 8px;font-size:13px;background:#fff;outline:none;cursor:pointer;color:#505050;">
+          <option value="">날짜 전체</option>
+          <option value="today">오늘</option>
+          <option value="week">이번 주</option>
+          <option value="month">이번 달</option>
+        </select>
+        <select id="statusFilter" onchange="applyFilter()" style="height:34px;border:1px solid #EDF2F6;border-radius:8px;padding:0 10px 0 8px;font-size:13px;background:#fff;outline:none;cursor:pointer;color:#505050;">
+          <option value="">결제 상태 전체</option>
+          <option value="완료">완료</option>
+          <option value="준비중">준비중</option>
+          <option value="취소">취소</option>
+        </select>
+        <button class="btn btn-outline btn-sm" onclick="resetFilter()">초기화</button>
       </div>
-      <div style="display:flex;gap:8px;align-items:center;">
-        <input class="search-input" type="text" id="ordSearch" placeholder="주문번호, 회원 검색..." oninput="applyFilter()">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <input type="text" id="menuSearch" placeholder="주문번호, 메뉴 검색..." style="height:34px;border:1px solid #EDF2F6;border-radius:8px;padding:0 12px;font-size:13px;outline:none;min-width:200px;" oninput="applyFilter()">
+        <button class="btn btn-outline btn-sm" onclick="exportOrdersCSV()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          엑셀로 추출하기
+        </button>
       </div>
     </div>
 
@@ -227,16 +213,13 @@ tbody tr:hover td { background: #FAFAFA; }
       <table>
         <thead>
           <tr>
-            <th>회원 ID</th>
-            <th>주문 일시</th>
-            <th>Order No</th>
-            <th>주문 상세 내용</th>
-            <th>결제 수단</th>
-            <th>결제 금액</th>
-            <th>결제 상태</th>
-            <th>결제 채널</th>
-            <th>키오스크 ID</th>
-            <th>관리</th>
+            <th>주문번호</th>
+            <th>메뉴</th>
+            <th>수량</th>
+            <th>샷 추가</th>
+            <th>금액</th>
+            <th>상태</th>
+            <th>주문일시</th>
           </tr>
         </thead>
         <tbody id="orderTableBody"></tbody>
@@ -246,168 +229,129 @@ tbody tr:hover td { background: #FAFAFA; }
   </div>
 </div>
 
-<!-- 주문 상세 모달 -->
-<div class="modal-overlay" id="orderDetailModal">
-  <div class="modal" style="width:560px">
-    <div class="modal-header">
-      <span class="modal-title">주문 상세</span>
-      <button class="modal-close" onclick="closeModal('orderDetailModal')">✕</button>
-    </div>
-    <div class="modal-body" id="orderDetailBody"></div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeModal('orderDetailModal')">닫기</button>
-    </div>
-  </div>
-</div>
-
 <script>
 const ALL_ORDERS = [
-  { no: 'ORD-20260330-001', memberId: '8c3df1ab-...9ad', dt: '2026/03/30 09:12:05', detail: '부스터샷, 컷팅샷', payMethod: '카드 결제', amount: 7800,  status: '결제완료', channel: '토스페이먼츠', kioskId: 'e8619adf' },
-  { no: 'ORD-20260330-002', memberId: '7b1281f7-...a0',  dt: '2026/03/30 09:35:22', detail: '아미노샷, 비타민샷', payMethod: '간편 결제', amount: 7800,  status: '결제완료', channel: '토스페이먼츠', kioskId: 'e8619adf' },
-  { no: 'ORD-20260330-003', memberId: '',                dt: '2026/03/30 10:05:11', detail: '릴렉스샷', payMethod: '카드 결제', amount: 3900,  status: '결제대기', channel: '-', kioskId: 'e8619adf' },
-  { no: 'ORD-20260329-015', memberId: '044f6f0d-...0c',  dt: '2026/03/29 14:20:33', detail: '부스터샷 x2, 컷팅샷', payMethod: '간편 결제', amount: 11700, status: '결제완료', channel: '토스페이먼츠', kioskId: 'e8619adf' },
-  { no: 'ORD-20260329-014', memberId: '8c3df1ab-...9ad', dt: '2026/03/29 13:47:09', detail: '비타민샷', payMethod: '카드 결제', amount: 3900,  status: '결제완료', channel: '토스페이먼츠', kioskId: 'e8619adf' },
-  { no: 'ORD-20260329-013', memberId: '',                dt: '2026/03/29 12:10:55', detail: '아미노샷, 릴렉스샷', payMethod: '카드 결제', amount: 7800,  status: '취소',    channel: '-', kioskId: 'e8619adf' },
-  { no: 'ORD-20260328-022', memberId: '7b1281f7-...a0',  dt: '2026/03/28 11:30:41', detail: '컷팅샷 x2', payMethod: '간편 결제', amount: 7800,  status: '결제완료', channel: '토스페이먼츠', kioskId: 'e8619adf' },
-  { no: 'ORD-20260328-021', memberId: '044f6f0d-...0c',  dt: '2026/03/28 10:55:18', detail: '부스터샷', payMethod: '카드 결제', amount: 3900,  status: '결제완료', channel: '토스페이먼츠', kioskId: 'e8619adf' },
-  { no: 'ORD-20260328-020', memberId: '',                dt: '2026/03/28 10:22:03', detail: '아미노샷, 비타민샷, 릴렉스샷', payMethod: '간편 결제', amount: 11700, status: '결제대기', channel: '-', kioskId: 'e8619adf' },
-  { no: 'ORD-20260327-018', memberId: '8c3df1ab-...9ad', dt: '2026/03/27 16:40:27', detail: '컷팅샷', payMethod: '카드 결제', amount: 3900,  status: '결제완료', channel: '토스페이먼츠', kioskId: 'e8619adf' },
-  { no: 'ORD-20260327-017', memberId: '7b1281f7-...a0',  dt: '2026/03/27 15:15:50', detail: '부스터샷, 아미노샷', payMethod: '간편 결제', amount: 7800,  status: '결제완료', channel: '토스페이먼츠', kioskId: 'e8619adf' },
-  { no: 'ORD-20260326-009', memberId: '',                dt: '2026/03/26 09:50:14', detail: '비타민샷 x2', payMethod: '카드 결제', amount: 7800,  status: '취소',    channel: '-', kioskId: 'e8619adf' },
-  { no: 'ORD-20260325-005', memberId: '044f6f0d-...0c',  dt: '2026/03/25 13:05:36', detail: '릴렉스샷, 컷팅샷', payMethod: '간편 결제', amount: 7800,  status: '결제완료', channel: '토스페이먼츠', kioskId: 'e8619adf' },
-  { no: 'ORD-20260324-003', memberId: '8c3df1ab-...9ad', dt: '2026/03/24 11:20:08', detail: '부스터샷', payMethod: '카드 결제', amount: 3900,  status: '결제완료', channel: '토스페이먼츠', kioskId: 'e8619adf' },
-  { no: 'ORD-20260323-001', memberId: '',                dt: '2026/03/23 17:33:44', detail: '아미노샷, 컷팅샷', payMethod: '간편 결제', amount: 7800,  status: '결제대기', channel: '-', kioskId: 'e8619adf' },
+  { no: 'ORD-20260330-001', menu: '단백질 쉐이크', qty: 1, shot: '없음',      amount: 6500,  status: '완료',  dt: '2026-03-30 09:12' },
+  { no: 'ORD-20260330-002', menu: '그린 스무디',    qty: 2, shot: '2샷 추가',  amount: 15000, status: '완료',  dt: '2026-03-30 09:35' },
+  { no: 'ORD-20260330-003', menu: '아미노 워터',    qty: 1, shot: '없음',      amount: 4500,  status: '준비중',dt: '2026-03-30 10:05' },
+  { no: 'ORD-20260329-015', menu: '콜라겐 드링크',  qty: 3, shot: '1샷 추가',  amount: 22500, status: '완료',  dt: '2026-03-29 14:20' },
+  { no: 'ORD-20260329-014', menu: '비타민 C 부스터',qty: 1, shot: '없음',      amount: 5500,  status: '완료',  dt: '2026-03-29 13:47' },
+  { no: 'ORD-20260329-013', menu: '단백질 쉐이크',  qty: 2, shot: '없음',      amount: 13000, status: '취소',  dt: '2026-03-29 12:10' },
+  { no: 'ORD-20260328-022', menu: '망고 스무디',    qty: 1, shot: '2샷 추가',  amount: 8500,  status: '완료',  dt: '2026-03-28 11:30' },
+  { no: 'ORD-20260328-021', menu: '그린 디톡스',    qty: 1, shot: '없음',      amount: 7000,  status: '완료',  dt: '2026-03-28 10:55' },
+  { no: 'ORD-20260328-020', menu: '아이언 부스터',  qty: 2, shot: '1샷 추가',  amount: 18000, status: '준비중',dt: '2026-03-28 10:22' },
+  { no: 'ORD-20260327-018', menu: '콜라겐 드링크',  qty: 1, shot: '없음',      amount: 7500,  status: '완료',  dt: '2026-03-27 16:40' },
+  { no: 'ORD-20260327-017', menu: '단백질 쉐이크',  qty: 3, shot: '없음',      amount: 19500, status: '완료',  dt: '2026-03-27 15:15' },
+  { no: 'ORD-20260326-009', menu: '비타민 C 부스터',qty: 2, shot: '2샷 추가',  amount: 13000, status: '취소',  dt: '2026-03-26 09:50' },
+  { no: 'ORD-20260325-005', menu: '망고 스무디',    qty: 1, shot: '1샷 추가',  amount: 8500,  status: '완료',  dt: '2026-03-25 13:05' },
+  { no: 'ORD-20260324-003', menu: '그린 스무디',    qty: 2, shot: '없음',      amount: 14000, status: '완료',  dt: '2026-03-24 11:20' },
+  { no: 'ORD-20260323-001', menu: '아이언 부스터',  qty: 1, shot: '없음',      amount: 9000,  status: '준비중',dt: '2026-03-23 17:33' },
 ];
 
 const PAGE_SIZE = 5;
 let currentPage = 1;
-let filteredOrders = ALL_ORDERS.slice();
-
-// 필터 상태
-const ordFilters = { date: '', pay: '', status: '' };
+let filteredOrders = [...ALL_ORDERS];
 
 function statusBadge(s) {
-  if (s === '결제완료') return '<span class="badge badge-success">' + s + '</span>';
-  if (s === '결제대기') return '<span class="badge badge-warning">' + s + '</span>';
-  if (s === '취소')     return '<span class="badge badge-error">' + s + '</span>';
-  return '<span class="badge badge-gray">' + s + '</span>';
+  if (s === '완료')  return `<span class="badge badge-success">${s}</span>`;
+  if (s === '준비중') return `<span class="badge badge-warning">${s}</span>`;
+  if (s === '취소')  return `<span class="badge badge-error">${s}</span>`;
+  return `<span class="badge badge-gray">${s}</span>`;
 }
 
 function renderTable() {
-  var tbody = document.getElementById('orderTableBody');
-  var start = (currentPage - 1) * PAGE_SIZE;
-  var slice = filteredOrders.slice(start, start + PAGE_SIZE);
-  tbody.innerHTML = slice.map(function(o) {
-    var memberCell = o.memberId ? '<span class="member-id">' + o.memberId + '</span>' : '<span class="text-muted">-</span>';
-    var channelCell = (o.channel && o.channel !== '-') ? '<span style="font-size:11px;color:#505050;">' + o.channel + '</span>' : '<span class="text-muted">-</span>';
-    var kioskCell = o.kioskId ? '<span style="font-size:11px;color:#767676;">' + o.kioskId + '</span>' : '<span class="text-muted">-</span>';
-    var cancelBtn = o.status !== '취소' ? '<button class="cancel-btn" onclick="cancelOrder(\'' + o.no + '\',this)">취소</button>' : '<span class="text-muted">-</span>';
-    return '<tr>'
-      + '<td>' + memberCell + '</td>'
-      + '<td style="color:#767676;white-space:nowrap;font-size:12px;">' + o.dt + '</td>'
-      + '<td style="font-size:11px;color:#505050;">' + o.no + '</td>'
-      + '<td>' + o.detail + ' <button class="btn btn-outline btn-sm" onclick="showDetail(\'' + o.no + '\')">상세보기</button></td>'
-      + '<td style="font-size:13px;">' + (o.payMethod || '<span class="text-muted">-</span>') + '</td>'
-      + '<td style="font-weight:500;">' + o.amount.toLocaleString() + '원</td>'
-      + '<td>' + statusBadge(o.status) + '</td>'
-      + '<td>' + channelCell + '</td>'
-      + '<td>' + kioskCell + '</td>'
-      + '<td>' + cancelBtn + '</td>'
-      + '</tr>';
-  }).join('');
+  const tbody = document.getElementById('orderTableBody');
+  const start = (currentPage - 1) * PAGE_SIZE;
+  const slice = filteredOrders.slice(start, start + PAGE_SIZE);
+  tbody.innerHTML = slice.map(o => `
+    <tr>
+      <td style="font-family:monospace;font-size:12px;color:#505050;">${o.no}</td>
+      <td style="font-weight:500;">${o.menu}</td>
+      <td>${o.qty}</td>
+      <td>${o.shot === '없음' ? '<span style="color:#CCC">-</span>' : `<span class="badge badge-primary">${o.shot}</span>`}</td>
+      <td style="font-weight:500;">${o.amount.toLocaleString()}원</td>
+      <td>${statusBadge(o.status)}</td>
+      <td style="color:#767676;font-size:12px;">${o.dt}</td>
+    </tr>
+  `).join('');
   renderPagination();
 }
 
 function renderPagination() {
-  var total = Math.ceil(filteredOrders.length / PAGE_SIZE);
-  var pg = document.getElementById('pagination');
+  const total = Math.ceil(filteredOrders.length / PAGE_SIZE);
+  const pg = document.getElementById('pagination');
   if (total <= 1) { pg.innerHTML = ''; return; }
-  var html = '<button class="page-btn" onclick="if(currentPage>1){currentPage--;renderTable();}">‹</button>';
-  for (var i = 1; i <= total; i++) {
-    html += '<button class="page-btn' + (i === currentPage ? ' active' : '') + '" onclick="goPage(' + i + ')">' + i + '</button>';
+  let html = '';
+  for (let i = 1; i <= total; i++) {
+    html += `<button class="page-btn${i === currentPage ? ' active' : ''}" onclick="goPage(${i})">${i}</button>`;
   }
-  html += '<button class="page-btn" onclick="if(currentPage<' + total + '){currentPage++;renderTable();}">›</button>';
   pg.innerHTML = html;
 }
 
-function goPage(n) { currentPage = n; renderTable(); }
+function goPage(n) {
+  currentPage = n;
+  renderTable();
+}
 
 function applyFilter() {
-  var search = (document.getElementById('ordSearch').value || '').trim().toLowerCase();
-  var today = new Date().toISOString().split('T')[0];
+  const dateVal = document.getElementById('dateFilter').value;
+  const status = document.getElementById('statusFilter').value;
+  const search = (document.getElementById('menuSearch').value || '').trim().toLowerCase();
+  const today = new Date().toISOString().split('T')[0];
   filteredOrders = ALL_ORDERS.filter(function(o) {
-    var d = o.dt.replace(/\//g, '-').split(' ')[0];
-    if (ordFilters.date === 'today' && d !== today) return false;
-    if (ordFilters.date === 'week') {
-      var weekAgo = new Date(Date.now() - 7*24*60*60*1000).toISOString().split('T')[0];
+    const d = o.dt.split(' ')[0];
+    if (dateVal === 'today' && d !== today) return false;
+    if (dateVal === 'week') {
+      const weekAgo = new Date(Date.now() - 7*24*60*60*1000).toISOString().split('T')[0];
       if (d < weekAgo) return false;
     }
-    if (ordFilters.date === 'month') {
-      var monthStart = today.slice(0,7) + '-01';
+    if (dateVal === 'month') {
+      const monthStart = today.slice(0,7) + '-01';
       if (d < monthStart) return false;
     }
-    if (ordFilters.pay && o.payMethod !== ordFilters.pay) return false;
-    if (ordFilters.status && o.status !== ordFilters.status) return false;
-    if (search && !o.no.toLowerCase().includes(search) && !o.memberId.toLowerCase().includes(search)) return false;
+    if (status && o.status !== status) return false;
+    if (search && !o.no.toLowerCase().includes(search) && !o.menu.toLowerCase().includes(search)) return false;
     return true;
   });
   currentPage = 1;
   renderTable();
 }
 
-function ordSetFilter(type, val, label, btnId, dropId) {
-  ordFilters[type] = val;
-  var btn = document.getElementById(btnId);
-  var defaultLabels = { date: '날짜', pay: '결제 수단', status: '결제 상태' };
-  setFilterBtnLabel(btn, val ? label : defaultLabels[type]);
-  btn.classList.toggle('active', !!val);
-  document.querySelectorAll('#' + dropId + ' .dropdown-item').forEach(function(el) {
-    el.classList.toggle('active', el.textContent === label || (!val && el.textContent === '전체'));
-  });
-  document.getElementById(dropId).classList.remove('show');
-  applyFilter();
-}
-
-// 드롭다운 토글
-document.addEventListener('click', function(e) {
-  var btn = e.target.closest('.filter-select-btn');
-  document.querySelectorAll('.dropdown-menu').forEach(function(d) { d.classList.remove('show'); });
-  if (btn) {
-    var drop = btn.querySelector('.dropdown-menu');
-    if (drop) { drop.classList.add('show'); e.stopPropagation(); }
-  }
-});
-
-function showDetail(no) {
-  var o = ALL_ORDERS.find(function(x){ return x.no === no; });
-  if (!o) return;
-  document.getElementById('orderDetailBody').innerHTML =
-    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px;background:#F8F8FA;border-radius:10px;">'
-    + '<div><div style="font-size:11px;color:#767676;margin-bottom:3px;">주문번호</div><div style="font-size:13px;font-weight:500;">' + o.no + '</div></div>'
-    + '<div><div style="font-size:11px;color:#767676;margin-bottom:3px;">주문일시</div><div style="font-size:13px;">' + o.dt + '</div></div>'
-    + '<div><div style="font-size:11px;color:#767676;margin-bottom:3px;">결제 수단</div><div style="font-size:13px;">' + (o.payMethod || '-') + '</div></div>'
-    + '<div><div style="font-size:11px;color:#767676;margin-bottom:3px;">결제 금액</div><div style="font-size:13px;font-weight:500;color:#0095FF;">' + o.amount.toLocaleString() + '원</div></div>'
-    + '<div><div style="font-size:11px;color:#767676;margin-bottom:3px;">결제 상태</div><div style="font-size:13px;">' + statusBadge(o.status) + '</div></div>'
-    + '<div><div style="font-size:11px;color:#767676;margin-bottom:3px;">키오스크 ID</div><div style="font-size:13px;">' + (o.kioskId || '-') + '</div></div>'
-    + '</div>'
-    + '<div style="margin-top:16px;"><div style="font-size:11px;color:#767676;margin-bottom:6px;">주문 상세</div><div style="font-size:13px;">' + o.detail + '</div></div>';
-  openModal('orderDetailModal');
-}
-
-function cancelOrder(no, btn) {
-  if (!confirm('주문을 취소하시겠습니까?')) return;
-  var o = ALL_ORDERS.find(function(x){ return x.no === no; });
-  if (o) { o.status = '취소'; }
-  applyFilter();
+function resetFilter() {
+  document.getElementById('dateFilter').value = '';
+  document.getElementById('statusFilter').value = '';
+  document.getElementById('menuSearch').value = '';
+  filteredOrders = [...ALL_ORDERS];
+  currentPage = 1;
+  renderTable();
 }
 
 function toggleGroup(el) {
   el.classList.toggle('open');
-  var sub = el.nextElementSibling;
-  if (sub) sub.classList.toggle('show');
+  const sub = el.nextElementSibling;
+  sub.classList.toggle('show');
 }
 
 renderTable();
+
+function exportOrdersCSV() {
+  const header = ['주문번호','메뉴','수량','샷 추가','금액','상태','주문일시'];
+  const rows = filteredOrders.map(o => [o.no, o.menu, o.qty, o.shot, o.amount + '원', o.status, o.dt]);
+  const csv = [header, ...rows].map(r => r.join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,\uFEFF' + encodeURIComponent(csv);
+  a.download = '주문내역.csv';
+  a.click();
+}
+function toggleTBDrop(id) {
+  document.querySelectorAll('.tb-dropdown').forEach(d => { if(d.id !== id) d.classList.remove('open'); });
+  document.getElementById(id).classList.toggle('open');
+}
+document.addEventListener('click', function(e) {
+  if(!e.target.closest('.topbar-branch-btn') && !e.target.closest('.topbar-admin-btn')) {
+    document.querySelectorAll('.tb-dropdown').forEach(d => d.classList.remove('open'));
+  }
+});
 </script>
 <script>(function(){if(!sessionStorage.getItem('branchAuth')){location.href='branch-login.html';}})()</script>
 <script src="branch-common.js"></script>
