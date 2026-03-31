@@ -28,33 +28,31 @@
 
   /* ── 헤더 ── */
   .header {
-    background: #111;
-    border-radius: 20px;
-    padding: 40px 48px;
-    margin-bottom: 24px;
+    padding: 12px 4px 28px;
+    margin-bottom: 20px;
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: space-between;
+    border-bottom: 1px solid #E0E0E0;
   }
-  .header-left { display: flex; flex-direction: column; gap: 10px; }
-  .logo-row { display: flex; align-items: center; gap: 10px; }
+  .header-left { display: flex; flex-direction: column; gap: 8px; }
+  .logo-row { display: flex; align-items: center; gap: 8px; }
   .logo-mark {
-    width: 32px; height: 32px; background: #fff;
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    width: 26px; height: 26px; background: #111;
+    border-radius: 8px; display: flex; align-items: center; justify-content: center;
   }
-  .logo-mark svg { width: 15px; height: 15px; }
-  .logo-text { font-size: 20px; font-weight: 600; color: #fff; letter-spacing: -0.5px; }
-  .doc-title { font-size: 20px; font-weight: 600; color: #fff; letter-spacing: -0.8px; margin-top: 4px; }
-  .doc-sub { font-size: 14px; color: rgba(255,255,255,0.5); margin-top: 4px; }
+  .logo-mark svg { width: 12px; height: 12px; }
+  .logo-text { font-size: 14px; font-weight: 600; color: #111; letter-spacing: -0.3px; }
+  .doc-title { font-size: 26px; font-weight: 600; color: #111; letter-spacing: -1px; margin-top: 2px; }
+  .doc-sub { font-size: 13px; color: #999; margin-top: 2px; }
   .header-badge {
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 12px;
-    padding: 16px 24px;
-    text-align: right;
+    display: flex;
+    gap: 16px;
+    padding-bottom: 2px;
   }
-  .header-badge .badge-label { font-size: 12px; color: rgba(255,255,255,0.4); letter-spacing: 1px; text-transform: uppercase; }
-  .header-badge .badge-val { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.85); margin-top: 6px; }
+  .header-badge .badge-item { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+  .header-badge .badge-label { font-size: 11px; color: #AAA; letter-spacing: 0.5px; text-transform: uppercase; }
+  .header-badge .badge-val { font-size: 13px; font-weight: 600; color: #333; }
 
   /* ── 준비물 배너 ── */
   .prep-banner {
@@ -325,10 +323,14 @@
       <div class="doc-sub">메이데이 파트너 전달용 · Kiosk Installation Guide v1.0</div>
     </div>
     <div class="header-badge">
-      <div class="badge-label">전달 대상</div>
-      <div class="badge-val">메이데이 설치팀</div>
-      <div class="badge-label" style="margin-top:12px;">작성</div>
-      <div class="badge-val">VRINK 운영팀</div>
+      <div class="badge-item">
+        <div class="badge-label">전달 대상</div>
+        <div class="badge-val">메이데이 설치팀</div>
+      </div>
+      <div class="badge-item">
+        <div class="badge-label">작성</div>
+        <div class="badge-val">VRINK 운영팀</div>
+      </div>
     </div>
   </div>
 
