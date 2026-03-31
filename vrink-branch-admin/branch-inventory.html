@@ -197,7 +197,6 @@ select { appearance: none; -webkit-appearance: none; background-image: url("data
       <div style="display:flex;gap:8px;">
         <button class="btn btn-outline btn-sm">재고 알림 설정</button>
         <button class="btn btn-primary btn-sm" onclick="document.getElementById('invInModal').style.display='flex'">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           재고 입고
         </button>
       </div>
@@ -205,14 +204,23 @@ select { appearance: none; -webkit-appearance: none; background-image: url("data
 
 
     <!-- Filter -->
-    <div class="filter-bar" style="align-items:center;gap:8px;">
-      <button class="filter-btn active" onclick="filterCat(this,'all')">전체</button>
-      <button class="filter-btn" onclick="filterCat(this,'기능샷')">기능샷</button>
-      <button class="filter-btn" onclick="filterCat(this,'맛샷')">맛샷</button>
-    </div>
-    <div class="filter-bar" style="margin-bottom:16px;">
+    <div class="filter-bar" style="align-items:center;gap:8px;margin-bottom:16px;">
       <div style="position:relative;display:inline-block;">
-        <button class="filter-select-btn" id="stockStatusFilterBtn">재고 상태
+        <button class="filter-select-btn" id="branchFilterBtn" onclick="toggleInvDrop('branchFilterDrop')">
+          <span id="branchFilterLabel">전체 지점</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          <div class="inv-dropdown" id="branchFilterDrop" style="position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #EDF2F6;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.08);min-width:140px;padding:4px;z-index:100;display:none;">
+            <div class="inv-drop-item" onclick="setBranchFilter('','전체 지점')">전체 지점</div>
+            <div class="inv-drop-item" onclick="setBranchFilter('성수','빌드업 성수점')">빌드업 성수점</div>
+            <div class="inv-drop-item" onclick="setBranchFilter('강남','강남점')">강남점</div>
+            <div class="inv-drop-item" onclick="setBranchFilter('홍대','홍대점')">홍대점</div>
+          </div>
+        </button>
+      </div>
+      <div style="position:relative;display:inline-block;">
+        <button class="filter-select-btn" id="stockStatusFilterBtn" onclick="toggleInvDrop('stockStatusFilterDrop')">
+          <span id="stockStatusFilterLabel">재고 상태</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
           <div class="inv-dropdown" id="stockStatusFilterDrop" style="position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #EDF2F6;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.08);min-width:120px;padding:4px;z-index:100;display:none;">
             <div class="inv-drop-item" onclick="setStatusFilter('','재고 상태')">전체</div>
             <div class="inv-drop-item" onclick="setStatusFilter('양호','양호')">양호</div>
@@ -232,77 +240,77 @@ select { appearance: none; -webkit-appearance: none; background-image: url("data
         <thead>
           <tr>
             <th>상품명</th>
-            <th>카테고리</th>
             <th>현재 재고</th>
             <th>재고 현황</th>
-            <th>최소 재고</th>
+            <th>안전 재고</th>
+            <th>마지막 입고일</th>
             <th>상태</th>
             <th>관리</th>
           </tr>
         </thead>
         <tbody>
           <tr data-category="기능샷">
-            <td style="font-weight:500;color:#111;">기능샷 부스터</td>
-            <td><span class="badge badge-primary">기능샷</span></td>
+            <td style="font-weight:500;color:#111;">부스터 원액</td>
             <td style="font-family:'Poppins',sans-serif;font-weight:500;">12<span style="font-size:11px;font-weight:400;color:#767676;"> 박스</span></td>
             <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:100%;background:#00E096;"></div></div><span style="font-size:11px;color:#505050;">100%</span></div></td>
             <td style="color:#767676;">8 박스</td>
+            <td style="color:#767676;">2026.03.15</td>
             <td><span class="badge badge-success"><span class="stock-status-text">양호</span></span></td>
-            <td><button class="btn btn-outline btn-sm" onclick="openInvIn('기능샷 부스터')">입고</button></td>
+            <td><button class="btn btn-outline btn-sm" onclick="openInvIn('부스터 원액')">입고</button></td>
           </tr>
           <tr data-category="기능샷">
-            <td style="font-weight:500;color:#111;">기능샷 컷팅</td>
-            <td><span class="badge badge-primary">기능샷</span></td>
+            <td style="font-weight:500;color:#111;">컷팅 원액</td>
             <td style="font-family:'Poppins',sans-serif;font-weight:500;">5<span style="font-size:11px;font-weight:400;color:#767676;"> 박스</span></td>
             <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:62%;background:#F4BE5E;"></div></div><span style="font-size:11px;color:#505050;">62%</span></div></td>
             <td style="color:#767676;">8 박스</td>
+            <td style="color:#767676;">2026.03.10</td>
             <td><span class="badge badge-warning"><span class="stock-status-text">부족</span></span></td>
-            <td><button class="btn btn-primary btn-sm" onclick="openInvIn('기능샷 컷팅')">입고</button></td>
+            <td><button class="btn btn-primary btn-sm" onclick="openInvIn('컷팅 원액')">입고</button></td>
           </tr>
           <tr data-category="기능샷">
-            <td style="font-weight:500;color:#111;">기능샷 비타민</td>
-            <td><span class="badge badge-primary">기능샷</span></td>
+            <td style="font-weight:500;color:#111;">비타민 원액</td>
             <td style="font-family:'Poppins',sans-serif;font-weight:500;color:#D32F2F;">3<span style="font-size:11px;font-weight:400;color:#767676;"> 박스</span></td>
             <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:37%;background:#EC3D3D;"></div></div><span style="font-size:11px;color:#505050;">37%</span></div></td>
             <td style="color:#767676;">8 박스</td>
+            <td style="color:#767676;">2026.02.28</td>
             <td><span class="badge badge-error"><span class="stock-status-text">위험</span></span></td>
-            <td><button class="btn btn-sm" style="background:#EC3D3D;color:#fff;" onclick="openInvIn('기능샷 비타민')">긴급입고</button></td>
+            <td><button class="btn btn-sm" style="background:#EC3D3D;color:#fff;" onclick="openInvIn('비타민 원액')">긴급입고</button></td>
           </tr>
           <tr data-category="기능샷">
-            <td style="font-weight:500;color:#111;">기능샷 릴렉스</td>
-            <td><span class="badge badge-primary">기능샷</span></td>
+            <td style="font-weight:500;color:#111;">릴렉스 원액</td>
             <td style="font-family:'Poppins',sans-serif;font-weight:500;">9<span style="font-size:11px;font-weight:400;color:#767676;"> 박스</span></td>
             <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:100%;background:#00E096;"></div></div><span style="font-size:11px;color:#505050;">100%</span></div></td>
             <td style="color:#767676;">8 박스</td>
+            <td style="color:#767676;">2026.03.20</td>
             <td><span class="badge badge-success"><span class="stock-status-text">양호</span></span></td>
-            <td><button class="btn btn-outline btn-sm" onclick="openInvIn('기능샷 릴렉스')">입고</button></td>
+            <td><button class="btn btn-outline btn-sm" onclick="openInvIn('릴렉스 원액')">입고</button></td>
           </tr>
           <tr data-category="기능샷">
-            <td style="font-weight:500;color:#111;">기능샷 아미노</td>
-            <td><span class="badge badge-primary">기능샷</span></td>
+            <td style="font-weight:500;color:#111;">아미노 원액</td>
             <td style="font-family:'Poppins',sans-serif;font-weight:500;">7<span style="font-size:11px;font-weight:400;color:#767676;"> 박스</span></td>
             <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:87%;background:#0095FF;"></div></div><span style="font-size:11px;color:#505050;">87%</span></div></td>
             <td style="color:#767676;">8 박스</td>
+            <td style="color:#767676;">2026.03.18</td>
             <td><span class="badge badge-success"><span class="stock-status-text">양호</span></span></td>
-            <td><button class="btn btn-outline btn-sm" onclick="openInvIn('기능샷 아미노')">입고</button></td>
+            <td><button class="btn btn-outline btn-sm" onclick="openInvIn('아미노 원액')">입고</button></td>
           </tr>
           <tr data-category="맛샷">
-            <td style="font-weight:500;color:#111;">맛샷 레몬</td>
-            <td><span class="badge badge-warning">맛샷</span></td>
+            <td style="font-weight:500;color:#111;">레몬 원액</td>
             <td style="font-family:'Poppins',sans-serif;font-weight:500;">11<span style="font-size:11px;font-weight:400;color:#767676;"> 박스</span></td>
             <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:100%;background:#00E096;"></div></div><span style="font-size:11px;color:#505050;">100%</span></div></td>
             <td style="color:#767676;">6 박스</td>
+            <td style="color:#767676;">2026.03.22</td>
             <td><span class="badge badge-success"><span class="stock-status-text">양호</span></span></td>
-            <td><button class="btn btn-outline btn-sm" onclick="openInvIn('맛샷 레몬')">입고</button></td>
+            <td><button class="btn btn-outline btn-sm" onclick="openInvIn('레몬 원액')">입고</button></td>
           </tr>
           <tr data-category="맛샷">
-            <td style="font-weight:500;color:#111;">맛샷 청포도</td>
-            <td><span class="badge badge-warning">맛샷</span></td>
+            <td style="font-weight:500;color:#111;">청포도 원액</td>
             <td style="font-family:'Poppins',sans-serif;font-weight:500;">4<span style="font-size:11px;font-weight:400;color:#767676;"> 박스</span></td>
             <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:66%;background:#F4BE5E;"></div></div><span style="font-size:11px;color:#505050;">66%</span></div></td>
             <td style="color:#767676;">6 박스</td>
+            <td style="color:#767676;">2026.03.08</td>
             <td><span class="badge badge-warning"><span class="stock-status-text">부족</span></span></td>
-            <td><button class="btn btn-primary btn-sm" onclick="openInvIn('맛샷 청포도')">입고</button></td>
+            <td><button class="btn btn-primary btn-sm" onclick="openInvIn('청포도 원액')">입고</button></td>
           </tr>
         </tbody>
       </table>
@@ -318,16 +326,16 @@ select { appearance: none; -webkit-appearance: none; background-image: url("data
     <div class="inv-form-group">
       <label class="inv-form-label">상품명 *</label>
       <select class="inv-form-select" id="invInProduct">
-        <option>기능샷 부스터</option>
-        <option>기능샷 컷팅</option>
-        <option>기능샷 비타민</option>
-        <option>기능샷 릴렉스</option>
-        <option>기능샷 아미노</option>
-        <option>맛샷 레몬</option>
-        <option>맛샷 청포도</option>
-        <option>맛샷 사과</option>
-        <option>맛샷 체리</option>
-        <option>맛샷 망고</option>
+        <option>부스터 원액</option>
+        <option>컷팅 원액</option>
+        <option>비타민 원액</option>
+        <option>릴렉스 원액</option>
+        <option>아미노 원액</option>
+        <option>레몬 원액</option>
+        <option>청포도 원액</option>
+        <option>사과 원액</option>
+        <option>체리 원액</option>
+        <option>망고 원액</option>
       </select>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
@@ -358,43 +366,43 @@ select { appearance: none; -webkit-appearance: none; background-image: url("data
 <script>
 function toggleGroup(el){el.classList.toggle('open');var s=el.nextElementSibling;if(s)s.classList.toggle('show');}
 
-var _activeCat = 'all';
-function filterCat(btn, cat) {
-  _activeCat = cat;
-  document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});
-  btn.classList.add('active');
-  filterInventory();
+var _statusFilter = '';
+
+function toggleInvDrop(id) {
+  var all = document.querySelectorAll('.inv-dropdown');
+  all.forEach(function(d) { if (d.id !== id) d.style.display = 'none'; });
+  var el = document.getElementById(id);
+  if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
 
-var _statusFilter = '';
+function setBranchFilter(val, label) {
+  document.getElementById('branchFilterLabel').textContent = label;
+  document.getElementById('branchFilterDrop').style.display = 'none';
+}
 
 function filterInventory() {
   var status = _statusFilter;
   var rows = document.querySelectorAll('#inventoryTable tbody tr');
   rows.forEach(function(row){
-    var catMatch = (_activeCat === 'all' || row.dataset.category === _activeCat);
     var statusMatch = true;
     if (status) {
       var statusCell = row.querySelector('.stock-status-text');
       statusMatch = statusCell && statusCell.textContent.trim() === status;
     }
-    row.style.display = (catMatch && statusMatch) ? '' : 'none';
+    row.style.display = statusMatch ? '' : 'none';
   });
 }
 
 function setStatusFilter(val, label) {
   _statusFilter = val;
-  setFilterBtnLabel('stockStatusFilterBtn', val ? label : '재고 상태');
+  document.getElementById('stockStatusFilterLabel').textContent = val ? label : '재고 상태';
   document.getElementById('stockStatusFilterDrop').style.display = 'none';
   filterInventory();
 }
 
 document.addEventListener('click', function(e) {
-  var btn = e.target.closest('.filter-select-btn');
-  document.querySelectorAll('.inv-dropdown').forEach(function(d) { d.style.display = 'none'; });
-  if (btn) {
-    var drop = btn.querySelector('.inv-dropdown');
-    if (drop) drop.style.display = drop.style.display === 'none' ? 'block' : 'none';
+  if (!e.target.closest('.filter-select-btn')) {
+    document.querySelectorAll('.inv-dropdown').forEach(function(d) { d.style.display = 'none'; });
   }
 });
 
