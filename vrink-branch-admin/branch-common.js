@@ -2,6 +2,10 @@
  * VRINK Branch Admin Common — Auth guard, logout, modal utilities
  */
 (function () {
+  /* ─── 0. 공통 스타일: 입력 필드 높이 통일 ─────────────── */
+  var _s = document.createElement('style');
+  _s.textContent = "input:not([type='checkbox']):not([type='radio']):not([type='file']):not([type='range']),select{height:42px!important;box-sizing:border-box;}";
+  document.head.appendChild(_s);
 
   /* ─── 1. 인증 가드 ───────────────────────────────────── */
   window.branchAuthGuard = function () {

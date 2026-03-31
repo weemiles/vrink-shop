@@ -96,6 +96,8 @@
   }
   .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: #0095FF; }
   .form-textarea { resize: vertical; min-height: 80px; }
+  input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]),
+  select { height: 42px !important; box-sizing: border-box; }
   .form-hint { font-size: 11px; color: #A0A8B3; }
   .modal-divider { height: 1px; background: #EDF2F6; }
   .modal-footer { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
