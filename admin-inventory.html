@@ -204,20 +204,101 @@ input[type="checkbox"] { width: 15px; height: 15px; accent-color: #0095FF; curso
     <div class="table-wrap">
       <table>
         <thead><tr><th>원료명</th><th>현재 재고</th><th>안전 재고</th><th>재고 현황</th><th>상태</th><th>마지막 입고일</th><th>관리</th></tr></thead>
-        <tbody>
-          <tr><td><strong>부스터 원액</strong></td><td>24박스</td><td>10박스</td><td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:70%;background:#0095FF;"></div></div><span style="font-size:12px;color:#505050;">70%</span></div></td><td><span class="badge badge-success">양호</span></td><td>2026-03-25</td><td><button class="btn btn-outline btn-sm" onclick="openModal('inventoryInModal')">입고</button></td></tr>
-          <tr><td><strong>비타민 원액</strong></td><td>8박스</td><td>10박스</td><td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:30%;background:#F4BE5E;"></div></div><span style="font-size:12px;color:#505050;">30%</span></div></td><td><span class="badge badge-warning">부족</span></td><td>2026-03-20</td><td><button class="btn btn-primary btn-sm" onclick="openModal('inventoryInModal')">입고</button></td></tr>
-          <tr><td><strong>컷팅 원액</strong></td><td>3박스</td><td>10박스</td><td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:15%;background:#EC3D3D;"></div></div><span style="font-size:12px;color:#505050;">15%</span></div></td><td><span class="badge badge-error">위험</span></td><td>2026-03-15</td><td><button class="btn btn-danger btn-sm" onclick="openModal('inventoryInModal')">긴급입고</button></td></tr>
-          <tr><td><strong>릴렉스 원액</strong></td><td>18박스</td><td>10박스</td><td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:85%;background:#00E096;"></div></div><span style="font-size:12px;color:#505050;">85%</span></div></td><td><span class="badge badge-success">양호</span></td><td>2026-03-28</td><td><button class="btn btn-outline btn-sm" onclick="openModal('inventoryInModal')">입고</button></td></tr>
-          <tr><td><strong>아미노 원액</strong></td><td>12박스</td><td>10박스</td><td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:60%;background:#0095FF;"></div></div><span style="font-size:12px;color:#505050;">60%</span></div></td><td><span class="badge badge-success">양호</span></td><td>2026-03-22</td><td><button class="btn btn-outline btn-sm" onclick="openModal('inventoryInModal')">입고</button></td></tr>
-          <tr><td><strong>레몬 농축액</strong></td><td>30박스</td><td>15박스</td><td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:100%;background:#00E096;"></div></div><span style="font-size:12px;color:#505050;">100%</span></div></td><td><span class="badge badge-success">양호</span></td><td>2026-03-29</td><td><button class="btn btn-outline btn-sm" onclick="openModal('inventoryInModal')">입고</button></td></tr>
-        </tbody>
+        <tbody id="adminInvTableBody"></tbody>
       </table>
     </div>
   </div>
 </div>
 <script>
 function toggleGroup(el){el.classList.toggle('open');var s=el.nextElementSibling;if(s)s.classList.toggle('show');}
+
+/* ─── 재고 데이터 (localStorage persistence) ─── */
+var _adminDefaultInv = [
+  {name:'부스터 원액', current:24, safe:10, unit:'박스', lastDate:'2026-03-25'},
+  {name:'비타민 원액', current:8,  safe:10, unit:'박스', lastDate:'2026-03-20'},
+  {name:'컷팅 원액',   current:3,  safe:10, unit:'박스', lastDate:'2026-03-15'},
+  {name:'릴렉스 원액', current:18, safe:10, unit:'박스', lastDate:'2026-03-28'},
+  {name:'아미노 원액', current:12, safe:10, unit:'박스', lastDate:'2026-03-22'},
+  {name:'레몬 농축액', current:30, safe:15, unit:'박스', lastDate:'2026-03-29'},
+];
+function loadAdminInv() {
+  try { var s = localStorage.getItem('admin_inv'); return s ? JSON.parse(s) : _adminDefaultInv.map(function(i){return Object.assign({},i);}); }
+  catch(e) { return _adminDefaultInv.map(function(i){return Object.assign({},i);}); }
+}
+function saveAdminInv() { localStorage.setItem('admin_inv', JSON.stringify(adminInvData)); }
+var adminInvData = loadAdminInv();
+
+function adminGetStatus(cur, safe) {
+  var r = cur/safe;
+  if (r >= 1) return '양호';
+  if (r >= 0.5) return '부족';
+  return '위험';
+}
+function adminStatusBadge(st) {
+  if (st === '양호') return '<span class="badge badge-success">'+st+'</span>';
+  if (st === '부족') return '<span class="badge badge-warning">'+st+'</span>';
+  return '<span class="badge badge-error">'+st+'</span>';
+}
+function adminBarColor(st) {
+  if (st === '양호') return '#00B377';
+  if (st === '부족') return '#F4BE5E';
+  return '#EC3D3D';
+}
+
+function renderAdminInv() {
+  var statusFilter = window._adminInvStatusFilter || '';
+  var tbody = document.getElementById('adminInvTableBody');
+  tbody.innerHTML = adminInvData.filter(function(row){
+    return !statusFilter || adminGetStatus(row.current, row.safe) === statusFilter;
+  }).map(function(row){
+    var st = adminGetStatus(row.current, row.safe);
+    var pct = Math.min(100, Math.round(row.current / row.safe * 100));
+    var isLow = st === '위험';
+    var btn = isLow
+      ? '<button class="btn btn-danger btn-sm" onclick="openAdminInvIn(\''+row.name+'\')">긴급입고</button>'
+      : '<button class="btn btn-outline btn-sm" onclick="openAdminInvIn(\''+row.name+'\')">입고</button>';
+    return '<tr>'
+      +'<td><strong>'+row.name+'</strong></td>'
+      +'<td>'+row.current+row.unit+'</td>'
+      +'<td>'+row.safe+row.unit+'</td>'
+      +'<td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:'+pct+'%;background:'+adminBarColor(st)+';"></div></div><span style="font-size:12px;color:#505050;">'+pct+'%</span></div></td>'
+      +'<td>'+adminStatusBadge(st)+'</td>'
+      +'<td>'+row.lastDate+'</td>'
+      +'<td>'+btn+'</td>'
+      +'</tr>';
+  }).join('');
+}
+
+window.openAdminInvIn = function(name) {
+  var sel = document.querySelector('#inventoryInModal select');
+  if (sel) {
+    for (var i=0;i<sel.options.length;i++) {
+      if (sel.options[i].text.includes(name.replace(' 원액','').replace(' 농축액',''))) {sel.selectedIndex=i;break;}
+    }
+  }
+  openModal('inventoryInModal');
+};
+
+window.saveAdminInvIn = function() {
+  var sel = document.querySelector('#inventoryInModal select');
+  var qtyInput = document.querySelector('#inventoryInModal input[type="number"]');
+  var dateInput = document.querySelector('#inventoryInModal input[type="date"]');
+  var qty = qtyInput ? parseInt(qtyInput.value)||0 : 0;
+  var dateVal = dateInput ? dateInput.value : '';
+  if (qty > 0 && sel) {
+    var productName = sel.options[sel.selectedIndex].text;
+    var matched = adminInvData.find(function(row){
+      return productName.includes(row.name.replace(' 원액','').replace(' 농축액',''));
+    });
+    if (matched) { matched.current += qty; if(dateVal) matched.lastDate = dateVal; saveAdminInv(); }
+  }
+  renderAdminInv();
+  alert('재고 입고가 등록되었습니다.');
+  closeModal('inventoryInModal');
+  if(qtyInput) qtyInput.value='';
+};
+
+renderAdminInv();
 
 (function(){
   var branchOpts = ['전체','빌드업 성수점','빌드업 강남점','빌드업 서대문점'];
@@ -265,19 +346,10 @@ window.invSelectFilter = function(dropId, val) {
     document.getElementById('invBranchBtn').textContent = (val === '전체' ? '전체 지점' : val) + ' ▾';
   } else {
     document.getElementById('invStatusBtn').textContent = (val === '전체' ? '재고 상태' : val) + ' ▾';
-    filterInvByStatus(val);
+    window._adminInvStatusFilter = (val === '전체') ? '' : val;
+    renderAdminInv();
   }
 };
-
-function filterInvByStatus(status) {
-  var rows = document.querySelectorAll('table tbody tr');
-  rows.forEach(function(tr){
-    if (status === '전체') { tr.style.display = ''; return; }
-    var badge = tr.querySelector('.badge');
-    var txt = badge ? badge.textContent.trim() : '';
-    tr.style.display = (txt === status) ? '' : 'none';
-  });
-}
 </script>
 <div class="modal-overlay" id="inventoryAlertModal">
   <div class="modal">
@@ -382,7 +454,7 @@ function filterInvByStatus(status) {
     </div>
     <div class="modal-footer">
       <button class="btn btn-outline" onclick="closeModal('inventoryInModal')">취소</button>
-      <button class="btn btn-primary" onclick="alert('재고 입고가 등록되었습니다.');closeModal('inventoryInModal')">저장</button>
+      <button class="btn btn-primary" onclick="saveAdminInvIn()">저장</button>
     </div>
   </div>
 </div>

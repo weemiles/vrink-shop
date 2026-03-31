@@ -218,62 +218,7 @@ select { appearance: none; -webkit-appearance: none; background-image: url("data
             <th>관리</th>
           </tr>
         </thead>
-        <tbody>
-          <tr data-status="양호">
-            <td style="font-weight:500;color:#111;">부스터 원액</td>
-            <td style="font-weight:500;">24박스</td>
-            <td style="color:#767676;">10박스</td>
-            <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap" style="width:120px;"><div class="stock-bar" style="width:70%;background:#0095FF;"></div></div><span style="font-size:12px;color:#505050;">70%</span></div></td>
-            <td><span class="badge badge-success"><span class="stock-status-text">양호</span></span></td>
-            <td style="color:#505050;font-size:13px;">2026-03-25</td>
-            <td><button class="btn btn-outline btn-sm" onclick="openInvIn('부스터 원액')">입고</button></td>
-          </tr>
-          <tr data-status="부족">
-            <td style="font-weight:500;color:#111;">비타민 원액</td>
-            <td style="font-weight:500;">8박스</td>
-            <td style="color:#767676;">10박스</td>
-            <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap" style="width:120px;"><div class="stock-bar" style="width:30%;background:#F4BE5E;"></div></div><span style="font-size:12px;color:#505050;">30%</span></div></td>
-            <td><span class="badge badge-warning"><span class="stock-status-text">부족</span></span></td>
-            <td style="color:#505050;font-size:13px;">2026-03-20</td>
-            <td><button class="btn btn-primary btn-sm" onclick="openInvIn('비타민 원액')">입고</button></td>
-          </tr>
-          <tr data-status="위험">
-            <td style="font-weight:500;color:#111;">컷팅 원액</td>
-            <td style="font-weight:500;color:#D32F2F;">3박스</td>
-            <td style="color:#767676;">10박스</td>
-            <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap" style="width:120px;"><div class="stock-bar" style="width:15%;background:#EC3D3D;"></div></div><span style="font-size:12px;color:#505050;">15%</span></div></td>
-            <td><span class="badge badge-error"><span class="stock-status-text">위험</span></span></td>
-            <td style="color:#505050;font-size:13px;">2026-03-15</td>
-            <td><button class="btn btn-sm" style="background:#EC3D3D;color:#fff;" onclick="openInvIn('컷팅 원액')">긴급입고</button></td>
-          </tr>
-          <tr data-status="양호">
-            <td style="font-weight:500;color:#111;">릴렉스 원액</td>
-            <td style="font-weight:500;">18박스</td>
-            <td style="color:#767676;">10박스</td>
-            <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap" style="width:120px;"><div class="stock-bar" style="width:85%;background:#00B377;"></div></div><span style="font-size:12px;color:#505050;">85%</span></div></td>
-            <td><span class="badge badge-success"><span class="stock-status-text">양호</span></span></td>
-            <td style="color:#505050;font-size:13px;">2026-03-28</td>
-            <td><button class="btn btn-outline btn-sm" onclick="openInvIn('릴렉스 원액')">입고</button></td>
-          </tr>
-          <tr data-status="양호">
-            <td style="font-weight:500;color:#111;">아미노 원액</td>
-            <td style="font-weight:500;">12박스</td>
-            <td style="color:#767676;">10박스</td>
-            <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap" style="width:120px;"><div class="stock-bar" style="width:60%;background:#0095FF;"></div></div><span style="font-size:12px;color:#505050;">60%</span></div></td>
-            <td><span class="badge badge-success"><span class="stock-status-text">양호</span></span></td>
-            <td style="color:#505050;font-size:13px;">2026-03-22</td>
-            <td><button class="btn btn-outline btn-sm" onclick="openInvIn('아미노 원액')">입고</button></td>
-          </tr>
-          <tr data-status="양호">
-            <td style="font-weight:500;color:#111;">레몬 농축액</td>
-            <td style="font-weight:500;">30박스</td>
-            <td style="color:#767676;">15박스</td>
-            <td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap" style="width:120px;"><div class="stock-bar" style="width:100%;background:#00B377;"></div></div><span style="font-size:12px;color:#505050;">100%</span></div></td>
-            <td><span class="badge badge-success"><span class="stock-status-text">양호</span></span></td>
-            <td style="color:#505050;font-size:13px;">2026-03-29</td>
-            <td><button class="btn btn-outline btn-sm" onclick="openInvIn('레몬 농축액')">입고</button></td>
-          </tr>
-        </tbody>
+        <tbody id="invTableBody"></tbody>
       </table>
     </div>
   </div>
@@ -319,7 +264,7 @@ select { appearance: none; -webkit-appearance: none; background-image: url("data
     </div>
     <div class="inv-modal-footer">
       <button class="btn btn-outline" onclick="var m=document.getElementById('invInModal');m.classList.remove('open');m.style.display='none';">취소</button>
-      <button class="btn btn-primary" onclick="showBranchToast('재고 입고가 등록되었습니다.');var m=document.getElementById('invInModal');m.classList.remove('open');m.style.display='none';">저장</button>
+      <button class="btn btn-primary" onclick="saveInvIn()">저장</button>
     </div>
   </div>
 </div>
@@ -327,28 +272,107 @@ select { appearance: none; -webkit-appearance: none; background-image: url("data
 <script>
 function toggleGroup(el){el.classList.toggle('open');var s=el.nextElementSibling;if(s)s.classList.toggle('show');}
 
-function filterInventory() {
-  var status = document.getElementById('stockStatusFilter').value;
-  var rows = document.querySelectorAll('#inventoryTable tbody tr');
-  rows.forEach(function(row){
-    var statusMatch = !status || row.dataset.status === status;
-    row.style.display = statusMatch ? '' : 'none';
-  });
+/* ─── 재고 데이터 (localStorage persistence) ─── */
+var _defaultInv = [
+  {name:'부스터 원액', current:24, safe:10, unit:'박스', lastDate:'2026-03-25'},
+  {name:'비타민 원액', current:8,  safe:10, unit:'박스', lastDate:'2026-03-20'},
+  {name:'컷팅 원액',   current:3,  safe:10, unit:'박스', lastDate:'2026-03-15'},
+  {name:'릴렉스 원액', current:18, safe:10, unit:'박스', lastDate:'2026-03-28'},
+  {name:'아미노 원액', current:12, safe:10, unit:'박스', lastDate:'2026-03-22'},
+  {name:'레몬 농축액', current:30, safe:15, unit:'박스', lastDate:'2026-03-29'},
+];
+
+function loadInv() {
+  try { var s = localStorage.getItem('branch_inv'); return s ? JSON.parse(s) : _defaultInv.map(function(i){return Object.assign({},i);}); }
+  catch(e) { return _defaultInv.map(function(i){return Object.assign({},i);}); }
 }
+function saveInv() { localStorage.setItem('branch_inv', JSON.stringify(invData)); }
+
+var invData = loadInv();
+
+function getStatus(cur, safe) {
+  var ratio = cur / safe;
+  if (ratio >= 1) return '양호';
+  if (ratio >= 0.5) return '부족';
+  return '위험';
+}
+function statusBadge(st) {
+  if (st === '양호') return '<span class="badge badge-success">' + st + '</span>';
+  if (st === '부족') return '<span class="badge badge-warning">' + st + '</span>';
+  return '<span class="badge badge-error">' + st + '</span>';
+}
+function barColor(st) {
+  if (st === '양호') return '#00B377';
+  if (st === '부족') return '#F4BE5E';
+  return '#EC3D3D';
+}
+
+function renderInv() {
+  var filter = document.getElementById('stockStatusFilter') ? document.getElementById('stockStatusFilter').value : '';
+  var tbody = document.getElementById('invTableBody');
+  tbody.innerHTML = invData.filter(function(row){
+    return !filter || getStatus(row.current, row.safe) === filter;
+  }).map(function(row, idx){
+    var st = getStatus(row.current, row.safe);
+    var pct = Math.min(100, Math.round(row.current / row.safe * 100));
+    var isLow = st === '위험';
+    var btnHtml = isLow
+      ? '<button class="btn btn-sm" style="background:#EC3D3D;color:#fff;" onclick="openInvIn(\'' + row.name + '\')">긴급입고</button>'
+      : '<button class="btn btn-outline btn-sm" onclick="openInvIn(\'' + row.name + '\')">입고</button>';
+    return '<tr data-status="' + st + '">'
+      + '<td style="font-weight:500;color:#111;">' + row.name + '</td>'
+      + '<td style="font-weight:500;' + (isLow ? 'color:#D32F2F;' : '') + '">' + row.current + row.unit + '</td>'
+      + '<td style="color:#767676;">' + row.safe + row.unit + '</td>'
+      + '<td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap" style="width:120px;"><div class="stock-bar" style="width:' + pct + '%;background:' + barColor(st) + ';"></div></div><span style="font-size:12px;color:#505050;">' + pct + '%</span></div></td>'
+      + '<td>' + statusBadge(st) + '</td>'
+      + '<td style="color:#505050;font-size:13px;">' + row.lastDate + '</td>'
+      + '<td>' + btnHtml + '</td>'
+      + '</tr>';
+  }).join('');
+}
+
+function filterInventory() { renderInv(); }
 
 function openInvIn(name) {
   var sel = document.getElementById('invInProduct');
   if (sel) {
     for (var i = 0; i < sel.options.length; i++) {
-      if (sel.options[i].text.includes(name)) { sel.selectedIndex = i; break; }
+      if (sel.options[i].text.includes(name.replace(' 원액','').replace(' 농축액',''))) { sel.selectedIndex = i; break; }
     }
   }
   var modal = document.getElementById('invInModal');
   if (modal) { modal.style.display = 'flex'; modal.classList.add('open'); }
 }
 
+window.saveInvIn = function() {
+  var productSel = document.getElementById('invInProduct');
+  var qtyInput = document.querySelector('#invInModal input[type="number"]');
+  var dateParts = document.querySelector('#invInModal input[type="date"]');
+  var qty = qtyInput ? parseInt(qtyInput.value) || 0 : 0;
+  var dateVal = dateParts ? dateParts.value : '';
+
+  if (qty > 0 && productSel) {
+    var productName = productSel.options[productSel.selectedIndex].text;
+    var matched = invData.find(function(row) {
+      return productName.includes(row.name.replace(' 원액','').replace(' 농축액',''));
+    });
+    if (matched) {
+      matched.current += qty;
+      if (dateVal) matched.lastDate = dateVal;
+      saveInv();
+    }
+  }
+  renderInv();
+  showBranchToast('재고 입고가 등록되었습니다.');
+  var modal = document.getElementById('invInModal');
+  if (modal) { modal.style.display='none'; modal.classList.remove('open'); }
+  if (qtyInput) qtyInput.value = '';
+};
+
 document.getElementById('invInModal').addEventListener('click', function(e){ if(e.target === this) { this.style.display='none'; this.classList.remove('open'); } });
 (function(){if(!sessionStorage.getItem('branchAuth')){location.href='branch-login.html';}})();
+
+renderInv();
 </script>
 <script src="branch-common.js"></script>
 </body>
