@@ -201,7 +201,7 @@ tbody tr:hover td { background: #FAFAFA; }
     <div class="stat-grid">
       <div class="stat-card">
         <div class="stat-label">총 매출</div>
-        <div class="stat-value" style="font-size:18px;">5,940,000<span style="font-size:13px;font-weight:400;color:#767676;">원</span></div>
+        <div class="stat-value" style="font-size:18px;">7,140,000<span style="font-size:13px;font-weight:400;color:#767676;">원</span></div>
         <div class="stat-change up">▲ +12% 전월 대비</div>
       </div>
       <div class="stat-card">
@@ -211,7 +211,7 @@ tbody tr:hover td { background: #FAFAFA; }
       </div>
       <div class="stat-card">
         <div class="stat-label">평균 주문금액</div>
-        <div class="stat-value" style="font-size:18px;">156,315<span style="font-size:13px;font-weight:400;color:#767676;">원</span></div>
+        <div class="stat-value" style="font-size:18px;">187,894<span style="font-size:13px;font-weight:400;color:#767676;">원</span></div>
         <div class="stat-change">이번 달 평균</div>
       </div>
       <div class="stat-card">
@@ -232,6 +232,7 @@ tbody tr:hover td { background: #FAFAFA; }
           <div style="display:flex;gap:10px;align-items:center;">
             <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:#767676;"><span style="width:8px;height:8px;background:#0095FF;border-radius:2px;display:inline-block;"></span>기능샷</span>
             <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:#767676;"><span style="width:8px;height:8px;background:#00E096;border-radius:2px;display:inline-block;"></span>맛샷</span>
+            <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:#767676;"><span style="width:8px;height:8px;background:#A855F7;border-radius:2px;display:inline-block;"></span>멤버십</span>
           </div>
         </div>
         <div class="chart-canvas-wrap"><canvas id="salesBarChart"></canvas></div>
@@ -259,6 +260,7 @@ tbody tr:hover td { background: #FAFAFA; }
             <th>주문건수</th>
             <th>기능샷 매출</th>
             <th>맛샷 매출</th>
+            <th>멤버십 매출</th>
             <th>합계</th>
           </tr>
         </thead>
@@ -268,48 +270,55 @@ tbody tr:hover td { background: #FAFAFA; }
             <td>5건</td>
             <td style="color:#0077CC;">594,000원</td>
             <td style="color:#E0A830;">256,000원</td>
-            <td style="font-weight:500;">850,000원</td>
+            <td style="color:#7C3AED;">120,000원</td>
+            <td style="font-weight:500;">970,000원</td>
           </tr>
           <tr>
             <td style="font-weight:500;color:#111;">3월 25일 (화)</td>
             <td>4건</td>
             <td style="color:#0077CC;">396,000원</td>
             <td style="color:#E0A830;">384,000원</td>
-            <td style="font-weight:500;">780,000원</td>
+            <td style="color:#7C3AED;">240,000원</td>
+            <td style="font-weight:500;">1,020,000원</td>
           </tr>
           <tr>
             <td style="font-weight:500;color:#111;">3월 26일 (수)</td>
             <td>6건</td>
             <td style="color:#0077CC;">792,000원</td>
             <td style="color:#E0A830;">128,000원</td>
-            <td style="font-weight:500;">920,000원</td>
+            <td style="color:#7C3AED;">120,000원</td>
+            <td style="font-weight:500;">1,040,000원</td>
           </tr>
           <tr>
             <td style="font-weight:500;color:#111;">3월 27일 (목)</td>
             <td>7건</td>
             <td style="color:#0077CC;">990,000원</td>
             <td style="color:#E0A830;">256,000원</td>
-            <td style="font-weight:500;">1,246,000원</td>
+            <td style="color:#7C3AED;">360,000원</td>
+            <td style="font-weight:500;">1,606,000원</td>
           </tr>
           <tr>
             <td style="font-weight:500;color:#111;">3월 28일 (금)</td>
             <td>8건</td>
             <td style="color:#0077CC;">792,000원</td>
             <td style="color:#E0A830;">384,000원</td>
-            <td style="font-weight:500;">1,176,000원</td>
+            <td style="color:#7C3AED;">240,000원</td>
+            <td style="font-weight:500;">1,416,000원</td>
           </tr>
           <tr>
             <td style="font-weight:500;color:#111;">3월 29일 (토)</td>
             <td>5건</td>
             <td style="color:#0077CC;">396,000원</td>
             <td style="color:#E0A830;">256,000원</td>
-            <td style="font-weight:500;">652,000원</td>
+            <td style="color:#7C3AED;">120,000원</td>
+            <td style="font-weight:500;">772,000원</td>
           </tr>
           <tr>
             <td style="font-weight:500;color:#111;">3월 30일 (일)</td>
             <td>3건</td>
             <td style="color:#0077CC;">198,000원</td>
             <td style="color:#E0A830;">118,000원</td>
+            <td style="color:#7C3AED;">0원</td>
             <td style="font-weight:500;">316,000원</td>
           </tr>
         </tbody>
@@ -323,24 +332,36 @@ tbody tr:hover td { background: #FAFAFA; }
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
           <div style="display:flex;align-items:center;gap:8px;">
             <span class="badge badge-primary">기능샷</span>
-            <span style="font-size:13px;font-weight:500;color:#111;">4,039,200원</span>
+            <span style="font-size:13px;font-weight:500;color:#111;">4,158,000원</span>
           </div>
-          <span style="font-family:'Poppins',sans-serif;font-size:15px;font-weight:500;color:#0077CC;">68%</span>
+          <span style="font-family:'Poppins',sans-serif;font-size:15px;font-weight:500;color:#0077CC;">58%</span>
         </div>
         <div class="progress-bar-wrap">
-          <div class="progress-bar" style="width:68%;background:#0095FF;"></div>
+          <div class="progress-bar" style="width:58%;background:#0095FF;"></div>
+        </div>
+      </div>
+      <div style="margin-bottom:16px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="badge badge-warning">맛샷</span>
+            <span style="font-size:13px;font-weight:500;color:#111;">1,782,000원</span>
+          </div>
+          <span style="font-family:'Poppins',sans-serif;font-size:15px;font-weight:500;color:#E0A830;">25%</span>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar" style="width:25%;background:#E0A830;"></div>
         </div>
       </div>
       <div>
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
           <div style="display:flex;align-items:center;gap:8px;">
-            <span class="badge badge-warning">맛샷</span>
-            <span style="font-size:13px;font-weight:500;color:#111;">1,900,800원</span>
+            <span class="badge" style="background:#F3E8FF;color:#7C3AED;">멤버십</span>
+            <span style="font-size:13px;font-weight:500;color:#111;">1,200,000원</span>
           </div>
-          <span style="font-family:'Poppins',sans-serif;font-size:15px;font-weight:500;color:#E0A830;">32%</span>
+          <span style="font-family:'Poppins',sans-serif;font-size:15px;font-weight:500;color:#7C3AED;">17%</span>
         </div>
         <div class="progress-bar-wrap">
-          <div class="progress-bar" style="width:32%;background:#E0A830;"></div>
+          <div class="progress-bar" style="width:17%;background:#A855F7;"></div>
         </div>
       </div>
     </div>
@@ -354,8 +375,9 @@ new Chart(barCtx, {
   data: {
     labels: ['3/24', '3/25', '3/26', '3/27', '3/28', '3/29', '3/30'],
     datasets: [
-      { label: '기능샷', data: [594000, 396000, 792000, 990000, 792000, 396000, 198000], backgroundColor: '#0095FF', borderRadius: 4, barPercentage: 0.5, categoryPercentage: 0.7 },
-      { label: '맛샷', data: [256000, 384000, 128000, 256000, 384000, 256000, 118000], backgroundColor: '#00E096', borderRadius: 4, barPercentage: 0.5, categoryPercentage: 0.7 }
+      { label: '기능샷', data: [594000, 396000, 792000, 990000, 792000, 396000, 198000], backgroundColor: '#0095FF', borderRadius: 4, barPercentage: 0.5, categoryPercentage: 0.8 },
+      { label: '맛샷', data: [256000, 384000, 128000, 256000, 384000, 256000, 118000], backgroundColor: '#00E096', borderRadius: 4, barPercentage: 0.5, categoryPercentage: 0.8 },
+      { label: '멤버십', data: [120000, 240000, 120000, 360000, 240000, 120000, 0], backgroundColor: '#A855F7', borderRadius: 4, barPercentage: 0.5, categoryPercentage: 0.8 }
     ]
   },
   options: {
