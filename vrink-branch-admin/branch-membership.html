@@ -51,28 +51,33 @@ body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; co
 .btn-sm { padding: 5px 10px; font-size: 12px; border-radius: 4px; }
 
 /* Page header */
-.page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
 .page-title { font-size: 24px; font-weight: 500; color: #111; }
 
-/* Product table */
-.product-table-wrap { background: #fff; border-radius: 16px; box-shadow: 0 2px 12px rgba(0,0,0,.06); overflow: hidden; }
-.product-table { width: 100%; border-collapse: collapse; }
-.product-table thead th { background: #F8F8FA; padding: 11px 16px; font-size: 12px; font-weight: 500; color: #767676; text-align: left; border-bottom: 1px solid #EDF2F6; white-space: nowrap; }
-.product-table tbody tr { border-bottom: 1px solid #EDF2F6; transition: background .1s; }
-.product-table tbody tr:last-child { border-bottom: none; }
-.product-table tbody tr:hover { background: #FAFBFF; }
-.product-table td { padding: 13px 16px; font-size: 13px; color: #111; vertical-align: middle; }
-.product-name { font-weight: 500; }
-.product-price-cell { font-weight: 600; color: #0095FF; font-size: 14px; white-space: nowrap; }
-.product-price-cell span { font-size: 11px; font-weight: 400; color: #767676; }
+/* Card grid */
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+.plan-card { background: #fff; border-radius: 20px; border: 1px solid #EDF2F6; padding: 24px; display: flex; flex-direction: column; gap: 0; transition: box-shadow .2s; position: relative; }
+.plan-card:hover { box-shadow: 0 8px 28px rgba(0,0,0,.10); }
+.plan-card.inactive { opacity: .55; }
+.plan-type-badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; letter-spacing: .3px; margin-bottom: 14px; width: fit-content; }
+.type-sub { background: #EFF6FF; color: #0077CC; }
+.type-ticket { background: #FEF6E6; color: #C8860A; }
+.type-pass { background: #E6FBF4; color: #008F5D; }
+.plan-name { font-size: 17px; font-weight: 600; color: #111; margin-bottom: 12px; line-height: 1.3; }
+.plan-price { display: flex; align-items: baseline; gap: 2px; margin-bottom: 4px; }
+.plan-price-num { font-size: 32px; font-weight: 700; color: #111; letter-spacing: -1px; }
+.plan-price-unit { font-size: 13px; color: #767676; margin-left: 2px; }
+.plan-provide { font-size: 13px; color: #505050; margin-bottom: 20px; margin-top: 2px; }
+.plan-divider { height: 1px; background: #F0F0F0; margin-bottom: 16px; }
+.plan-actions { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 16px; border-top: 1px solid #F0F0F0; }
 .toggle-wrap { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #505050; }
-.toggle { position: relative; width: 36px; height: 20px; }
+.toggle { position: relative; width: 36px; height: 20px; flex-shrink: 0; }
 .toggle input { opacity: 0; width: 0; height: 0; }
 .toggle-slider { position: absolute; inset: 0; background: #DDD; border-radius: 20px; cursor: pointer; transition: background .2s; }
 .toggle-slider::before { content: ''; position: absolute; width: 14px; height: 14px; background: #fff; border-radius: 9999px; top: 3px; left: 3px; transition: transform .2s; }
 .toggle input:checked + .toggle-slider { background: #0095FF; }
 .toggle input:checked + .toggle-slider::before { transform: translateX(16px); }
-.product-actions { display: flex; gap: 6px; }
+.plan-btns { display: flex; gap: 6px; }
 
 /* Modal */
 .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 999; align-items: center; justify-content: center; }
@@ -197,21 +202,7 @@ body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; co
       </button>
     </div>
 
-    <div class="product-table-wrap">
-      <table class="product-table">
-        <thead>
-          <tr>
-            <th>상품명</th>
-            <th>타입</th>
-            <th>가격</th>
-            <th>제공량</th>
-            <th>판매 상태</th>
-            <th style="width:100px;"></th>
-          </tr>
-        </thead>
-        <tbody id="productTableBody"></tbody>
-      </table>
-    </div>
+    <div class="card-grid" id="productTableBody"></div>
   </div>
 </div>
 
@@ -284,11 +275,11 @@ function saveProducts() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
 }
 
-function typeBadge(type) {
-  if (type === '구독제')    return `<span class="badge badge-primary">${type}</span>`;
-  if (type === '한잔권')    return `<span class="badge badge-warning">${type}</span>`;
-  if (type === '자유이용권') return `<span class="badge badge-success">${type}</span>`;
-  return `<span class="badge badge-gray">${type}</span>`;
+function typeBadgeClass(type) {
+  if (type === '구독제')    return 'plan-type-badge type-sub';
+  if (type === '한잔권')    return 'plan-type-badge type-ticket';
+  if (type === '자유이용권') return 'plan-type-badge type-pass';
+  return 'plan-type-badge';
 }
 
 function priceUnit(type) {
@@ -296,14 +287,17 @@ function priceUnit(type) {
 }
 
 function renderGrid() {
-  const tbody = document.getElementById('productTableBody');
-  tbody.innerHTML = products.map(p => `
-    <tr>
-      <td class="product-name">${p.name}</td>
-      <td>${typeBadge(p.type)}</td>
-      <td class="product-price-cell">${p.price.toLocaleString()}원<span>${priceUnit(p.type)}</span></td>
-      <td style="color:#505050;font-size:12px;">${p.provide}</td>
-      <td>
+  const wrap = document.getElementById('productTableBody');
+  wrap.innerHTML = products.map(p => `
+    <div class="plan-card${p.active ? '' : ' inactive'}">
+      <span class="${typeBadgeClass(p.type)}">${p.type}</span>
+      <div class="plan-name">${p.name}</div>
+      <div class="plan-price">
+        <span class="plan-price-num">${p.price.toLocaleString()}</span>
+        <span class="plan-price-unit">원${priceUnit(p.type)}</span>
+      </div>
+      <div class="plan-provide">${p.provide}</div>
+      <div class="plan-actions">
         <div class="toggle-wrap">
           <label class="toggle">
             <input type="checkbox" ${p.active ? 'checked' : ''} onchange="toggleActive(${p.id}, this.checked)">
@@ -311,14 +305,12 @@ function renderGrid() {
           </label>
           <span>${p.active ? '판매중' : '판매중지'}</span>
         </div>
-      </td>
-      <td>
-        <div class="product-actions">
+        <div class="plan-btns">
           <button class="btn btn-outline btn-sm" onclick="openEditModal(${p.id})">수정</button>
           <button class="btn btn-danger btn-sm" onclick="deleteProduct(${p.id})">삭제</button>
         </div>
-      </td>
-    </tr>
+      </div>
+    </div>
   `).join('');
 }
 
