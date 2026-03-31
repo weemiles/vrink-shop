@@ -189,27 +189,36 @@ select { appearance: none; -webkit-appearance: none; background-image: url("data
     <!-- Filter -->
     <div class="filter-bar" style="margin-bottom:20px;justify-content:space-between;">
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-        <select id="dateFilter" onchange="applyFilter()" style="height:34px;border:1px solid #EDF2F6;border-radius:8px;padding:0 10px 0 8px;font-size:13px;background:#fff;outline:none;cursor:pointer;color:#505050;">
-          <option value="">날짜 전체</option>
-          <option value="today">오늘</option>
-          <option value="week">이번 주</option>
-          <option value="month">이번 달</option>
-        </select>
-        <select id="statusFilter" onchange="applyFilter()" style="height:34px;border:1px solid #EDF2F6;border-radius:8px;padding:0 10px 0 8px;font-size:13px;background:#fff;outline:none;cursor:pointer;color:#505050;">
-          <option value="">결제 상태 전체</option>
-          <option value="완료">완료</option>
-          <option value="준비중">준비중</option>
-          <option value="취소">취소</option>
-        </select>
-        <button class="btn btn-outline btn-sm" onclick="resetFilter()">초기화</button>
+        <div style="position:relative;display:inline-block;">
+          <button class="filter-select-btn" id="dateFilterBtn">날짜
+            <div class="inv-dropdown" id="dateFilterDrop" style="position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #EDF2F6;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.08);min-width:120px;padding:4px;z-index:100;display:none;">
+              <div class="inv-drop-item" onclick="setOrderFilter('date','','날짜')">전체</div>
+              <div class="inv-drop-item" onclick="setOrderFilter('date','today','오늘')">오늘</div>
+              <div class="inv-drop-item" onclick="setOrderFilter('date','week','이번 주')">이번 주</div>
+              <div class="inv-drop-item" onclick="setOrderFilter('date','month','이번 달')">이번 달</div>
+            </div>
+          </button>
+        </div>
+        <div style="position:relative;display:inline-block;">
+          <button class="filter-select-btn" id="payMethodFilterBtn">결제 수단
+            <div class="inv-dropdown" id="payMethodFilterDrop" style="position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #EDF2F6;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.08);min-width:120px;padding:4px;z-index:100;display:none;">
+              <div class="inv-drop-item" onclick="setOrderFilter('payMethod','','결제 수단')">전체</div>
+              <div class="inv-drop-item" onclick="setOrderFilter('payMethod','카드 결제','카드 결제')">카드 결제</div>
+              <div class="inv-drop-item" onclick="setOrderFilter('payMethod','간편 결제','간편 결제')">간편 결제</div>
+            </div>
+          </button>
+        </div>
+        <div style="position:relative;display:inline-block;">
+          <button class="filter-select-btn" id="statusFilterBtn">결제 상태
+            <div class="inv-dropdown" id="statusFilterDrop" style="position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #EDF2F6;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.08);min-width:120px;padding:4px;z-index:100;display:none;">
+              <div class="inv-drop-item" onclick="setOrderFilter('status','','결제 상태')">전체</div>
+              <div class="inv-drop-item" onclick="setOrderFilter('status','결제 완료','결제 완료')">결제 완료</div>
+              <div class="inv-drop-item" onclick="setOrderFilter('status','취소','취소')">취소</div>
+            </div>
+          </button>
+        </div>
       </div>
-      <div style="display:flex;align-items:center;gap:8px;">
-        <input type="text" id="menuSearch" placeholder="주문번호, 메뉴 검색..." style="height:34px;border:1px solid #EDF2F6;border-radius:8px;padding:0 12px;font-size:13px;outline:none;min-width:200px;" oninput="applyFilter()">
-        <button class="btn btn-outline btn-sm" onclick="exportOrdersCSV()">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          엑셀로 추출하기
-        </button>
-      </div>
+      <input type="text" id="menuSearch" placeholder="주문번호, 회원 검색..." style="height:34px;border:1px solid #EDF2F6;border-radius:8px;padding:0 12px;font-size:13px;outline:none;min-width:220px;" oninput="applyFilter()">
     </div>
 
     <!-- Table -->
@@ -217,13 +226,16 @@ select { appearance: none; -webkit-appearance: none; background-image: url("data
       <table>
         <thead>
           <tr>
-            <th>주문번호</th>
-            <th>메뉴</th>
-            <th>수량</th>
-            <th>샷 추가</th>
-            <th>금액</th>
-            <th>상태</th>
-            <th>주문일시</th>
+            <th>회원 ID</th>
+            <th>주문 일시</th>
+            <th>Order No</th>
+            <th>주문 상세 내용</th>
+            <th>결제 수단</th>
+            <th>결제 금액</th>
+            <th>결제 상태</th>
+            <th>결제 채널</th>
+            <th>키오스크 ID</th>
+            <th>관리</th>
           </tr>
         </thead>
         <tbody id="orderTableBody"></tbody>
@@ -235,32 +247,27 @@ select { appearance: none; -webkit-appearance: none; background-image: url("data
 
 <script>
 const ALL_ORDERS = [
-  { no: 'ORD-20260330-001', menu: '단백질 쉐이크', qty: 1, shot: '없음',      amount: 6500,  status: '완료',  dt: '2026-03-30 09:12' },
-  { no: 'ORD-20260330-002', menu: '그린 스무디',    qty: 2, shot: '2샷 추가',  amount: 15000, status: '완료',  dt: '2026-03-30 09:35' },
-  { no: 'ORD-20260330-003', menu: '아미노 워터',    qty: 1, shot: '없음',      amount: 4500,  status: '준비중',dt: '2026-03-30 10:05' },
-  { no: 'ORD-20260329-015', menu: '콜라겐 드링크',  qty: 3, shot: '1샷 추가',  amount: 22500, status: '완료',  dt: '2026-03-29 14:20' },
-  { no: 'ORD-20260329-014', menu: '비타민 C 부스터',qty: 1, shot: '없음',      amount: 5500,  status: '완료',  dt: '2026-03-29 13:47' },
-  { no: 'ORD-20260329-013', menu: '단백질 쉐이크',  qty: 2, shot: '없음',      amount: 13000, status: '취소',  dt: '2026-03-29 12:10' },
-  { no: 'ORD-20260328-022', menu: '망고 스무디',    qty: 1, shot: '2샷 추가',  amount: 8500,  status: '완료',  dt: '2026-03-28 11:30' },
-  { no: 'ORD-20260328-021', menu: '그린 디톡스',    qty: 1, shot: '없음',      amount: 7000,  status: '완료',  dt: '2026-03-28 10:55' },
-  { no: 'ORD-20260328-020', menu: '아이언 부스터',  qty: 2, shot: '1샷 추가',  amount: 18000, status: '준비중',dt: '2026-03-28 10:22' },
-  { no: 'ORD-20260327-018', menu: '콜라겐 드링크',  qty: 1, shot: '없음',      amount: 7500,  status: '완료',  dt: '2026-03-27 16:40' },
-  { no: 'ORD-20260327-017', menu: '단백질 쉐이크',  qty: 3, shot: '없음',      amount: 19500, status: '완료',  dt: '2026-03-27 15:15' },
-  { no: 'ORD-20260326-009', menu: '비타민 C 부스터',qty: 2, shot: '2샷 추가',  amount: 13000, status: '취소',  dt: '2026-03-26 09:50' },
-  { no: 'ORD-20260325-005', menu: '망고 스무디',    qty: 1, shot: '1샷 추가',  amount: 8500,  status: '완료',  dt: '2026-03-25 13:05' },
-  { no: 'ORD-20260324-003', menu: '그린 스무디',    qty: 2, shot: '없음',      amount: 14000, status: '완료',  dt: '2026-03-24 11:20' },
-  { no: 'ORD-20260323-001', menu: '아이언 부스터',  qty: 1, shot: '없음',      amount: 9000,  status: '준비중',dt: '2026-03-23 17:33' },
+  { memberId: '8c3df1ab-...9ad', dt: '2026/03/30 09:12:10', no: 'ORD-20260330-001', items: '부스터샷, 컷팅샷',    payMethod: '카드 결제',  amount: 7800,  status: '결제 완료', channel: '-',        kiosk: '-' },
+  { memberId: '7b1281f7-...a0',  dt: '2026/03/30 09:35:22', no: 'ORD-20260330-002', items: '부스터샷 x2',         payMethod: '간편 결제',  amount: 7800,  status: '결제 완료', channel: '-',        kiosk: '-' },
+  { memberId: '-',               dt: '2026/03/30 10:05:44', no: 'ORD-20260330-003', items: '부스터샷',            payMethod: '카드 결제',  amount: 6000,  status: '결제 완료', channel: '-',        kiosk: '-' },
+  { memberId: '-',               dt: '2026/03/29 12:03:36', no: 'ORD-20260329-015', items: '아미노샷, 릴렉스샷',  payMethod: '-',          amount: 7800,  status: '-',         channel: '-',        kiosk: 'e8619adf' },
+  { memberId: '8c3df1ab-...9ad', dt: '2026/03/29 16:50:36', no: 'ORD-20260329-014', items: '릴렉스샷, 비타민샷, 아미노샷', payMethod: '간편 결제', amount: 11700, status: '결제 완료', channel: '토스페이먼츠', kiosk: '-' },
+  { memberId: '4a9e2c31-...b2',  dt: '2026/03/28 11:30:00', no: 'ORD-20260328-022', items: '컷팅샷 x2',           payMethod: '카드 결제',  amount: 7800,  status: '결제 완료', channel: '-',        kiosk: '-' },
+  { memberId: '-',               dt: '2026/03/28 10:55:00', no: 'ORD-20260328-021', items: '비타민샷',            payMethod: '간편 결제',  amount: 3900,  status: '결제 완료', channel: '카카오페이', kiosk: '-' },
+  { memberId: '2f7d4e88-...c5',  dt: '2026/03/27 16:40:00', no: 'ORD-20260327-018', items: '아미노샷, 부스터샷',  payMethod: '카드 결제',  amount: 9800,  status: '결제 완료', channel: '-',        kiosk: 'a1b2c3d4' },
+  { memberId: '-',               dt: '2026/03/27 15:15:00', no: 'ORD-20260327-017', items: '릴렉스샷',            payMethod: '-',          amount: 3900,  status: '취소',      channel: '-',        kiosk: '-' },
+  { memberId: '8c3df1ab-...9ad', dt: '2026/03/26 09:50:00', no: 'ORD-20260326-009', items: '부스터샷, 컷팅샷, 비타민샷', payMethod: '간편 결제', amount: 11700, status: '결제 완료', channel: '토스페이먼츠', kiosk: '-' },
 ];
 
 const PAGE_SIZE = 5;
 let currentPage = 1;
 let filteredOrders = [...ALL_ORDERS];
+let _dateFilter = '', _payMethodFilter = '', _statusFilter = '';
 
 function statusBadge(s) {
-  if (s === '완료')  return `<span class="badge badge-success">${s}</span>`;
-  if (s === '준비중') return `<span class="badge badge-warning">${s}</span>`;
-  if (s === '취소')  return `<span class="badge badge-error">${s}</span>`;
-  return `<span class="badge badge-gray">${s}</span>`;
+  if (s === '결제 완료') return `<span class="badge badge-success">${s}</span>`;
+  if (s === '취소') return `<span class="badge badge-error">${s}</span>`;
+  return `<span style="color:#CCC">-</span>`;
 }
 
 function renderTable() {
@@ -269,13 +276,16 @@ function renderTable() {
   const slice = filteredOrders.slice(start, start + PAGE_SIZE);
   tbody.innerHTML = slice.map(o => `
     <tr>
+      <td style="font-family:monospace;font-size:12px;color:#505050;">${o.memberId}</td>
+      <td style="font-size:12px;color:#505050;">${o.dt}</td>
       <td style="font-family:monospace;font-size:12px;color:#505050;">${o.no}</td>
-      <td style="font-weight:500;">${o.menu}</td>
-      <td>${o.qty}</td>
-      <td>${o.shot === '없음' ? '<span style="color:#CCC">-</span>' : `<span class="badge badge-primary">${o.shot}</span>`}</td>
+      <td><span style="font-size:13px;">${o.items}</span> <button class="btn btn-outline btn-sm" style="font-size:11px;padding:3px 8px;" onclick="void 0">상세보기</button></td>
+      <td style="font-size:13px;">${o.payMethod === '-' ? '<span style="color:#CCC">-</span>' : o.payMethod}</td>
       <td style="font-weight:500;">${o.amount.toLocaleString()}원</td>
       <td>${statusBadge(o.status)}</td>
-      <td style="color:#767676;font-size:12px;">${o.dt}</td>
+      <td style="font-size:12px;color:#505050;">${o.channel === '-' ? '<span style="color:#CCC">-</span>' : o.channel}</td>
+      <td style="font-family:monospace;font-size:12px;color:#505050;">${o.kiosk === '-' ? '<span style="color:#CCC">-</span>' : o.kiosk}</td>
+      <td>${o.status === '결제 완료' ? '<button class="btn btn-outline btn-sm" style="font-size:11px;padding:3px 8px;color:#EC3D3D;border-color:#EC3D3D;">취소</button>' : '<span style="color:#CCC">-</span>'}</td>
     </tr>
   `).join('');
   renderPagination();
@@ -285,68 +295,44 @@ function renderPagination() {
   const total = Math.ceil(filteredOrders.length / PAGE_SIZE);
   const pg = document.getElementById('pagination');
   if (total <= 1) { pg.innerHTML = ''; return; }
-  let html = '';
+  let html = `<button class="page-btn" onclick="goPage(${Math.max(1,currentPage-1)})">‹</button>`;
   for (let i = 1; i <= total; i++) {
     html += `<button class="page-btn${i === currentPage ? ' active' : ''}" onclick="goPage(${i})">${i}</button>`;
   }
+  html += `<button class="page-btn" onclick="goPage(${Math.min(total,currentPage+1)})">›</button>`;
   pg.innerHTML = html;
 }
 
-function goPage(n) {
-  currentPage = n;
-  renderTable();
+function goPage(n) { currentPage = n; renderTable(); }
+
+function setOrderFilter(type, val, label) {
+  if (type === 'date') { _dateFilter = val; setFilterBtnLabel('dateFilterBtn', val ? label : '날짜'); document.getElementById('dateFilterDrop').style.display='none'; }
+  if (type === 'payMethod') { _payMethodFilter = val; setFilterBtnLabel('payMethodFilterBtn', val ? label : '결제 수단'); document.getElementById('payMethodFilterDrop').style.display='none'; }
+  if (type === 'status') { _statusFilter = val; setFilterBtnLabel('statusFilterBtn', val ? label : '결제 상태'); document.getElementById('statusFilterDrop').style.display='none'; }
+  applyFilter();
 }
 
 function applyFilter() {
-  const dateVal = document.getElementById('dateFilter').value;
-  const status = document.getElementById('statusFilter').value;
   const search = (document.getElementById('menuSearch').value || '').trim().toLowerCase();
-  const today = new Date().toISOString().split('T')[0];
   filteredOrders = ALL_ORDERS.filter(function(o) {
-    const d = o.dt.split(' ')[0];
-    if (dateVal === 'today' && d !== today) return false;
-    if (dateVal === 'week') {
-      const weekAgo = new Date(Date.now() - 7*24*60*60*1000).toISOString().split('T')[0];
-      if (d < weekAgo) return false;
-    }
-    if (dateVal === 'month') {
-      const monthStart = today.slice(0,7) + '-01';
-      if (d < monthStart) return false;
-    }
-    if (status && o.status !== status) return false;
-    if (search && !o.no.toLowerCase().includes(search) && !o.menu.toLowerCase().includes(search)) return false;
+    if (_payMethodFilter && o.payMethod !== _payMethodFilter) return false;
+    if (_statusFilter && o.status !== _statusFilter) return false;
+    if (search && !o.no.toLowerCase().includes(search) && !o.memberId.toLowerCase().includes(search) && !o.items.toLowerCase().includes(search)) return false;
     return true;
   });
   currentPage = 1;
   renderTable();
 }
 
-function resetFilter() {
-  document.getElementById('dateFilter').value = '';
-  document.getElementById('statusFilter').value = '';
-  document.getElementById('menuSearch').value = '';
-  filteredOrders = [...ALL_ORDERS];
-  currentPage = 1;
-  renderTable();
-}
+function toggleGroup(el) { el.classList.toggle('open'); const sub = el.nextElementSibling; sub.classList.toggle('show'); }
 
-function toggleGroup(el) {
-  el.classList.toggle('open');
-  const sub = el.nextElementSibling;
-  sub.classList.toggle('show');
-}
+document.addEventListener('click', function(e) {
+  var btn = e.target.closest('.filter-select-btn');
+  document.querySelectorAll('.inv-dropdown').forEach(function(d) { d.style.display = 'none'; });
+  if (btn) { var drop = btn.querySelector('.inv-dropdown'); if (drop) drop.style.display = drop.style.display === 'none' ? 'block' : 'none'; }
+});
 
 renderTable();
-
-function exportOrdersCSV() {
-  const header = ['주문번호','메뉴','수량','샷 추가','금액','상태','주문일시'];
-  const rows = filteredOrders.map(o => [o.no, o.menu, o.qty, o.shot, o.amount + '원', o.status, o.dt]);
-  const csv = [header, ...rows].map(r => r.join(',')).join('\n');
-  const a = document.createElement('a');
-  a.href = 'data:text/csv;charset=utf-8,\uFEFF' + encodeURIComponent(csv);
-  a.download = '주문내역.csv';
-  a.click();
-}
 function toggleTBDrop(id) {
   document.querySelectorAll('.tb-dropdown').forEach(d => { if(d.id !== id) d.classList.remove('open'); });
   document.getElementById(id).classList.toggle('open');
