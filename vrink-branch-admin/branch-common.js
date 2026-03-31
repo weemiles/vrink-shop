@@ -2,14 +2,9 @@
  * VRINK Branch Admin Common — Auth guard, logout, modal utilities
  */
 (function () {
-  /* ─── 0. Pretendard 폰트 + 공통 스타일 ───────────────── */
-  var _pf = document.createElement('link');
-  _pf.rel = 'stylesheet'; _pf.crossOrigin = '';
-  _pf.href = 'https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.css';
-  document.head.insertBefore(_pf, document.head.firstChild);
+  /* ─── 0. 공통 스타일: 입력 필드 높이 통일 ─────────────── */
   var _s = document.createElement('style');
-  _s.textContent = "body,input,select,textarea,button{font-family:'Pretendard',sans-serif!important;}" +
-    "input:not([type='checkbox']):not([type='radio']):not([type='file']):not([type='range']),select{height:42px!important;box-sizing:border-box;}";
+  _s.textContent = "input:not([type='checkbox']):not([type='radio']):not([type='file']):not([type='range']),select{height:42px!important;box-sizing:border-box;}";
   document.head.appendChild(_s);
 
   /* ─── 1. 인증 가드 ───────────────────────────────────── */
@@ -249,5 +244,27 @@
       }
     });
   });
+
+  // filter-select-btn 화살표 자동 처리
+  document.addEventListener('DOMContentLoaded', function() {
+    var arrowSVG = '<svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M1 1l4 4 4-4"/></svg>';
+    document.querySelectorAll('.filter-select-btn').forEach(function(btn) {
+      if (btn.querySelector('svg')) return;
+      btn.childNodes.forEach(function(node) {
+        if (node.nodeType === 3) node.textContent = node.textContent.replace(/\s*▾\s*$/, '').replace(/\s*▼\s*$/, '');
+      });
+      btn.insertAdjacentHTML('beforeend', arrowSVG);
+      btn.style.cssText += 'display:inline-flex!important;align-items:center!important;gap:6px!important;';
+    });
+  });
+
+  // SVG 유지하며 filter-select-btn 텍스트만 변경하는 전역 함수
+  window.setFilterBtnLabel = function(btn, label) {
+    if (typeof btn === 'string') btn = document.getElementById(btn);
+    if (!btn) return;
+    var svg = btn.querySelector('svg');
+    btn.textContent = label;
+    if (svg) btn.appendChild(svg);
+  };
 
 })();
