@@ -304,10 +304,8 @@ function renderGrid() {
   grid.innerHTML = products.map(p => `
     <div class="product-card" id="card-${p.id}">
       <div class="product-card-header">
-        <div>
-          <div class="product-name">${p.name}</div>
-          <div style="margin-top:6px;">${typeBadge(p.type)}</div>
-        </div>
+        <div class="product-name">${p.name}</div>
+        ${typeBadge(p.type)}
       </div>
       <div class="product-price">${p.price.toLocaleString()}원<span>${priceUnit(p.type)}</span></div>
       <div class="product-meta">
@@ -315,7 +313,6 @@ function renderGrid() {
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0095FF" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           ${p.provide}
         </div>
-        ${p.gift ? `<div class="product-meta-row"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#00B377" stroke-width="2"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg>선물하기 가능</div>` : ''}
       </div>
       <hr class="product-divider">
       <div class="product-footer">
