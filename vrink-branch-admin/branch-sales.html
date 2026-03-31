@@ -95,6 +95,10 @@ tbody tr:hover td { background: #FAFAFA; }
 .chart-card-title { font-size: 15px; font-weight: 500; color: #111; }
 .chart-card-sub { font-size: 11px; color: #767676; }
 .chart-canvas-wrap { height: 180px; position: relative; }
+.pagination { display: flex; align-items: center; justify-content: center; gap: 4px; padding: 16px; }
+.page-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 6px; border: 1px solid #EDF2F6; background: #fff; font-size: 13px; color: #505050; cursor: pointer; }
+.page-btn.active { background: #0095FF; color: #fff; border-color: #0095FF; font-weight: 500; }
+.page-btn:hover:not(.active) { background: #F6F6F6; }
 </style>
 </head>
 <body>
@@ -249,10 +253,8 @@ tbody tr:hover td { background: #FAFAFA; }
     </div>
 
     <!-- Sales Trend Table -->
+    <div style="font-size:15px;font-weight:500;color:#111;margin-bottom:12px;">매출 추이</div>
     <div class="table-wrap" style="margin-bottom:20px;">
-      <div class="section-header">
-        <div class="section-title">매출 추이</div>
-      </div>
       <table>
         <thead>
           <tr>
@@ -264,65 +266,9 @@ tbody tr:hover td { background: #FAFAFA; }
             <th>합계</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td style="font-weight:500;color:#111;">3월 24일 (월)</td>
-            <td>5건</td>
-            <td style="color:#0077CC;">594,000원</td>
-            <td style="color:#00916A;">256,000원</td>
-            <td style="color:#7C3AED;">120,000원</td>
-            <td style="font-weight:500;">970,000원</td>
-          </tr>
-          <tr>
-            <td style="font-weight:500;color:#111;">3월 25일 (화)</td>
-            <td>4건</td>
-            <td style="color:#0077CC;">396,000원</td>
-            <td style="color:#00916A;">384,000원</td>
-            <td style="color:#7C3AED;">240,000원</td>
-            <td style="font-weight:500;">1,020,000원</td>
-          </tr>
-          <tr>
-            <td style="font-weight:500;color:#111;">3월 26일 (수)</td>
-            <td>6건</td>
-            <td style="color:#0077CC;">792,000원</td>
-            <td style="color:#00916A;">128,000원</td>
-            <td style="color:#7C3AED;">120,000원</td>
-            <td style="font-weight:500;">1,040,000원</td>
-          </tr>
-          <tr>
-            <td style="font-weight:500;color:#111;">3월 27일 (목)</td>
-            <td>7건</td>
-            <td style="color:#0077CC;">990,000원</td>
-            <td style="color:#00916A;">256,000원</td>
-            <td style="color:#7C3AED;">360,000원</td>
-            <td style="font-weight:500;">1,606,000원</td>
-          </tr>
-          <tr>
-            <td style="font-weight:500;color:#111;">3월 28일 (금)</td>
-            <td>8건</td>
-            <td style="color:#0077CC;">792,000원</td>
-            <td style="color:#00916A;">384,000원</td>
-            <td style="color:#7C3AED;">240,000원</td>
-            <td style="font-weight:500;">1,416,000원</td>
-          </tr>
-          <tr>
-            <td style="font-weight:500;color:#111;">3월 29일 (토)</td>
-            <td>5건</td>
-            <td style="color:#0077CC;">396,000원</td>
-            <td style="color:#00916A;">256,000원</td>
-            <td style="color:#7C3AED;">120,000원</td>
-            <td style="font-weight:500;">772,000원</td>
-          </tr>
-          <tr>
-            <td style="font-weight:500;color:#111;">3월 30일 (일)</td>
-            <td>3건</td>
-            <td style="color:#0077CC;">198,000원</td>
-            <td style="color:#00916A;">118,000원</td>
-            <td style="color:#7C3AED;">0원</td>
-            <td style="font-weight:500;">316,000원</td>
-          </tr>
-        </tbody>
+        <tbody id="salesTrendBody"></tbody>
       </table>
+      <div class="pagination" id="salesTrendPagination"></div>
     </div>
 
     <!-- Product Sales Share -->
@@ -407,6 +353,37 @@ new Chart(lineCtx, {
   }
 });
 
+const TREND_DATA = [
+  { date:'3월 24일 (월)', cnt:'5건', sub:'594,000원', single:'256,000원', free:'120,000원', total:'970,000원' },
+  { date:'3월 25일 (화)', cnt:'4건', sub:'396,000원', single:'384,000원', free:'240,000원', total:'1,020,000원' },
+  { date:'3월 26일 (수)', cnt:'6건', sub:'792,000원', single:'128,000원', free:'120,000원', total:'1,040,000원' },
+  { date:'3월 27일 (목)', cnt:'7건', sub:'990,000원', single:'256,000원', free:'360,000원', total:'1,606,000원' },
+  { date:'3월 28일 (금)', cnt:'8건', sub:'792,000원', single:'384,000원', free:'240,000원', total:'1,416,000원' },
+  { date:'3월 29일 (토)', cnt:'5건', sub:'396,000원', single:'256,000원', free:'120,000원', total:'772,000원' },
+  { date:'3월 30일 (일)', cnt:'3건', sub:'198,000원', single:'118,000원', free:'0원',       total:'316,000원' },
+];
+const TREND_PAGE_SIZE = 5;
+let trendPage = 1;
+function renderTrend() {
+  const start = (trendPage - 1) * TREND_PAGE_SIZE;
+  const slice = TREND_DATA.slice(start, start + TREND_PAGE_SIZE);
+  document.getElementById('salesTrendBody').innerHTML = slice.map(r => `<tr>
+    <td style="font-weight:500;color:#111;">${r.date}</td>
+    <td>${r.cnt}</td>
+    <td style="color:#0077CC;">${r.sub}</td>
+    <td style="color:#00916A;">${r.single}</td>
+    <td style="color:#7C3AED;">${r.free}</td>
+    <td style="font-weight:500;">${r.total}</td>
+  </tr>`).join('');
+  const total = Math.ceil(TREND_DATA.length / TREND_PAGE_SIZE);
+  const pg = document.getElementById('salesTrendPagination');
+  if (total <= 1) { pg.innerHTML = ''; return; }
+  let html = `<button class="page-btn" onclick="trendPage=Math.max(1,trendPage-1);renderTrend()">‹</button>`;
+  for (let i = 1; i <= total; i++) html += `<button class="page-btn${i===trendPage?' active':''}" onclick="trendPage=${i};renderTrend()">${i}</button>`;
+  html += `<button class="page-btn" onclick="trendPage=Math.min(${total},trendPage+1);renderTrend()">›</button>`;
+  pg.innerHTML = html;
+}
+renderTrend();
 function toggleGroup(el){el.classList.toggle('open');var s=el.nextElementSibling;if(s)s.classList.toggle('show');}
 (function(){if(!sessionStorage.getItem('branchAuth')){location.href='branch-login.html';}})();
 function toggleTBDrop(id) {
