@@ -20,8 +20,10 @@
   }
 
   .doc {
-    width: 860px;
+    max-width: 860px;
+    width: 100%;
     margin: 0 auto;
+    padding: 0 16px;
   }
 
   /* ── 헤더 ── */
@@ -191,6 +193,16 @@
 
   /* ── 2열 테이블 래퍼 ── */
   .table-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 600px) {
+    body { padding: 24px 0 60px; }
+    .header { padding: 28px 24px; flex-direction: column; align-items: flex-start; gap: 16px; }
+    .header-badge { text-align: left; }
+    .prep-banner { padding: 16px 20px; flex-direction: column; align-items: flex-start; gap: 10px; }
+    .section-head { padding: 18px 20px; }
+    .section-body { padding: 18px 20px; }
+    .table-row { grid-template-columns: 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
+  }
   .table-box { }
   .table-label {
     font-size: 12px; font-weight: 600;
