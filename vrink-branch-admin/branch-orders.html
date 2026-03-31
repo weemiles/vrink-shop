@@ -189,8 +189,11 @@ select { appearance: none; -webkit-appearance: none; background-image: url("data
     <!-- Filter -->
     <div class="filter-bar" style="margin-bottom:20px;justify-content:space-between;">
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#767676" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
         <div style="position:relative;display:inline-block;">
-          <button class="filter-select-btn" id="dateFilterBtn">날짜
+          <button class="filter-select-btn" id="dateFilterBtn">
+            <span id="dateFilterLabel">날짜</span>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
             <div class="inv-dropdown" id="dateFilterDrop" style="position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #EDF2F6;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.08);min-width:120px;padding:4px;z-index:100;display:none;">
               <div class="inv-drop-item" onclick="setOrderFilter('date','','날짜')">전체</div>
               <div class="inv-drop-item" onclick="setOrderFilter('date','today','오늘')">오늘</div>
@@ -200,7 +203,9 @@ select { appearance: none; -webkit-appearance: none; background-image: url("data
           </button>
         </div>
         <div style="position:relative;display:inline-block;">
-          <button class="filter-select-btn" id="payMethodFilterBtn">결제 수단
+          <button class="filter-select-btn" id="payMethodFilterBtn">
+            <span id="payMethodFilterLabel">결제 수단</span>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
             <div class="inv-dropdown" id="payMethodFilterDrop" style="position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #EDF2F6;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.08);min-width:120px;padding:4px;z-index:100;display:none;">
               <div class="inv-drop-item" onclick="setOrderFilter('payMethod','','결제 수단')">전체</div>
               <div class="inv-drop-item" onclick="setOrderFilter('payMethod','카드 결제','카드 결제')">카드 결제</div>
@@ -209,7 +214,9 @@ select { appearance: none; -webkit-appearance: none; background-image: url("data
           </button>
         </div>
         <div style="position:relative;display:inline-block;">
-          <button class="filter-select-btn" id="statusFilterBtn">결제 상태
+          <button class="filter-select-btn" id="statusFilterBtn">
+            <span id="statusFilterLabel">결제 상태</span>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
             <div class="inv-dropdown" id="statusFilterDrop" style="position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #EDF2F6;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.08);min-width:120px;padding:4px;z-index:100;display:none;">
               <div class="inv-drop-item" onclick="setOrderFilter('status','','결제 상태')">전체</div>
               <div class="inv-drop-item" onclick="setOrderFilter('status','결제 완료','결제 완료')">결제 완료</div>
@@ -218,7 +225,13 @@ select { appearance: none; -webkit-appearance: none; background-image: url("data
           </button>
         </div>
       </div>
-      <input type="text" id="menuSearch" placeholder="주문번호, 회원 검색..." style="height:34px;border:1px solid #EDF2F6;border-radius:8px;padding:0 12px;font-size:13px;outline:none;min-width:220px;" oninput="applyFilter()">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <input type="text" id="menuSearch" placeholder="주문번호, 회원 검색..." style="height:34px;border:1px solid #EDF2F6;border-radius:8px;padding:0 12px;font-size:13px;outline:none;min-width:220px;" oninput="applyFilter()">
+        <button class="btn btn-outline btn-sm" onclick="showBranchToast('엑셀 다운로드가 시작되었습니다.')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          엑셀 다운로드
+        </button>
+      </div>
     </div>
 
     <!-- Table -->
@@ -306,9 +319,9 @@ function renderPagination() {
 function goPage(n) { currentPage = n; renderTable(); }
 
 function setOrderFilter(type, val, label) {
-  if (type === 'date') { _dateFilter = val; setFilterBtnLabel('dateFilterBtn', val ? label : '날짜'); document.getElementById('dateFilterDrop').style.display='none'; }
-  if (type === 'payMethod') { _payMethodFilter = val; setFilterBtnLabel('payMethodFilterBtn', val ? label : '결제 수단'); document.getElementById('payMethodFilterDrop').style.display='none'; }
-  if (type === 'status') { _statusFilter = val; setFilterBtnLabel('statusFilterBtn', val ? label : '결제 상태'); document.getElementById('statusFilterDrop').style.display='none'; }
+  if (type === 'date') { _dateFilter = val; document.getElementById('dateFilterLabel').textContent = val ? label : '날짜'; document.getElementById('dateFilterDrop').style.display='none'; }
+  if (type === 'payMethod') { _payMethodFilter = val; document.getElementById('payMethodFilterLabel').textContent = val ? label : '결제 수단'; document.getElementById('payMethodFilterDrop').style.display='none'; }
+  if (type === 'status') { _statusFilter = val; document.getElementById('statusFilterLabel').textContent = val ? label : '결제 상태'; document.getElementById('statusFilterDrop').style.display='none'; }
   applyFilter();
 }
 
