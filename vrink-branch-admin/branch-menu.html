@@ -207,16 +207,16 @@ select.shot-select:focus { border-color: #0095FF; font-weight: 500; }
 
 <script>
 var defaultSettings = [
-  { name: '부스터샷', category: '기능샷', basePrice: '5,000원', price: 5500, shotPrice: 500, maxShot: 2, active: true },
-  { name: '비타민샷', category: '기능샷', basePrice: '4,500원', price: 5000, shotPrice: 500, maxShot: 2, active: true },
-  { name: '컷팅샷',  category: '기능샷', basePrice: '5,000원', price: 5500, shotPrice: 500, maxShot: 2, active: true },
-  { name: '릴렉스샷', category: '기능샷', basePrice: '4,500원', price: 5000, shotPrice: 500, maxShot: 1, active: true },
-  { name: '아미노샷', category: '기능샷', basePrice: '5,000원', price: 5500, shotPrice: 500, maxShot: 2, active: false },
-  { name: '맛·레몬',  category: '맛샷',  basePrice: '120,000원', price: 128000, shotPrice: 700, maxShot: 3, active: true },
-  { name: '맛·청포도', category: '맛샷', basePrice: '120,000원', price: 128000, shotPrice: 700, maxShot: 2, active: true },
-  { name: '맛·사과',  category: '맛샷',  basePrice: '120,000원', price: 128000, shotPrice: 700, maxShot: 2, active: true },
-  { name: '맛·체리',  category: '맛샷',  basePrice: '120,000원', price: 128000, shotPrice: 700, maxShot: 1, active: false },
-  { name: '맛·망고',  category: '맛샷',  basePrice: '120,000원', price: 128000, shotPrice: 700, maxShot: 2, active: true }
+  { name: '부스터샷', category: '기능샷', price: 5500, shotPrice: 500, active: true },
+  { name: '비타민샷', category: '기능샷', price: 5000, shotPrice: 500, active: true },
+  { name: '컷팅샷',  category: '기능샷', price: 5500, shotPrice: 500, active: true },
+  { name: '릴렉스샷', category: '기능샷', price: 5000, shotPrice: 500, active: true },
+  { name: '아미노샷', category: '기능샷', price: 5500, shotPrice: 500, active: false },
+  { name: '맛·레몬',  category: '맛샷',  price: 128000, shotPrice: 700, active: true },
+  { name: '맛·청포도', category: '맛샷', price: 128000, shotPrice: 700, active: true },
+  { name: '맛·사과',  category: '맛샷',  price: 128000, shotPrice: 700, active: true },
+  { name: '맛·체리',  category: '맛샷',  price: 128000, shotPrice: 700, active: false },
+  { name: '맛·망고',  category: '맛샷',  price: 128000, shotPrice: 700, active: true }
 ];
 
 function loadSettings() {
@@ -259,11 +259,9 @@ function saveMenuSettings() {
   rows.forEach(function(row, i) {
     var priceInput = row.querySelector('input[data-field="price"]');
     var shotPriceInput = row.querySelector('input[data-field="shotPrice"]');
-    var maxShotSelect = row.querySelector('select[data-field="maxShot"]');
     var toggleBtn = row.querySelector('.toggle');
     if (priceInput) data[i].price = parseInt(priceInput.value) || data[i].price;
     if (shotPriceInput) data[i].shotPrice = parseInt(shotPriceInput.value) || data[i].shotPrice;
-    if (maxShotSelect) data[i].maxShot = parseInt(maxShotSelect.value);
     if (toggleBtn) data[i].active = toggleBtn.classList.contains('on');
   });
   localStorage.setItem('branchMenuSettings', JSON.stringify(data));
