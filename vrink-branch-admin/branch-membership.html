@@ -97,6 +97,10 @@ body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; co
 .stat-value { font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 500; color: #111111; margin-bottom: 6px; }
 .nav-group-trigger.open .nav-arrow { transform: rotate(180deg); }
 .nav-arrow { transition: transform .2s; display: inline-block; }
+.topbar-branch-btn { display:flex; align-items:center; gap:6px; height:36px; padding:0 12px; border:1px solid #EDF2F6; border-radius:8px; font-size:13px; font-weight:500; color:#111; cursor:pointer; background:#fff; white-space:nowrap; }
+.topbar-branch-btn:hover { background:#F6F6F6; }
+.topbar-user-wrap { display:flex; align-items:center; gap:8px; cursor:pointer; padding:4px 8px; border-radius:8px; }
+.topbar-user-wrap:hover { background:#F6F6F6; }
 </style>
 </head>
 <body>
@@ -105,7 +109,6 @@ body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; co
 <aside class="sidebar">
   <div class="sidebar-logo" onclick="location.href='branch-index.html'">
     <img src="logo_spinner.png" alt="VRINK" style="height:28px;width:auto;">
-    <span style="font-size:12px;font-weight:600;color:#0095FF;background:#EFF6FF;padding:2px 8px;border-radius:4px;">성수점</span>
   </div>
   <nav class="sidebar-nav">
     <a href="branch-index.html" class="nav-item">
