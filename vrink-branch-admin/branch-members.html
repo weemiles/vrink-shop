@@ -20,7 +20,7 @@ body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; co
 .nav-label { flex: 1; }
 .nav-group { display: flex; flex-direction: column; }
 .nav-group-trigger { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; color: #505050; font-size: 14px; font-weight: 500; cursor: pointer; }
-.nav-group-trigger:hover,.nav-group-trigger.open { background: #F6F6F6; }
+.nav-group-trigger:hover { background: #F6F6F6; }
 .nav-arrow { margin-left: auto; font-size: 10px; color: #767676; }
 .nav-sub { display: none; flex-direction: column; padding-left: 32px; gap: 1px; }
 .nav-sub.show { display: flex; }
@@ -30,19 +30,24 @@ body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #F8F8FA; co
 .sidebar-bottom { padding: 12px 12px 16px; border-top: 1px solid #EDF2F6; display: flex; flex-direction: column; gap: 2px; }
 .sidebar-section-title { font-size: 11px; font-weight: 500; color: #A098AE; letter-spacing: .91px; padding: 4px 12px 8px; text-transform: uppercase; }
 .main-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-.topbar { height: 64px; background: #fff; border-bottom: 1px solid #EDF2F6; display: flex; align-items: center; justify-content: flex-end; padding: 0 24px; gap: 8px; flex-shrink: 0; }
-.topbar-branch-btn, .topbar-admin-btn { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid #EDF2F6; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 500; color: #111; background: #fff; position: relative; user-select: none; }
-.topbar-branch-btn:hover, .topbar-admin-btn:hover { background: #F6F6F6; }
-.user-avatar-sm { width: 24px; height: 24px; border-radius: 50%; background: #0095FF; color: #fff; font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.topbar { height: 64px; background: #fff; border-bottom: 1px solid #EDF2F6; display: flex; align-items: center; justify-content: flex-end; padding: 0 24px; gap: 10px; flex-shrink: 0; }
+.topbar-notif-btn { background: none; border: 1px solid #EDF2F6; border-radius: 8px; padding: 8px; cursor: pointer; position: relative; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; }
+.topbar-notif-btn:hover { background: #F6F6F6; }
+.notif-badge { position: absolute; top: -4px; right: -4px; background: #0095FF; color: #fff; font-size: 10px; font-weight: 700; border-radius: 9999px; min-width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; padding: 0 3px; }
+.topbar-branch-btn { display: flex; align-items: center; gap: 6px; padding: 7px 14px; border: 1px solid #E0E0E0; border-radius: 20px; cursor: pointer; font-size: 13px; font-weight: 500; color: #111; background: #fff; position: relative; user-select: none; }
+.topbar-branch-btn:hover { background: #F6F6F6; }
+.topbar-admin-btn { display: flex; align-items: center; gap: 8px; padding: 5px 10px 5px 5px; border: 1px solid #EDF2F6; border-radius: 8px; cursor: pointer; background: #fff; position: relative; user-select: none; }
+.topbar-admin-btn:hover { background: #F6F6F6; }
+.user-avatar-sm { width: 28px; height: 28px; border-radius: 50%; background: #E8E8E8; color: #505050; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.admin-info { display: flex; flex-direction: column; gap: 1px; }
+.admin-name { font-size: 13px; font-weight: 600; color: #111; line-height: 1.2; }
+.admin-role-text { font-size: 11px; color: #767676; line-height: 1.2; }
 .tb-dropdown { display: none; position: absolute; top: calc(100% + 6px); right: 0; background: #fff; border: 1px solid #EDF2F6; border-radius: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.10); min-width: 140px; z-index: 200; overflow: hidden; }
 .tb-dropdown.open { display: block; }
 .tb-dd-item { padding: 10px 14px; font-size: 13px; color: #333; cursor: pointer; }
 .tb-dd-item:hover { background: #F6F6F6; }
 .tb-dd-item.active { color: #0095FF; font-weight: 600; }
 .tb-dd-logout { color: #EC3D3D; }
-.user-avatar { width: 32px; height: 32px; background: #EDF2F6; border-radius: 9999px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; color: #505050; }
-.user-name { font-size: 13px; font-weight: 500; color: #111; }
-.user-role { font-size: 11px; color: #767676; }
 .page-content { flex: 1; overflow-y: auto; padding: 28px; }
 .page-title { font-size: 24px; font-weight: 500; color: #111; margin-bottom: 0; }
 .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
@@ -79,7 +84,7 @@ tbody tr:hover td { background: #FAFAFA; }
 .card-title { font-size: 16px; font-weight: 500; color: #111111; margin-bottom: 4px; }
 .card-sub { font-size: 12px; color: #767676; }
 .btn-danger { background: #EC3D3D; color: #fff; }
-.user-info { display: flex; flex-direction: column; }
+
 .stat-value { font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 500; color: #111111; margin-bottom: 6px; }
 .nav-group-trigger.open .nav-arrow { transform: rotate(180deg); }
 .nav-arrow { transition: transform .2s; display: inline-block; }
@@ -152,20 +157,23 @@ tbody tr:hover td { background: #FAFAFA; }
 <!-- Main -->
 <div class="main-wrapper">
   <header class="topbar">
+    <button class="topbar-notif-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" stroke="#505050" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="notif-badge">2</span></button>
     <div class="topbar-branch-btn" onclick="toggleTBDrop('tb-branch-dd')">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
-      <span>빌드업성수점</span>
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      <span>빌드업 성수점</span>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
       <div class="tb-dropdown" id="tb-branch-dd">
-        <div class="tb-dd-item active">빌드업성수점</div>
+        <div class="tb-dd-item active">빌드업 성수점</div>
         <div class="tb-dd-item">강남점</div>
         <div class="tb-dd-item">홍대점</div>
       </div>
     </div>
     <div class="topbar-admin-btn" onclick="toggleTBDrop('tb-admin-dd')">
-      <div class="user-avatar-sm">박</div>
-      <span>박지영</span>
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      <div class="user-avatar-sm">A</div>
+      <div class="admin-info">
+        <div class="admin-name">admin</div>
+        <div class="admin-role-text">관리자</div>
+      </div>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#767676" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
       <div class="tb-dropdown" id="tb-admin-dd">
         <div class="tb-dd-item">프로필 설정</div>
         <div class="tb-dd-item tb-dd-logout" onclick="if(confirm('로그아웃 하시겠습니까?')){sessionStorage.removeItem('branchAuth');location.href='branch-login.html';}">로그아웃</div>
