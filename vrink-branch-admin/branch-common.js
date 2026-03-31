@@ -2,9 +2,14 @@
  * VRINK Branch Admin Common — Auth guard, logout, modal utilities
  */
 (function () {
-  /* ─── 0. 공통 스타일: 입력 필드 높이 통일 ─────────────── */
+  /* ─── 0. Pretendard 폰트 + 공통 스타일 ───────────────── */
+  var _pf = document.createElement('link');
+  _pf.rel = 'stylesheet'; _pf.crossOrigin = '';
+  _pf.href = 'https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.css';
+  document.head.insertBefore(_pf, document.head.firstChild);
   var _s = document.createElement('style');
-  _s.textContent = "input:not([type='checkbox']):not([type='radio']):not([type='file']):not([type='range']),select{height:42px!important;box-sizing:border-box;}";
+  _s.textContent = "body,input,select,textarea,button{font-family:'Pretendard',sans-serif!important;}" +
+    "input:not([type='checkbox']):not([type='radio']):not([type='file']):not([type='range']),select{height:42px!important;box-sizing:border-box;}";
   document.head.appendChild(_s);
 
   /* ─── 1. 인증 가드 ───────────────────────────────────── */

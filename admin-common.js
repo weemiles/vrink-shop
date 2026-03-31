@@ -2,6 +2,15 @@
  * VRINK Admin Common — Topbar dropdowns & Modal utilities
  */
 (function () {
+  /* ─── Pretendard 폰트 로드 ──────────────────────────── */
+  var _pf = document.createElement('link');
+  _pf.rel = 'stylesheet'; _pf.crossOrigin = '';
+  _pf.href = 'https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.css';
+  document.head.insertBefore(_pf, document.head.firstChild);
+  var _fs = document.createElement('style');
+  _fs.textContent = "body,input,select,textarea,button{font-family:'Pretendard',sans-serif!important;}";
+  document.head.appendChild(_fs);
+
   /* ─── Shared CSS ─────────────────────────────────────── */
   const css = `
   /* ── Topbar dropdown base ── */
