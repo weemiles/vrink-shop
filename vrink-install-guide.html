@@ -277,18 +277,11 @@
     border-radius: 12px;
     padding: 8px 12px;
     box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-  }
-  @media (max-width: 600px) {
-    #editBar {
-      top: 12px; right: 12px;
-      padding: 6px 10px;
-      gap: 6px;
-    }
-    #editBar .bar-label { display: none; }
-    #editBar button { padding: 5px 11px; font-size: 11px; }
+    max-width: calc(100vw - 24px);
+    box-sizing: border-box;
   }
   #editBar .bar-label {
-    font-size: 12px; color: #888; margin-right: 4px;
+    font-size: 12px; color: #888; margin-right: 4px; white-space: nowrap;
   }
   #editBar button {
     font-family: 'Pretendard', sans-serif;
@@ -296,6 +289,7 @@
     border: none; border-radius: 7px;
     padding: 6px 14px; cursor: pointer;
     transition: background .15s;
+    white-space: nowrap; flex-shrink: 0;
   }
   #editBtn { background: #111; color: #fff; }
   #editBtn:hover { background: #333; }
@@ -306,6 +300,16 @@
   #dlBtn:hover { background: #E0E0E0; }
   #cancelBtn { background: #F0F0F0; color: #555; }
   #cancelBtn:hover { background: #E0E0E0; }
+  /* 모바일 — 일반 스타일 이후 선언해야 덮어씌워짐 */
+  @media (max-width: 600px) {
+    #editBar {
+      top: 12px; right: 12px; left: auto;
+      padding: 6px 10px; gap: 6px;
+    }
+    #editBar .bar-label { display: none; }
+    #editBar button { padding: 5px 10px; font-size: 11px; }
+    #dlBtn { display: none; }
+  }
 
   /* 편집 모드 – editable 요소 표시 */
   body.edit-mode [contenteditable] {
