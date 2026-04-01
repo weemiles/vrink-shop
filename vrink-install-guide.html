@@ -280,11 +280,12 @@
   }
   @media (max-width: 600px) {
     #editBar {
-      top: auto; right: auto;
-      bottom: 20px; left: 50%;
-      transform: translateX(-50%);
-      white-space: nowrap;
+      top: 12px; right: 12px;
+      padding: 6px 10px;
+      gap: 6px;
     }
+    #editBar .bar-label { display: none; }
+    #editBar button { padding: 5px 11px; font-size: 11px; }
   }
   #editBar .bar-label {
     font-size: 12px; color: #888; margin-right: 4px;
@@ -337,12 +338,12 @@
         <img src="vrink-logo.svg" alt="VRINK" style="height:28px; width:auto; max-width:130px; object-fit:contain; display:block;">
       </div>
       <div class="doc-title">키오스크 설치 운영 가이드</div>
-      <div class="doc-sub">메이데이 파트너 전달용 · Kiosk Installation Guide v1.0</div>
+      <div class="doc-sub">파트너 전달용 · Kiosk Installation Guide v1.0</div>
     </div>
     <div class="header-badge">
       <div class="badge-item">
         <div class="badge-label">전달 대상</div>
-        <div class="badge-val">메이데이 설치팀</div>
+        <div class="badge-val">설치팀</div>
       </div>
       <div class="badge-item">
         <div class="badge-label">작성</div>
@@ -791,7 +792,7 @@
     </div>
   </div>
 
-  <div class="footer">VRINK 운영팀 · 기술 문의: [연락처 기입] · 본 문서는 메이데이 설치팀 전달용입니다</div>
+  <div class="footer">VRINK 운영팀 · 기술 문의: [연락처 기입]</div>
 
 </div>
 <script>
@@ -816,6 +817,7 @@ var snapshot = '';
 
 // 페이지 로드 시 저장된 내용 복원
 window.addEventListener('DOMContentLoaded', function() {
+  assignIds(); // 반드시 먼저 ID 부여 후 복원
   var saved = localStorage.getItem(STORAGE_KEY);
   if (saved) {
     try {
@@ -826,7 +828,6 @@ window.addEventListener('DOMContentLoaded', function() {
       });
     } catch(e) {}
   }
-  assignIds();
 });
 
 // 각 편집 가능 요소에 고유 ID 부여
