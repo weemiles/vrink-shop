@@ -189,15 +189,31 @@
 
   /* ── 2열 테이블 래퍼 ── */
   .table-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  @media (max-width: 600px) {
-    body { padding: 24px 0 60px; }
-    .header { padding: 28px 24px; flex-direction: column; align-items: flex-start; gap: 16px; }
-    .header-badge { text-align: left; }
-    .prep-banner { padding: 16px 20px; flex-direction: column; align-items: flex-start; gap: 10px; }
-    .section-head { padding: 18px 20px; }
-    .section-body { padding: 18px 20px; }
+  @media (max-width: 640px) {
+    body { padding: 16px 0 60px; font-size: 14px; }
+    .doc { padding: 0 12px; }
+    .header { padding: 20px 4px 20px; flex-direction: column; align-items: flex-start; gap: 12px; }
+    .header-badge { flex-direction: row; flex-wrap: wrap; gap: 12px; }
+    .header-badge .badge-item { align-items: flex-start; }
+    .doc-title { font-size: 20px; letter-spacing: -0.5px; }
+    .prep-banner { padding: 14px 16px; flex-direction: column; align-items: flex-start; gap: 10px; }
+    .prep-items { gap: 6px; }
+    .section-card { border-radius: 14px; }
+    .section-head { padding: 16px 18px; gap: 12px; }
+    .step-num { width: 30px; height: 30px; font-size: 13px; border-radius: 8px; }
+    .section-title { font-size: 14px; }
+    .section-desc { font-size: 11px; }
+    .section-body { padding: 16px 18px; }
+    .sub-title { font-size: 11px; }
+    .step-item { font-size: 13px; padding: 9px 12px; }
+    .step-item .num { font-size: 11px; min-width: 20px; height: 20px; }
+    .data-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .data-table th, .data-table td { font-size: 12px; padding: 9px 10px; white-space: nowrap; }
     .table-row { grid-template-columns: 1fr; }
     .grid-2 { grid-template-columns: 1fr; }
+    .check-item { font-size: 13px; }
+    #editBar { top: auto; bottom: 12px; right: 10px; left: 10px; justify-content: center; border-radius: 12px; }
+    .footer { font-size: 11px; padding: 0 12px; }
   }
   .table-box { }
   .table-label {
@@ -333,16 +349,62 @@
     <div class="prep-items">
       <div class="prep-chip">Samsung 태블릿 (전용 기기)</div>
       <div class="prep-chip">Wi-Fi 환경 구축 완료</div>
-      <div class="prep-chip">VRINK 앱 설치 완료</div>
       <div class="prep-chip">관리자 계정 (별도 전달)</div>
       <div class="prep-chip">기기 시리얼 번호 확인</div>
+      <div class="prep-chip">PC(관리자 페이지 접속 가능)</div>
     </div>
   </div>
 
-  <!-- ── STEP 1 ── -->
+  <!-- ── STEP 1 : 디바이스 등록 ── -->
   <div class="section-card">
     <div class="section-head">
       <div class="step-num red">1</div>
+      <div>
+        <div class="section-title">디바이스 등록 및 초기 기기 설정</div>
+        <div class="section-desc">관리자 페이지에서 QR코드 생성 → 태블릿 초기화 → 앱 자동 설치</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="sub-section">
+        <div class="sub-title">1-1 · 관리자 페이지 — QR코드 생성</div>
+        <div class="step-list" style="margin-bottom:14px;">
+          <div class="step-item"><div class="num">경로</div><span>사이드바 → <em>시스템 관리</em> → <em>디바이스</em></span></div>
+          <div class="step-item"><div class="num">1</div><span><em>디바이스 등록</em> 버튼 클릭 → 지점 선택 → <em>생성</em> 클릭</span></div>
+          <div class="step-item"><div class="num">2</div><span>화면에 QR코드가 표시되면 <strong>절대 닫지 말고 그대로 유지</strong> — 태블릿 등록이 끝날 때까지 PC 화면을 켜두어야 함</span></div>
+        </div>
+        <div class="note">
+          <span class="note-icon">⚠</span>
+          <span>QR코드 화면이 꺼지면 등록이 실패합니다. 태블릿 스캔 완료 전까지 PC 화면을 닫지 마세요.</span>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-title">1-2 · 태블릿 초기화 및 등록</div>
+        <div class="step-list">
+          <div class="step-item"><div class="num">1</div><span>태블릿 <em>완전 초기화</em> (공장 초기화) 진행</span></div>
+          <div class="step-item"><div class="num">2</div><span>전원 켜기 → 첫 화면 <em>"환영합니다"</em> 글자가 나오면 해당 부분을 <em>연속으로 빠르게 터치</em></span></div>
+          <div class="step-item"><div class="num">3</div><span>QR 스캐너 화면이 나오면 PC에 띄워둔 <em>QR코드를 인식</em></span></div>
+          <div class="step-item"><div class="num">4</div><span>Wi-Fi 연결 후 태블릿 활성화 진행 — 약관 동의 등은 모두 <em>동의 / 예</em> 선택하며 진행</span></div>
+          <div class="step-item"><div class="num">5</div><span>세팅 완료 후 키오스크 앱 <em>자동 설치 및 실행</em> — 자동 실행이 안 되면 설치된 앱을 직접 눌러서 실행</span></div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-title">1-3 · 마무리 — 동기화</div>
+        <div class="step-list">
+          <div class="step-item"><div class="num">1</div><span>태블릿 앱 실행 완료 확인 후 <em>관리자 페이지</em>로 돌아옴</span></div>
+          <div class="step-item"><div class="num">2</div><span><em>디바이스 등록</em> 버튼 옆 <em>동기화</em> 버튼 클릭 → 최종 등록 완료</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── STEP 2 (구 STEP 1) ── -->
+  <div class="section-card">
+    <div class="section-head">
+      <div class="step-num red">2</div>
       <div>
         <div class="section-title">키오스크 비즈니스 모드 설정</div>
         <div class="section-desc">태블릿을 VRINK 전용 단말기로 고정 · 홈버튼 및 알림바 잠금</div>
@@ -363,7 +425,7 @@
   <!-- ── STEP 2 ── -->
   <div class="section-card">
     <div class="section-head">
-      <div class="step-num blue">2</div>
+      <div class="step-num blue">3</div>
       <div>
         <div class="section-title">관리자 페이지 — 지점 · 키오스크 · 시스템 설정</div>
         <div class="section-desc">admin2.vrink.kr 접속 후 진행</div>
@@ -372,7 +434,7 @@
     <div class="section-body">
 
       <div class="sub-section">
-        <div class="sub-title">2-1 · 지점 등록</div>
+        <div class="sub-title">3-1 · 지점 등록</div>
         <div class="step-list" style="margin-bottom:14px;">
           <div class="step-item"><div class="num">1</div><span>좌측 메뉴 <em>지점 관리</em> 클릭</span></div>
           <div class="step-item"><div class="num">2</div><span>우측 상단 <em>지점 추가</em> 버튼 클릭 → 아래 항목 입력 후 저장</span></div>
@@ -391,7 +453,7 @@
       </div>
 
       <div class="sub-section">
-        <div class="sub-title">2-2 · 키오스크 등록</div>
+        <div class="sub-title">3-2 · 키오스크 등록</div>
         <div class="step-list" style="margin-bottom:14px;">
           <div class="step-item"><div class="num">1</div><span>좌측 메뉴 <em>지점 관리 → 키오스크</em> 클릭</span></div>
           <div class="step-item"><div class="num">2</div><span><em>키오스크 추가</em> 버튼 클릭 → 아래 항목 입력 후 저장</span></div>
@@ -412,7 +474,7 @@
       </div>
 
       <div class="sub-section">
-        <div class="sub-title">2-3 · 시스템 설정</div>
+        <div class="sub-title">3-3 · 시스템 설정</div>
         <div class="step-list" style="margin-bottom:14px;">
           <div class="step-item"><div class="num">1</div><span>좌측 메뉴 <em>설정</em> 클릭 → 아래 항목 확인 및 설정</span></div>
         </div>
@@ -436,7 +498,7 @@
   <!-- ── STEP 3 ── -->
   <div class="section-card">
     <div class="section-head">
-      <div class="step-num green">3</div>
+      <div class="step-num green">4</div>
       <div>
         <div class="section-title">디스펜서 관리자 V1.0 앱 설정</div>
         <div class="section-desc">태블릿 전용 관리자 앱 · 운영 / 설정 / 재고 / 네트워크 4개 탭 순서대로 진행</div>
@@ -456,7 +518,7 @@
 
       <!-- 네트워크 탭 -->
       <div class="sub-section">
-        <div class="sub-title">3-1 · 네트워크 탭 — Wi-Fi · 서버 연결 확인</div>
+        <div class="sub-title">4-1 · 네트워크 탭 — Wi-Fi · 서버 연결 확인</div>
         <div class="step-list" style="margin-bottom:14px;">
           <div class="step-item"><div class="num">1</div><span>하단 <em>네트워크</em> 탭 선택</span></div>
           <div class="step-item"><div class="num">2</div><span><em>서버 연결 상태</em>: <em>SSE 실시간 연결</em> · "서버의 실시간 연결되어있습니다" 메시지 + 녹색 아이콘 확인</span></div>
@@ -468,7 +530,7 @@
 
       <!-- 설정 탭 -->
       <div class="sub-section">
-        <div class="sub-title">3-2 · 설정 탭 — 원액 활성화 · 출수 · 로터리</div>
+        <div class="sub-title">4-2 · 설정 탭 — 원액 활성화 · 출수 · 로터리</div>
         <div class="step-list" style="margin-bottom:14px;">
           <div class="step-item"><div class="num">경로</div><span>하단 <em>설정</em> 탭 선택</span></div>
         </div>
@@ -525,7 +587,7 @@
 
       <!-- 운영 탭 -->
       <div class="sub-section">
-        <div class="sub-title">3-3 · 운영 탭 — 출수 시간 설정 및 테스트</div>
+        <div class="sub-title">4-3 · 운영 탭 — 출수 시간 설정 및 테스트</div>
         <div class="step-list" style="margin-bottom:14px;">
           <div class="step-item"><div class="num">경로</div><span>하단 <em>운영</em> 탭 선택 → 출수 시간 설정 화면</span></div>
           <div class="step-item"><div class="num">1</div><span>상단 <em>맛</em> / <em>기능</em> 탭 버튼으로 맛 원액 채널과 기능샷 채널 전환</span></div>
@@ -556,7 +618,7 @@
 
       <!-- 재고 탭 -->
       <div class="sub-section">
-        <div class="sub-title">3-4 · 재고 탭 — 원액 잔량 확인</div>
+        <div class="sub-title">4-4 · 재고 탭 — 원액 잔량 확인</div>
         <div class="step-list" style="margin-bottom:14px;">
           <div class="step-item"><div class="num">경로</div><span>하단 <em>재고</em> 탭 선택</span></div>
           <div class="step-item"><div class="num">1</div><span>각 원액별 <em>잔량(ml) / 총 용량(2000ml)</em> 및 <em>%</em> 표시 확인</span></div>
@@ -603,7 +665,7 @@
   <!-- ── STEP 4 ── -->
   <div class="section-card">
     <div class="section-head">
-      <div class="step-num purple">4</div>
+      <div class="step-num purple">5</div>
       <div>
         <div class="section-title">탄산수 · 냉수 유속 설정</div>
         <div class="section-desc">운영 탭 → 탄산수 / 냉수 탭 선택 → 유속 수치 입력 후 테스트 버튼으로 확인</div>
@@ -650,7 +712,7 @@
   <!-- ── STEP 5 ── -->
   <div class="section-card">
     <div class="section-head">
-      <div class="step-num orange">5</div>
+      <div class="step-num orange">6</div>
       <div>
         <div class="section-title">자동 세척 및 기타 설정</div>
         <div class="section-desc">운영 탭 → 세척 설정 · 소독수 청소 스위치 확인</div>
