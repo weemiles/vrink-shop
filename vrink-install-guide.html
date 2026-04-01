@@ -49,8 +49,8 @@
     padding-bottom: 2px;
   }
   .header-badge .badge-item { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
-  .header-badge .badge-label { font-size: 11px; color: #AAA; letter-spacing: 0.5px; text-transform: uppercase; }
-  .header-badge .badge-val { font-size: 13px; font-weight: 500; color: #333; }
+  .header-badge .badge-label { font-size: 11px; color: #8B95A1; letter-spacing: 0.5px; text-transform: uppercase; }
+  .header-badge .badge-val { font-size: 14px; font-weight: 500; color: #191F28; }
 
   /* ── 준비물 배너 ── */
   .prep-banner {
@@ -101,7 +101,7 @@
   .step-num.purple, .step-num.orange { background: #111; color: #fff; }
 
   .section-title { font-size: 16px; font-weight: 500; color: #111; letter-spacing: -0.3px; }
-  .section-desc  { font-size: 12px; color: #888; margin-top: 2px; }
+  .section-desc  { font-size: 13px; color: #6B7684; margin-top: 3px; }
 
   .section-body { padding: 24px 32px; }
 
@@ -132,13 +132,13 @@
     font-size: 14px; color: #333;
   }
   .step-item .num {
-    min-width: 20px; height: 20px;
-    padding: 0 4px;
-    background: #EBEBEB; color: #888;
-    border-radius: 50%;
-    font-size: 11px; font-weight: 500;
+    min-width: 24px; height: 24px;
+    padding: 0 6px;
+    background: #E8EAF0; color: #4E5968;
+    border-radius: 6px;
+    font-size: 12px; font-weight: 600;
     display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; margin-top: 2px;
+    flex-shrink: 0; margin-top: 1px;
     white-space: nowrap;
   }
   .step-item em {
@@ -157,30 +157,30 @@
   }
 
   /* ── 테이블 ── */
-  .data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .data-table { width: 100%; border-collapse: collapse; font-size: 14px; }
   .data-table thead tr { background: #F7F7F7; }
   .data-table th {
     text-align: left;
     padding: 10px 14px;
-    font-size: 12px; font-weight: 500;
-    color: #888; letter-spacing: .5px; text-transform: uppercase;
+    font-size: 12px; font-weight: 600;
+    color: #6B7684; letter-spacing: .3px; text-transform: uppercase;
     border-bottom: 1px solid #E0E0E0;
   }
   .data-table td {
-    padding: 11px 14px;
+    padding: 12px 14px;
     border-bottom: 1px solid #F0F0F0;
     color: #333; font-weight: 400;
   }
   .data-table tr:last-child td { border-bottom: none; }
-  .data-table td:first-child { font-weight: 500; color: #111; }
+  .data-table td:first-child { font-weight: 500; color: #191F28; }
   .data-table .placeholder {
-    color: #BCC3D0;
+    color: #B0BAC8;
     font-style: italic;
   }
   .data-table .tag {
     display: inline-block;
-    padding: 2px 8px; border-radius: 5px;
-    font-size: 12px; font-weight: 500;
+    padding: 3px 10px; border-radius: 6px;
+    font-size: 12px; font-weight: 600;
   }
   .tag-on  { background: #EBEBEB; color: #111; }
   .tag-off { background: #F7F7F7; color: #888; }
@@ -268,7 +268,7 @@
       line-height: 1.6;
       background: #F8F9FA;
     }
-    .step-item .num { font-size: 11px; min-width: 20px; height: 20px; }
+    .step-item .num { font-size: 12px; min-width: 24px; height: 24px; }
 
     /* 테이블 → 모바일 카드 */
     .data-table { display: block; }
@@ -286,16 +286,16 @@
       display: block;
       padding: 0;
       border: none;
-      font-size: 13px;
+      font-size: 14px;
       white-space: normal;
     }
     .data-table td:first-child {
-      font-size: 13px; font-weight: 500; color: #555;
+      font-size: 14px; font-weight: 500; color: #4E5968;
       flex: 1;
     }
     .data-table td:last-child {
       text-align: right;
-      color: #111; font-weight: 500;
+      color: #191F28; font-weight: 500;
       flex-shrink: 0; padding-left: 12px;
     }
     /* 3열 이상 테이블은 가로 스크롤 유지 */
@@ -329,7 +329,7 @@
     .check-box { width: 22px; height: 22px; border-radius: 7px; }
 
     /* 노트 */
-    .note { font-size: 12.5px; padding: 11px 14px; margin-top: 14px; }
+    .note { font-size: 13px; padding: 12px 14px; margin-top: 14px; }
 
     /* 풋터 */
     .footer { font-size: 11px; padding: 0 18px 20px; }
@@ -340,32 +340,32 @@
   }
   .table-box { }
   .table-label {
-    font-size: 12px; font-weight: 500;
-    color: #111; margin-bottom: 8px;
+    font-size: 13px; font-weight: 500;
+    color: #191F28; margin-bottom: 8px;
     display: flex; align-items: center; gap: 6px;
   }
   .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 
   /* ── 노트 ── */
   .note {
-    background: #F5F5F5;
-    border: 1px solid #DCDCDC;
+    background: #F5F6F8;
+    border: 1px solid #D8DCE5;
     border-radius: 10px;
-    padding: 12px 16px;
-    font-size: 12px; color: #444;
+    padding: 13px 16px;
+    font-size: 13px; color: #4E5968; line-height: 1.6;
     margin-top: 16px;
     display: flex; gap: 8px; align-items: flex-start;
   }
-  .note-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+  .note-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
 
   /* ── 체크리스트 ── */
   .checklist { display: flex; flex-direction: column; gap: 8px; }
   .check-item {
     display: flex; align-items: center; gap: 12px;
-    padding: 11px 16px;
+    padding: 12px 16px;
     background: #FAFBFC;
     border-radius: 10px;
-    font-size: 14px; color: #333;
+    font-size: 14px; color: #2D3748;
     border: 1px solid #E8E8E8;
   }
   .check-box {
@@ -660,7 +660,7 @@
         <div class="table-label" style="margin-bottom:8px;"><div class="dot" style="background:#555"></div>로터리 위치 설정 — 키오스크별 펌프 번호 지정</div>
         <div class="table-row" style="margin-bottom:8px;">
           <div class="table-box">
-            <div class="table-label" style="font-size:11px; color:#888; margin-bottom:6px;">기능 메뉴</div>
+            <div class="table-label" style="font-size:12px; color:#6B7684; margin-bottom:6px;">기능 메뉴</div>
             <table class="data-table">
               <thead><tr><th>메뉴</th><th>펌프 번호</th></tr></thead>
               <tbody>
@@ -674,7 +674,7 @@
             </table>
           </div>
           <div class="table-box">
-            <div class="table-label" style="font-size:11px; color:#888; margin-bottom:6px;">맛 메뉴</div>
+            <div class="table-label" style="font-size:12px; color:#6B7684; margin-bottom:6px;">맛 메뉴</div>
             <table class="data-table">
               <thead><tr><th>메뉴</th><th>펌프 번호</th></tr></thead>
               <tbody>
@@ -735,7 +735,7 @@
         </div>
         <div class="table-row">
           <div class="table-box">
-            <div class="table-label" style="font-size:11px; color:#888; margin-bottom:6px;">맛 원액 (총 2000ml)</div>
+            <div class="table-label" style="font-size:12px; color:#6B7684; margin-bottom:6px;">맛 원액 (총 2000ml)</div>
             <table class="data-table">
               <thead><tr><th>원액</th><th>총 용량</th></tr></thead>
               <tbody>
@@ -748,7 +748,7 @@
             </table>
           </div>
           <div class="table-box">
-            <div class="table-label" style="font-size:11px; color:#888; margin-bottom:6px;">기능 샷 (총 2000ml)</div>
+            <div class="table-label" style="font-size:12px; color:#6B7684; margin-bottom:6px;">기능 샷 (총 2000ml)</div>
             <table class="data-table">
               <thead><tr><th>샷</th><th>총 용량</th></tr></thead>
               <tbody>
