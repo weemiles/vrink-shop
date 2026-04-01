@@ -6,9 +6,7 @@
 <title>VRINK 키오스크 설치 운영 가이드</title>
 <style>
   @font-face { font-family: 'Pretendard'; font-weight: 400; src: url('pretendard/Pretendard-Regular.woff2') format('woff2'); }
-  @font-face { font-family: 'Pretendard'; font-weight: 400; src: url('pretendard/Pretendard-Regular.woff2') format('woff2'); }
   @font-face { font-family: 'Pretendard'; font-weight: 500; src: url('pretendard/Pretendard-Medium.woff2') format('woff2'); }
-  @font-face { font-family: 'Pretendard'; font-weight: 600; src: url('pretendard/Pretendard-Bold.woff2') format('woff2'); }
 
   * { margin: 0; padding: 0; box-sizing: border-box; line-height: 1.5; }
 
@@ -42,8 +40,8 @@
     border-radius: 8px; display: flex; align-items: center; justify-content: center;
   }
   .logo-mark svg { width: 12px; height: 12px; }
-  .logo-text { font-size: 14px; font-weight: 600; color: #111; letter-spacing: -0.3px; }
-  .doc-title { font-size: 26px; font-weight: 600; color: #111; letter-spacing: -1px; margin-top: 2px; }
+  .logo-text { font-size: 14px; font-weight: 500; color: #111; letter-spacing: -0.3px; }
+  .doc-title { font-size: 26px; font-weight: 500; color: #111; letter-spacing: -1px; margin-top: 2px; }
   .doc-sub { font-size: 13px; color: #999; margin-top: 2px; }
   .header-badge {
     display: flex;
@@ -52,7 +50,7 @@
   }
   .header-badge .badge-item { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
   .header-badge .badge-label { font-size: 11px; color: #AAA; letter-spacing: 0.5px; text-transform: uppercase; }
-  .header-badge .badge-val { font-size: 13px; font-weight: 600; color: #333; }
+  .header-badge .badge-val { font-size: 13px; font-weight: 500; color: #333; }
 
   /* ── 준비물 배너 ── */
   .prep-banner {
@@ -65,7 +63,7 @@
     gap: 32px;
     border: 1px solid #E0E0E0;
   }
-  .prep-label { font-size: 12px; font-weight: 600; color: #111; letter-spacing: 1px; text-transform: uppercase; white-space: nowrap; }
+  .prep-label { font-size: 12px; font-weight: 500; color: #111; letter-spacing: 1px; text-transform: uppercase; white-space: nowrap; }
   .prep-items { display: flex; gap: 10px; flex-wrap: wrap; }
   .prep-chip {
     background: #F7F7F7;
@@ -95,7 +93,7 @@
     width: 36px; height: 36px;
     border-radius: 10px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 14px; font-weight: 600;
+    font-size: 14px; font-weight: 500;
     flex-shrink: 0;
   }
   .step-num.blue  { background: #EBEBEB; color: #111; }
@@ -104,7 +102,7 @@
   .step-num.purple{ background: #EBEBEB; color: #111; }
   .step-num.orange{ background: #EBEBEB; color: #111; }
 
-  .section-title { font-size: 16px; font-weight: 600; color: #111; letter-spacing: -0.3px; }
+  .section-title { font-size: 16px; font-weight: 500; color: #111; letter-spacing: -0.3px; }
   .section-desc  { font-size: 12px; color: #888; margin-top: 2px; }
 
   .section-body { padding: 24px 32px; }
@@ -113,7 +111,7 @@
   .sub-section { margin-bottom: 28px; }
   .sub-section:last-child { margin-bottom: 0; }
   .sub-title {
-    font-size: 12px; font-weight: 600;
+    font-size: 12px; font-weight: 500;
     color: #111;
     letter-spacing: .5px;
     text-transform: uppercase;
@@ -140,7 +138,7 @@
     padding: 0 6px;
     background: #111; color: #fff;
     border-radius: 6px;
-    font-size: 12px; font-weight: 600;
+    font-size: 12px; font-weight: 500;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0; margin-top: 1px;
     white-space: nowrap;
@@ -149,7 +147,7 @@
     font-style: normal;
     background: #EBEBEB;
     color: #111;
-    font-size: 12px; font-weight: 600;
+    font-size: 12px; font-weight: 500;
     padding: 1px 6px; border-radius: 4px;
   }
   .step-item code {
@@ -166,7 +164,7 @@
   .data-table th {
     text-align: left;
     padding: 10px 14px;
-    font-size: 12px; font-weight: 600;
+    font-size: 12px; font-weight: 500;
     color: #888; letter-spacing: .5px; text-transform: uppercase;
     border-bottom: 1px solid #E0E0E0;
   }
@@ -176,7 +174,7 @@
     color: #333; font-weight: 400;
   }
   .data-table tr:last-child td { border-bottom: none; }
-  .data-table td:first-child { font-weight: 600; color: #111; }
+  .data-table td:first-child { font-weight: 500; color: #111; }
   .data-table .placeholder {
     color: #BCC3D0;
     font-style: italic;
@@ -184,7 +182,7 @@
   .data-table .tag {
     display: inline-block;
     padding: 2px 8px; border-radius: 5px;
-    font-size: 12px; font-weight: 600;
+    font-size: 12px; font-weight: 500;
   }
   .tag-on  { background: #EBEBEB; color: #111; }
   .tag-off { background: #F7F7F7; color: #888; }
@@ -203,7 +201,7 @@
   }
   .table-box { }
   .table-label {
-    font-size: 12px; font-weight: 600;
+    font-size: 12px; font-weight: 500;
     color: #111; margin-bottom: 8px;
     display: flex; align-items: center; gap: 6px;
   }
@@ -269,7 +267,7 @@
   }
   #editBar button {
     font-family: 'Pretendard', sans-serif;
-    font-size: 12px; font-weight: 600;
+    font-size: 12px; font-weight: 500;
     border: none; border-radius: 7px;
     padding: 6px 14px; cursor: pointer;
     transition: background .15s;
