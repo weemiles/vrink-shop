@@ -189,30 +189,164 @@
 
   /* ── 2열 테이블 래퍼 ── */
   .table-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  /* ══════════════════════════════
+     모바일 전용 레이아웃 (≤ 640px)
+     ══════════════════════════════ */
   @media (max-width: 640px) {
-    body { padding: 16px 0 60px; font-size: 14px; }
-    .doc { padding: 0 12px; }
-    .header { padding: 20px 4px 20px; flex-direction: column; align-items: flex-start; gap: 12px; }
-    .header-badge { flex-direction: row; flex-wrap: wrap; gap: 12px; }
-    .header-badge .badge-item { align-items: flex-start; }
-    .doc-title { font-size: 20px; letter-spacing: -0.5px; }
-    .prep-banner { padding: 14px 16px; flex-direction: column; align-items: flex-start; gap: 10px; }
-    .prep-items { gap: 6px; }
-    .section-card { border-radius: 14px; }
+    body { padding: 0 0 100px; background: #F4F5F7; }
+    .doc { padding: 0; }
+
+    /* 헤더 */
+    .header {
+      padding: 20px 18px 18px;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: none;
+      background: #fff;
+      margin-bottom: 0;
+    }
+    .header-left { gap: 4px; }
+    .doc-title { font-size: 17px; letter-spacing: -0.5px; }
+    .doc-sub { display: none; }
+    .header-badge { gap: 12px; }
+    .header-badge .badge-label { font-size: 10px; }
+    .header-badge .badge-val { font-size: 12px; }
+
+    /* 준비물 – 가로 스크롤 띠 */
+    .prep-banner {
+      background: #fff;
+      border-radius: 0;
+      border: none;
+      border-top: 1px solid #EFEFEF;
+      border-bottom: 1px solid #EFEFEF;
+      padding: 12px 18px;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 0;
+    }
+    .prep-items {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      gap: 6px;
+      padding-bottom: 2px;
+      scrollbar-width: none;
+    }
+    .prep-items::-webkit-scrollbar { display: none; }
+    .prep-chip {
+      flex-shrink: 0;
+      white-space: nowrap;
+      font-size: 12px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      background: #F0F0F0;
+      border: 1px solid #E4E4E4;
+    }
+
+    /* 섹션 구분 간격 */
+    .section-card {
+      border-radius: 0;
+      border-left: none;
+      border-right: none;
+      margin-bottom: 8px;
+    }
+    .section-card:first-of-type { margin-top: 8px; }
+
+    /* 섹션 헤더 */
     .section-head { padding: 16px 18px; gap: 12px; }
-    .step-num { width: 30px; height: 30px; font-size: 13px; border-radius: 8px; }
-    .section-title { font-size: 14px; }
-    .section-desc { font-size: 11px; }
+    .step-num {
+      width: 32px; height: 32px;
+      font-size: 14px; border-radius: 8px;
+      background: #111 !important; color: #fff !important;
+    }
+    .section-title { font-size: 15px; letter-spacing: -0.3px; }
+    .section-desc { font-size: 11.5px; }
+
+    /* 섹션 본문 */
     .section-body { padding: 16px 18px; }
-    .sub-title { font-size: 11px; }
-    .step-item { font-size: 13px; padding: 9px 12px; }
+    .sub-section { margin-bottom: 22px; }
+    .sub-title { font-size: 11px; margin-bottom: 10px; }
+
+    /* 스텝 아이템 */
+    .step-list { gap: 7px; }
+    .step-item {
+      font-size: 13.5px;
+      padding: 11px 13px;
+      line-height: 1.6;
+      background: #F8F9FA;
+    }
     .step-item .num { font-size: 11px; min-width: 20px; height: 20px; }
-    .data-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    .data-table th, .data-table td { font-size: 12px; padding: 9px 10px; white-space: nowrap; }
-    .table-row { grid-template-columns: 1fr; }
+
+    /* 테이블 → 모바일 카드 */
+    .data-table { display: block; }
+    .data-table thead { display: none; }
+    .data-table tbody { display: flex; flex-direction: column; gap: 0; }
+    .data-table tr {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 11px 0;
+      border-bottom: 1px solid #F0F0F0;
+    }
+    .data-table tr:last-child { border-bottom: none; }
+    .data-table td {
+      display: block;
+      padding: 0;
+      border: none;
+      font-size: 13px;
+      white-space: normal;
+    }
+    .data-table td:first-child {
+      font-size: 13px; font-weight: 500; color: #555;
+      flex: 1;
+    }
+    .data-table td:last-child {
+      text-align: right;
+      color: #111; font-weight: 500;
+      flex-shrink: 0; padding-left: 12px;
+    }
+    /* 3열 이상 테이블은 가로 스크롤 유지 */
+    .data-table.multi-col {
+      display: block; overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .data-table.multi-col thead,
+    .data-table.multi-col tbody,
+    .data-table.multi-col tr,
+    .data-table.multi-col td,
+    .data-table.multi-col th { display: revert; }
+    .data-table.multi-col th,
+    .data-table.multi-col td { white-space: nowrap; padding: 9px 12px; font-size: 12px; }
+
+    /* 2열 그리드 → 1열 */
+    .table-row { grid-template-columns: 1fr; gap: 12px; }
     .grid-2 { grid-template-columns: 1fr; }
-    .check-item { font-size: 13px; }
-    .footer { font-size: 11px; padding: 0 12px; }
+
+    /* 체크리스트 */
+    .checklist { gap: 7px; }
+    .check-item {
+      padding: 13px 16px;
+      font-size: 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background .15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .check-item:active { background: #F0F7FF; }
+    .check-box { width: 22px; height: 22px; border-radius: 7px; }
+
+    /* 노트 */
+    .note { font-size: 12.5px; padding: 11px 14px; margin-top: 14px; }
+
+    /* 풋터 */
+    .footer { font-size: 11px; padding: 0 18px 20px; }
+
+    /* 편집 버튼 위치 고정 */
+    #editBtn { top: 18px; right: 14px; width: 36px; height: 36px; font-size: 16px; }
+    #saveBtn { top: 18px; right: 58px; height: 36px; font-size: 12px; padding: 0 14px; }
   }
   .table-box { }
   .table-label {
@@ -525,7 +659,7 @@
         </div>
 
         <div class="table-label" style="margin-bottom:8px;"><div class="dot" style="background:#555"></div>출수 · 세정 기본값</div>
-        <table class="data-table" style="margin-bottom:16px;">
+        <table class="data-table multi-col" style="margin-bottom:16px;">
           <thead><tr><th>항목</th><th>설명</th><th>기본값</th></tr></thead>
           <tbody>
             <tr><td>정수물 (DRINK 12)</td><td>출수 시 DRINK 12번 위치에 정수물 시간 추가</td><td>1.5</td></tr>
@@ -845,6 +979,11 @@ function saveLocal() {
   toggleEdit();
   showToast('저장되었습니다');
 }
+
+// 체크리스트 탭 토글
+document.querySelectorAll('.check-item').forEach(function(el) {
+  el.addEventListener('click', function() { el.classList.toggle('done'); });
+});
 
 function showToast(msg) {
   var t = document.createElement('div');
