@@ -278,6 +278,14 @@
     padding: 8px 12px;
     box-shadow: 0 2px 12px rgba(0,0,0,0.08);
   }
+  @media (max-width: 600px) {
+    #editBar {
+      top: auto; right: auto;
+      bottom: 20px; left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+    }
+  }
   #editBar .bar-label {
     font-size: 12px; color: #888; margin-right: 4px;
   }
@@ -326,7 +334,7 @@
   <div class="header">
     <div class="header-left">
       <div class="logo-row">
-        <img src="vrink-logo.svg" alt="VRINK" style="height:44px; width:auto;">
+        <img src="vrink-logo.svg" alt="VRINK" style="height:28px; width:auto; max-width:130px; object-fit:contain; display:block;">
       </div>
       <div class="doc-title">키오스크 설치 운영 가이드</div>
       <div class="doc-sub">메이데이 파트너 전달용 · Kiosk Installation Guide v1.0</div>
