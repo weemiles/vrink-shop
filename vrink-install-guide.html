@@ -440,30 +440,109 @@
     <div class="section-head">
       <div class="step-num green">3</div>
       <div>
-        <div class="section-title">키오스크 내 관리자 — 음료 유속 · 시간 설정</div>
-        <div class="section-desc">키오스크 태블릿에서 직접 진행 · 앱 내 관리자 메뉴</div>
+        <div class="section-title">디스펜서 관리자 앱 — 네트워크 · 설정</div>
+        <div class="section-desc">키오스크 태블릿의 디스펜서 관리자 V1.0 앱 · 운영 / 설정 / 재고 / 네트워크 탭</div>
       </div>
     </div>
     <div class="section-body">
 
-      <div class="step-list" style="margin-bottom:20px;">
-        <div class="step-item"><div class="num">접근</div><span>VRINK 앱 화면 우측 상단 <em>QR코드 버튼 길게 누름</em> → 비밀번호 <code>0000</code> 입력 → 관리자 메뉴 진입</span></div>
-        <div class="step-item"><div class="num">경로</div><span>앱 관리자 메뉴 → <em>디스펜서 설정</em> → <em>음료 농도 설정</em> → 각 탭 선택 후 저장</span></div>
+      <div class="sub-section">
+        <div class="sub-title">3-1 · 네트워크 연결 확인</div>
+        <div class="step-list" style="margin-bottom:14px;">
+          <div class="step-item"><div class="num">1</div><span>디스펜서 관리자 앱 하단 <em>네트워크</em> 탭 선택</span></div>
+          <div class="step-item"><div class="num">2</div><span><em>서버 연결 상태</em> 항목에서 <em>SSE 실시간 연결</em> 표시 확인 — "서버의 실시간 연결되어있습니다" 메시지 녹색으로 표시되어야 함</span></div>
+          <div class="step-item"><div class="num">3</div><span><em>현재 연결된 네트워크</em> 항목에서 SSID와 IP 주소 기록 (예: KT_GIGA_5G_09B3 / 172.30.1.93)</span></div>
+          <div class="step-item"><div class="num">4</div><span>네트워크 변경이 필요한 경우 <em>사용 가능한 네트워크</em> 목록에서 해당 SSID 선택 → <em>새로고침</em> 버튼으로 목록 갱신 가능</span></div>
+          <div class="step-item"><div class="num">5</div><span>연결 완료 후 상단 상태가 <em>연결됨</em>(녹색)으로 변경되는지 확인</span></div>
+        </div>
+        <table class="data-table">
+          <thead><tr><th>항목</th><th>확인 내용</th></tr></thead>
+          <tbody>
+            <tr><td>서버 연결 상태</td><td>SSE 실시간 연결 · 녹색 아이콘 확인</td></tr>
+            <tr><td>현재 연결 네트워크</td><td>SSID 및 IP 주소 기록</td></tr>
+            <tr><td>연결 해제 상태</td><td>빨간색 "연결 해제" 표시 시 Wi-Fi 재연결 필요</td></tr>
+          </tbody>
+        </table>
       </div>
 
-      <table class="data-table">
-        <thead><tr><th>농도</th><th>유속 (ml/s)</th><th>추출 시간 (초)</th><th>비고</th></tr></thead>
-        <tbody>
-          <tr><td>🔵 연하게</td><td class="placeholder">___ ml/s</td><td class="placeholder">___ 초</td><td>—</td></tr>
-          <tr><td>🟢 보통</td><td class="placeholder">___ ml/s</td><td class="placeholder">___ 초</td><td>기본값</td></tr>
-          <tr><td>🔴 진하게</td><td class="placeholder">___ ml/s</td><td class="placeholder">___ 초</td><td>—</td></tr>
-        </tbody>
-      </table>
-
-      <div class="note">
-        <span class="note-icon">⚠</span>
-        <span>위 수치는 현장 테스트 후 VRINK 기술팀이 직접 기입. 설치 당일 출수 테스트 필수.</span>
+      <div class="sub-section">
+        <div class="sub-title">3-2 · 출수 및 세정 설정</div>
+        <div class="step-list" style="margin-bottom:14px;">
+          <div class="step-item"><div class="num">경로</div><span>디스펜서 관리자 앱 → <em>설정</em> 탭 선택</span></div>
+        </div>
+        <table class="data-table">
+          <thead><tr><th>항목</th><th>설명</th><th>기본값</th></tr></thead>
+          <tbody>
+            <tr><td>정수물 (DRINK 12)</td><td>출수 시 DRINK 12번 위치에 정수물 시간 추가</td><td>1.5</td></tr>
+            <tr><td>출수 후 세정</td><td>출수 완료 후 정수로 라인 헹굼 (0이면 미실행)</td><td>0.0</td></tr>
+          </tbody>
+        </table>
+        <div class="note" style="margin-top:12px;">
+          <span class="note-icon">ℹ</span>
+          <span>출수 후 세정값을 <strong>0</strong>으로 설정하면 세정이 실행되지 않습니다. 현장 위생 기준에 따라 VRINK 기술팀과 협의 후 설정.</span>
+        </div>
       </div>
+
+      <div class="sub-section">
+        <div class="sub-title">3-3 · 로터리 위치 설정</div>
+        <div class="step-list" style="margin-bottom:14px;">
+          <div class="step-item"><div class="num">경로</div><span>디스펜서 관리자 앱 → <em>설정</em> 탭 → <em>로터리 위치 설정</em> — 키오스크별 펌프 위치 지정</span></div>
+        </div>
+        <div class="table-row">
+          <div class="table-box">
+            <div class="table-label"><div class="dot" style="background:#111"></div>기능 메뉴</div>
+            <table class="data-table">
+              <thead><tr><th>메뉴</th><th>펌프 번호</th></tr></thead>
+              <tbody>
+                <tr><td>부스터샷</td><td>1</td></tr>
+                <tr><td>커팅샷</td><td>2</td></tr>
+                <tr><td>릴렉스샷</td><td>3</td></tr>
+                <tr><td>비타민샷</td><td>4</td></tr>
+                <tr><td>아미노샷</td><td>5</td></tr>
+                <tr><td>아미노샷 (추가)</td><td>11</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="table-box">
+            <div class="table-label"><div class="dot" style="background:#666"></div>맛 메뉴</div>
+            <table class="data-table">
+              <thead><tr><th>메뉴</th><th>펌프 번호</th></tr></thead>
+              <tbody>
+                <tr><td>레몬</td><td>6</td></tr>
+                <tr><td>사과</td><td>7</td></tr>
+                <tr><td>망고</td><td>8</td></tr>
+                <tr><td>청포도</td><td>9</td></tr>
+                <tr><td>체리</td><td>10</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="note" style="margin-top:12px;">
+          <span class="note-icon">⚠</span>
+          <span>로터리 위치는 기기별로 다를 수 있습니다. 설치 전 실제 배관 위치를 확인하고 위 번호와 일치하는지 반드시 검증 후 저장.</span>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-title">3-4 · 음료 유속 · 시간 설정</div>
+        <div class="step-list" style="margin-bottom:14px;">
+          <div class="step-item"><div class="num">접근</div><span>VRINK 앱 화면 우측 상단 <em>QR코드 버튼 길게 누름</em> → 비밀번호 <code>0000</code> 입력 → 관리자 메뉴 진입</span></div>
+          <div class="step-item"><div class="num">경로</div><span>앱 관리자 메뉴 → <em>디스펜서 설정</em> → <em>음료 농도 설정</em> → 각 탭 선택 후 저장</span></div>
+        </div>
+        <table class="data-table">
+          <thead><tr><th>농도</th><th>유속 (ml/s)</th><th>추출 시간 (초)</th><th>비고</th></tr></thead>
+          <tbody>
+            <tr><td>연하게</td><td class="placeholder">___ ml/s</td><td class="placeholder">___ 초</td><td>—</td></tr>
+            <tr><td>보통</td><td class="placeholder">___ ml/s</td><td class="placeholder">___ 초</td><td>기본값</td></tr>
+            <tr><td>진하게</td><td class="placeholder">___ ml/s</td><td class="placeholder">___ 초</td><td>—</td></tr>
+          </tbody>
+        </table>
+        <div class="note">
+          <span class="note-icon">⚠</span>
+          <span>위 수치는 현장 테스트 후 VRINK 기술팀이 직접 기입. 설치 당일 출수 테스트 필수.</span>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -562,10 +641,14 @@
         <div class="checklist">
           <div class="check-item"><div class="check-box"></div>비즈니스 모드 활성화 확인</div>
           <div class="check-item"><div class="check-box"></div>관리자 웹 키오스크 온라인 상태 확인</div>
+          <div class="check-item"><div class="check-box"></div>SSE 실시간 서버 연결 (녹색) 확인</div>
+          <div class="check-item"><div class="check-box"></div>Wi-Fi 연결 및 IP 주소 기록</div>
+          <div class="check-item"><div class="check-box"></div>로터리 위치 설정 저장 (펌프 번호 일치 확인)</div>
           <div class="check-item"><div class="check-box"></div>음료 테스트 출수 (농도 3종 각각)</div>
           <div class="check-item"><div class="check-box"></div>탄산수 / 냉수 테스트 출수</div>
         </div>
         <div class="checklist">
+          <div class="check-item"><div class="check-box"></div>정수물 · 출수 후 세정 수치 설정 완료</div>
           <div class="check-item"><div class="check-box"></div>자동 세척 1회 수동 실행 확인</div>
           <div class="check-item"><div class="check-box"></div>카드 결제 테스트 (1원 후 취소)</div>
           <div class="check-item"><div class="check-box"></div>매출 데이터 관리자 웹 반영 확인</div>
