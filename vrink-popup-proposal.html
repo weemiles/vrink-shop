@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VRINK 더현대 팝업 부스 기획서</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: #f0f1f3;
+  color: #111;
+  line-height: 1.7;
+}
+
+.page {
+  max-width: 800px;
+  margin: 48px auto;
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 24px rgba(0,0,0,0.06);
+}
+
+/* Header */
+.header { background: #fff; padding: 56px 56px 44px; border-bottom: 1px solid #ebebeb; }
+.header-logo { height: 28px; width: auto; display: block; margin-bottom: 32px; }
+.header-top-bar { width: 40px; height: 3px; background: #111; border-radius: 2px; margin-bottom: 28px; }
+.header .label { font-size: 11px; font-weight: 500; letter-spacing: 2.5px; color: #aaa; text-transform: uppercase; margin-bottom: 14px; }
+.header h1 { font-size: 30px; font-weight: 600; letter-spacing: -0.5px; margin-bottom: 10px; line-height: 1.3; color: #111; }
+.header .subtitle { font-size: 14px; color: #888; font-weight: 400; }
+.header .meta { margin-top: 32px; display: flex; gap: 32px; padding-top: 24px; border-top: 1px solid #f0f0f0; flex-wrap: wrap; }
+.header .meta-item { font-size: 11px; color: #bbb; letter-spacing: 0.3px; }
+.header .meta-item span { display: block; font-size: 13px; color: #333; font-weight: 500; margin-top: 4px; }
+
+/* Body */
+.body { padding: 56px; }
+.section { margin-bottom: 48px; }
+.section-title { font-size: 16px; font-weight: 500; letter-spacing: 2.5px; color: #555; text-transform: uppercase; margin-bottom: 20px; }
+
+/* Footer */
+.footer { border-top: 1px solid #ebebeb; padding: 24px 56px; display: flex; justify-content: space-between; align-items: center; background: #fafafa; }
+.footer .brand { font-size: 12px; font-weight: 600; color: #111; letter-spacing: 2px; }
+.footer .date { font-size: 11px; color: #bbb; }
+
+/* Background box */
+.background-box { background: #fafafa; border-left: 3px solid #111; border-radius: 0 8px 8px 0; padding: 20px 24px; font-size: 14px; color: #444; line-height: 1.9; }
+
+/* Spec grid */
+.spec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.spec-item { background: #fafafa; border: 1px solid #ebebeb; border-radius: 10px; padding: 18px 20px; }
+.spec-item .spec-label { font-size: 11px; color: #bbb; font-weight: 500; letter-spacing: 0.5px; margin-bottom: 6px; }
+.spec-item .spec-value { font-size: 14px; font-weight: 600; color: #111; line-height: 1.6; }
+
+/* Three col */
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+
+/* Two col */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+
+/* Stat row */
+.stat-row { display: flex; border: 1px solid #ebebeb; border-radius: 12px; overflow: hidden; }
+.stat-cell { flex: 1; padding: 20px 24px; border-right: 1px solid #ebebeb; }
+.stat-cell:last-child { border-right: none; }
+.stat-cell .stat-num { font-size: 28px; font-weight: 600; color: #111; line-height: 1; margin-bottom: 6px; }
+.stat-cell .stat-label { font-size: 12px; color: #888; font-weight: 400; }
+
+/* Zone layout */
+.zone-layout { border: 1px solid #ebebeb; border-radius: 12px; overflow: hidden; }
+.zone-ruler { display: flex; background: #fafafa; border-bottom: 1px solid #ebebeb; font-size: 10px; font-weight: 500; color: #bbb; }
+.zone-ruler-item { padding: 9px 0; text-align: center; border-right: 1px solid #ebebeb; }
+.zone-ruler-item:last-child { border-right: none; }
+.zone-bars { display: flex; }
+.zone-bar { padding: 20px 14px; border-right: 1px solid #ebebeb; display: flex; flex-direction: column; gap: 5px; }
+.zone-bar:last-child { border-right: none; }
+.zone-label { font-size: 10px; font-weight: 600; color: #ccc; letter-spacing: 1.5px; text-transform: uppercase; }
+.zone-name { font-size: 12px; font-weight: 600; color: #111; line-height: 1.4; }
+.zone-desc { font-size: 10px; color: #999; line-height: 1.6; margin-top: 2px; }
+.zone-size { font-size: 10px; color: #ccc; font-weight: 500; margin-top: 3px; }
+
+/* Material grid */
+.material-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.material-card { border: 1px solid #ebebeb; border-radius: 10px; overflow: hidden; }
+.material-swatch { height: 52px; }
+.material-info { padding: 12px 14px; }
+.material-name { font-size: 12px; font-weight: 600; color: #111; margin-bottom: 3px; }
+.material-desc { font-size: 11px; color: #bbb; }
+
+/* Journey */
+.journey-list { border: 1px solid #ebebeb; border-radius: 12px; overflow: hidden; }
+.journey-item { display: flex; gap: 16px; padding: 16px 20px; border-bottom: 1px solid #f5f5f5; align-items: flex-start; }
+.journey-item:last-child { border-bottom: none; }
+.journey-step { width: 26px; height: 26px; border-radius: 50%; background: #111; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; flex-shrink: 0; margin-top: 2px; }
+.journey-content { flex: 1; }
+.journey-title { font-size: 13px; font-weight: 600; color: #111; margin-bottom: 2px; }
+.journey-desc { font-size: 12px; color: #888; line-height: 1.6; }
+.journey-time { font-size: 11px; color: #ccc; font-weight: 500; flex-shrink: 0; padding-top: 4px; }
+
+/* Info bar */
+.info-bar { background: #fafafa; border: 1px solid #ebebeb; border-radius: 10px; padding: 14px 20px; display: flex; gap: 32px; flex-wrap: wrap; }
+.info-bar-item { font-size: 11px; color: #bbb; }
+.info-bar-item span { display: inline; font-size: 13px; font-weight: 600; color: #111; margin-left: 6px; }
+
+/* Event grid */
+.event-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.event-card { border: 1px solid #ebebeb; border-radius: 12px; padding: 22px; }
+.event-label { font-size: 10px; font-weight: 600; color: #bbb; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px; }
+.event-title { font-size: 15px; font-weight: 600; color: #111; margin-bottom: 10px; }
+.event-cond { font-size: 12px; color: #666; line-height: 1.8; margin-bottom: 14px; }
+.event-note { font-size: 11px; color: #bbb; margin-top: 4px; }
+.event-reward { display: inline-block; background: #111; color: #fff; font-size: 11px; font-weight: 500; padding: 5px 12px; border-radius: 6px; letter-spacing: 0.3px; }
+
+/* Benefit list */
+.benefit-list { display: flex; flex-direction: column; gap: 14px; }
+.benefit-card { border: 1px solid #ebebeb; border-radius: 12px; padding: 22px 26px; display: flex; gap: 20px; align-items: flex-start; transition: border-color 0.2s, box-shadow 0.2s; }
+.benefit-card:hover { border-color: #ccc; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+.benefit-num { width: 34px; height: 34px; border: 1.5px solid #ddd; color: #111; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; flex-shrink: 0; margin-top: 2px; background: #fff; }
+.benefit-content h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; color: #111; }
+.benefit-content p { font-size: 13px; color: #666; line-height: 1.85; }
+.benefit-tag { display: inline-block; background: #f4f4f4; color: #666; font-size: 10px; font-weight: 600; letter-spacing: 1px; padding: 3px 8px; border-radius: 4px; margin-bottom: 8px; text-transform: uppercase; }
+
+/* Table */
+.data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.data-table th { background: #fafafa; font-weight: 500; color: #888; font-size: 11px; letter-spacing: 0.5px; padding: 11px 16px; text-align: left; border-bottom: 1px solid #ebebeb; border-top: 1px solid #ebebeb; }
+.data-table td { padding: 12px 16px; border-bottom: 1px solid #f5f5f5; color: #444; vertical-align: top; }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table .td-label { font-weight: 600; color: #111; }
+.data-table .td-tbd { color: #ccc; font-size: 12px; }
+
+/* Checklist */
+.checklist-group { margin-bottom: 20px; }
+.checklist-group:last-child { margin-bottom: 0; }
+.checklist-group-title { font-size: 11px; font-weight: 600; color: #888; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+.checklist { display: flex; flex-direction: column; gap: 7px; }
+.checklist-item { display: flex; align-items: center; gap: 10px; padding: 11px 16px; background: #fafafa; border: 1px solid #ebebeb; border-radius: 8px; font-size: 13px; color: #444; }
+.checklist-item::before { content: ''; width: 16px; height: 16px; flex-shrink: 0; background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='16' height='16' rx='4' fill='%23111'/%3E%3Cpath d='M4 8.5L6.8 11L12 5' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-size: contain; background-repeat: no-repeat; }
+.check-badge { margin-left: auto; font-size: 10px; font-weight: 500; color: #bbb; flex-shrink: 0; }
+
+/* Timeline */
+.timeline { display: flex; flex-direction: column; }
+.timeline-item { display: flex; align-items: stretch; }
+.timeline-left { width: 110px; flex-shrink: 0; padding: 16px 16px 16px 0; text-align: right; }
+.timeline-date { font-size: 11px; font-weight: 600; color: #111; line-height: 1.5; }
+.timeline-center { width: 24px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; }
+.timeline-dot { width: 8px; height: 8px; border-radius: 50%; background: #111; flex-shrink: 0; margin-top: 20px; }
+.timeline-line { width: 1px; background: #e8e8e8; flex: 1; margin-top: 3px; }
+.timeline-item:last-child .timeline-line { display: none; }
+.timeline-right { flex: 1; padding: 14px 0 14px 16px; }
+.timeline-title { font-size: 13px; font-weight: 600; color: #111; margin-bottom: 4px; }
+.timeline-body { font-size: 12px; color: #888; line-height: 1.7; }
+
+/* Concept flow */
+.concept-flow { display: flex; align-items: stretch; border: 1px solid #ebebeb; border-radius: 12px; overflow: hidden; }
+.concept-item { flex: 1; padding: 18px 12px; text-align: center; background: #fff; border-right: 1px solid #ebebeb; }
+.concept-item:last-child { border-right: none; }
+.concept-item .word { font-size: 12px; font-weight: 600; color: #111; }
+.concept-item .eng { font-size: 10px; color: #bbb; margin-top: 3px; letter-spacing: 0.5px; }
+.concept-arrow { color: #ddd; font-size: 16px; display: flex; align-items: center; padding: 0 2px; background: #fff; flex-shrink: 0; border-right: 1px solid #ebebeb; }
+
+/* Ref image grid */
+.ref-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+.ref-item { border-radius: 10px; overflow: hidden; background: #f8f8f8; border: 1px solid #ebebeb; }
+.ref-item img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; display: block; }
+.ref-item .ref-caption { padding: 8px 10px 10px; font-size: 10px; color: #999; font-weight: 500; line-height: 1.5; text-align: center; border-top: 1px solid #ebebeb; }
+
+/* Sub-label */
+.sub-label { font-size: 11px; font-weight: 600; color: #888; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+
+strong { font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <img class="header-logo" src="vrink-logo.png" alt="VRINK">
+    <div class="header-top-bar"></div>
+    <div class="label">Popup Booth Proposal</div>
+    <h1>VRINK 더현대 서울<br>팝업 부스 기획서</h1>
+    <div class="subtitle">더현대 서울 3층 러닝존 — Clean Lab 컨셉 체험형 팝업</div>
+    <div class="meta">
+      <div class="meta-item">작성일 <span>2026. 04. 05</span></div>
+      <div class="meta-item">운영 기간 <span>2026년 5월 ~ 8 / 9월</span></div>
+      <div class="meta-item">운영 주체 <span>VRINK</span></div>
+      <div class="meta-item">구분 <span>팝업 기획 제안</span></div>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="body">
+
+    <!-- 01. Overview -->
+    <div class="section">
+      <div class="section-title">Overview</div>
+      <div class="background-box">
+        더현대 서울 3층 러닝·스포츠 매장 구역 에스컬레이터 바로 옆 고유동 위치에서 <strong>VRINK AI 스마트 영양 음료 디스펜서 기기 2대를 전시·체험</strong>하는 팝업 부스를 운영한다. 러닝·퍼포먼스 라이프스타일 고객층에게 브랜드를 직접 경험시키고, 기술적 신뢰감과 웰니스 감성을 동시에 전달하는 것이 핵심 목적이다. 부스는 <strong>Clean Lab — 과학 실험실 미학</strong>을 기반으로 디자인한다.
+      </div>
+    </div>
+
+    <!-- 02. Location & Space -->
+    <div class="section">
+      <div class="section-title">Location & Space</div>
+      <div class="spec-grid">
+        <div class="spec-item">
+          <div class="spec-label">위치</div>
+          <div class="spec-value">더현대 서울 3층<br>러닝존 / 에스컬레이터 바로 옆</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">부스 규모</div>
+          <div class="spec-value">가로 6,000 × 세로 1,200mm<br>(총 7.2㎡)</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">형태</div>
+          <div class="spec-value">1면 오픈 카운터형<br>(복도 방향 오픈)</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">인접 환경</div>
+          <div class="spec-value">Ciele Athletics 등<br>러닝·스포츠 브랜드 밀집</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">전기</div>
+          <div class="spec-value">현대 측 제공 확정</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">백월</div>
+          <div class="spec-value">에스컬레이터 유리벽<br>(활용 여부 협의 중)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 03. Concept & Material -->
+    <div class="section">
+      <div class="section-title">Concept & Material</div>
+      <div class="background-box" style="margin-bottom: 16px;">
+        <strong>Clean Lab.</strong> VRINK의 AI 스마트 영양 음료를 과학 실험실 공간으로 시각화한다. 스테인리스·강화유리·LED 백라이트 중심 구성에 아래 5가지 세부 연출을 더해 기술적 신뢰감과 프리미엄 웰니스 감성을 전달한다. ① 미니멀 화이트 박스 천장 캐노피 + 슬림 스팟 라이팅 ② 유리 플라스크·비커 오브제 선반 진열 (과학 실험실 감성) ③ 기기·카운터 하단 플로팅 LED 언더라이팅 (부유감 연출) ④ VRINK 로고 세로형 발광 사이니지 (모션 그래픽) ⑤ 대형 세로형 디스플레이 스택 (브랜드 비주얼 콘텐츠 재생)
+      </div>
+      <div class="material-grid">
+        <div class="material-card">
+          <div class="material-swatch" style="background: #ffffff; border-bottom: 1px solid #ebebeb;"></div>
+          <div class="material-info">
+            <div class="material-name">Pure White</div>
+            <div class="material-desc">카운터 상판, 패널 기본</div>
+          </div>
+        </div>
+        <div class="material-card">
+          <div class="material-swatch" style="background: linear-gradient(135deg, #b8b9bb, #dedfe0, #9a9b9c); border-bottom: 1px solid #ebebeb;"></div>
+          <div class="material-info">
+            <div class="material-name">Stainless Hairline</div>
+            <div class="material-desc">프레임, 구조재 마감</div>
+          </div>
+        </div>
+        <div class="material-card">
+          <div class="material-swatch" style="background: linear-gradient(135deg, rgba(190,215,240,0.25), rgba(255,255,255,0.95)); border-bottom: 1px solid #ebebeb;"></div>
+          <div class="material-info">
+            <div class="material-name">Clear Glass</div>
+            <div class="material-desc">쇼케이스, 유리 선반</div>
+          </div>
+        </div>
+        <div class="material-card">
+          <div class="material-swatch" style="background: linear-gradient(90deg, #ddeeff, #f8faff, #ddeeff); border-bottom: 1px solid #ebebeb;"></div>
+          <div class="material-info">
+            <div class="material-name">LED Backlight</div>
+            <div class="material-desc">아크릴 패널 내부 조명</div>
+          </div>
+        </div>
+        <div class="material-card">
+          <div class="material-swatch" style="background: #efefef; border-bottom: 1px solid #ebebeb;"></div>
+          <div class="material-info">
+            <div class="material-name">Light Gray Ceramic</div>
+            <div class="material-desc">카운터 상판 옵션</div>
+          </div>
+        </div>
+        <div class="material-card">
+          <div class="material-swatch" style="background: #111111; border-bottom: 1px solid #ebebeb;"></div>
+          <div class="material-info">
+            <div class="material-name">Matte Black</div>
+            <div class="material-desc">로고·타이포 강조</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 03-B. Design Reference -->
+    <div class="section">
+      <div class="section-title">Design Reference</div>
+
+      <!-- 전체 부스 컨셉 -->
+      <div class="sub-label" style="margin-bottom: 10px;">전체 부스 컨셉</div>
+      <div class="ref-grid" style="margin-bottom: 24px;">
+        <div class="ref-item">
+          <img src="proposal-images/ref-18.png" alt="Hublot 유리큐브">
+          <div class="ref-caption">Hublot Glass Cube<br>스테인리스 + 강화유리 쇼케이스</div>
+        </div>
+        <div class="ref-item">
+          <img src="proposal-images/ref-19.png" alt="Dr.G 쇼룸">
+          <div class="ref-caption">Dr.G Lab Store<br>LED 백라이트 선반 디스플레이</div>
+        </div>
+        <div class="ref-item">
+          <img src="proposal-images/ref-20.png" alt="XM Labs 팝업">
+          <div class="ref-caption">XM Labs Popup<br>라이트박스 컬럼 + 미니멀 카운터</div>
+        </div>
+        <div class="ref-item">
+          <img src="proposal-images/ref-21.png" alt="LED 백라이트 패널">
+          <div class="ref-caption">Backlit Panel<br>LED 백라이트 타이포그래피 패널</div>
+        </div>
+        <div class="ref-item">
+          <img src="proposal-images/ref-22.png" alt="백화점 팝업 카운터">
+          <div class="ref-caption">Department Store Popup<br>백화점 인샵 카운터 구성</div>
+        </div>
+      </div>
+
+      <!-- 세부 연출 디테일 -->
+      <div class="sub-label" style="margin-bottom: 10px;">세부 연출 디테일</div>
+      <div class="ref-grid">
+        <div class="ref-item">
+          <img src="proposal-images/ref-23.jpeg" alt="천장 구성">
+          <div class="ref-caption">천장 캐노피<br>화이트 박스 + 슬림 스팟</div>
+        </div>
+        <div class="ref-item">
+          <img src="proposal-images/ref-24.png" alt="유리 플라스크 오브제">
+          <div class="ref-caption">유리 플라스크 오브제<br>과학 실험실 감성 진열</div>
+        </div>
+        <div class="ref-item">
+          <img src="proposal-images/ref-25.jpeg" alt="플로팅 LED 언더라이팅">
+          <div class="ref-caption">플로팅 LED 언더라이팅<br>하단 부유감 조명</div>
+        </div>
+        <div class="ref-item">
+          <img src="proposal-images/ref-27.jpeg" alt="세로형 대형 디스플레이">
+          <div class="ref-caption">세로형 디스플레이<br>브랜드 모션 그래픽 재생</div>
+        </div>
+        <div class="ref-item">
+          <img src="proposal-images/ref-28.jpeg" alt="세로 디스플레이 스택">
+          <div class="ref-caption">세로 디스플레이 스택<br>멀티 화면 연속 콘텐츠</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 04. Layout -->
+    <div class="section">
+      <div class="section-title">Layout — Zone Configuration</div>
+      <div class="zone-layout">
+        <div class="zone-ruler">
+          <div class="zone-ruler-item" style="flex: 8;">Zone A · 800mm</div>
+          <div class="zone-ruler-item" style="flex: 12;">Zone B · 1,200mm</div>
+          <div class="zone-ruler-item" style="flex: 18;">Zone C · 1,800mm</div>
+          <div class="zone-ruler-item" style="flex: 12;">Zone D · 1,200mm</div>
+          <div class="zone-ruler-item" style="flex: 10;">Zone E · 1,000mm</div>
+        </div>
+        <div class="zone-bars">
+          <div class="zone-bar" style="flex: 8;">
+            <div class="zone-label">A</div>
+            <div class="zone-name">브랜드 컬럼</div>
+            <div class="zone-desc">LED 라이트박스 세로 컬럼. VRINK 로고 + 핵심 카피</div>
+            <div class="zone-size">H 2,200mm</div>
+          </div>
+          <div class="zone-bar" style="flex: 12;">
+            <div class="zone-label">B</div>
+            <div class="zone-name">기기 1 쇼케이스</div>
+            <div class="zone-desc">스테인리스+유리 큐브. 체험 가능. 스팟 조명</div>
+            <div class="zone-size">600×900×1,050</div>
+          </div>
+          <div class="zone-bar" style="flex: 18;">
+            <div class="zone-label">C</div>
+            <div class="zone-name">체험 카운터 + 운영존</div>
+            <div class="zone-desc">시음·결제·상담 핵심 공간. 세라믹 상판. 하부 수납</div>
+            <div class="zone-size">W1,800 × D600</div>
+          </div>
+          <div class="zone-bar" style="flex: 12;">
+            <div class="zone-label">D</div>
+            <div class="zone-name">기기 2 쇼케이스</div>
+            <div class="zone-desc">B와 대칭. 다른 음료 옵션 또는 각도 전시</div>
+            <div class="zone-size">600×900×1,050</div>
+          </div>
+          <div class="zone-bar" style="flex: 10;">
+            <div class="zone-label">E</div>
+            <div class="zone-name">제품 진열 + 사이니지</div>
+            <div class="zone-desc">유리 선반 3단. QR 구매 연결</div>
+            <div class="zone-size">3단 구성</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top: 10px; font-size: 11px; color: #bbb; padding: 0 2px; line-height: 1.8;">
+        * 세로 1,200mm = 기기·카운터 본체 600mm + 고객 인터랙션 공간 600mm<br>
+        * 에스컬레이터 유리벽 패널 부착 가능 시 백월 그래픽 추가
+      </div>
+    </div>
+
+    <!-- 05. Product System -->
+    <div class="section">
+      <div class="section-title">Product System</div>
+
+      <!-- 사용방법 — 상단 강조 -->
+      <div style="margin-bottom: 16px;">
+        <div class="sub-label" style="margin-bottom: 10px;">사용방법 안내</div>
+        <div class="concept-flow" style="margin-bottom: 10px;">
+          <div class="concept-item">
+            <div class="word">기기 접근</div>
+            <div class="eng">Approach</div>
+          </div>
+          <div class="concept-arrow">›</div>
+          <div class="concept-item">
+            <div class="word">샷 선택</div>
+            <div class="eng">Select Shot</div>
+          </div>
+          <div class="concept-arrow">›</div>
+          <div class="concept-item">
+            <div class="word">맛·농도 조절</div>
+            <div class="eng">Customize</div>
+          </div>
+          <div class="concept-arrow">›</div>
+          <div class="concept-item">
+            <div class="word">결제</div>
+            <div class="eng">Pay</div>
+          </div>
+          <div class="concept-arrow">›</div>
+          <div class="concept-item" style="background: #f4f4f4;">
+            <div class="word" style="font-size: 14px; font-weight: 600;">15초 완성</div>
+            <div class="eng">Auto Dispense</div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <div style="background: #fafafa; border: 1px solid #ebebeb; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #666;">안내카드 참고하여 직접 조작</div>
+          <div style="background: #fafafa; border: 1px solid #ebebeb; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #666;">베이스: 물 (별도 음료 없음)</div>
+          <div style="background: #fafafa; border: 1px solid #ebebeb; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #666;">1,800가지 이상 조합</div>
+          <div style="background: #fafafa; border: 1px solid #ebebeb; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #666;">3 Zero — No Powder · No Calorie &amp; Sugar · No Prep</div>
+        </div>
+      </div>
+
+      <!-- 영양 성분 -->
+      <div class="sub-label" style="margin-bottom: 10px;">Functional Shot 라인업</div>
+      <div class="three-col">
+        <div class="spec-item">
+          <div class="spec-label">부스터 샷</div>
+          <div class="spec-value" style="font-size: 13px; font-weight: 500; color: #333;">타우린 · 카페인<br><span style="font-size: 11px; color: #999; font-weight: 400;">지친 몸을 깨울 때</span></div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">컷팅 샷</div>
+          <div class="spec-value" style="font-size: 13px; font-weight: 500; color: #333;">L-카르니틴 · 녹차추출물<br><span style="font-size: 11px; color: #999; font-weight: 400;">지방 관리</span></div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">비타민 샷</div>
+          <div class="spec-value" style="font-size: 13px; font-weight: 500; color: #333;">비타민B · 비타민C<br><span style="font-size: 11px; color: #999; font-weight: 400;">하루 비타민 보충</span></div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">탈렉스 샷</div>
+          <div class="spec-value" style="font-size: 13px; font-weight: 500; color: #333;">L-테아닌 · 타우린<br><span style="font-size: 11px; color: #999; font-weight: 400;">긴장 완화</span></div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">아미노 샷</div>
+          <div class="spec-value" style="font-size: 13px; font-weight: 500; color: #333;">필수 아미노산 9종 · 타우린<br><span style="font-size: 11px; color: #999; font-weight: 400;">근육 운동 지원</span></div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">기기 사양</div>
+          <div class="spec-value" style="font-size: 13px; font-weight: 500; color: #333;">2대 배치<br><span style="font-size: 11px; color: #999; font-weight: 400;">600 × 900 × 1,050mm</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 06. Customer Journey -->
+    <div class="section">
+      <div class="section-title">Customer Journey</div>
+      <div class="journey-list" style="margin-bottom: 12px;">
+        <div class="journey-item">
+          <div class="journey-step">1</div>
+          <div class="journey-content">
+            <div class="journey-title">발견</div>
+            <div class="journey-desc">에스컬레이터 하차 → 라이트박스 컬럼 시각 인식 → 부스 접근</div>
+          </div>
+          <div class="journey-time">—</div>
+        </div>
+        <div class="journey-item">
+          <div class="journey-step">2</div>
+          <div class="journey-content">
+            <div class="journey-title">안내</div>
+            <div class="journey-desc">스태프 인사 → 안내카드 배포 → 5가지 Functional Shot 및 가격 안내</div>
+          </div>
+          <div class="journey-time">~30초</div>
+        </div>
+        <div class="journey-item">
+          <div class="journey-step">3</div>
+          <div class="journey-content">
+            <div class="journey-title">기기 직접 조작</div>
+            <div class="journey-desc">안내카드 참고 → 기능성 샷 선택 → 맛·농도 조절 → 음료 확정</div>
+          </div>
+          <div class="journey-time">30~60초</div>
+        </div>
+        <div class="journey-item">
+          <div class="journey-step">4</div>
+          <div class="journey-content">
+            <div class="journey-title">결제</div>
+            <div class="journey-desc">토스 단말기 — 기본 2,400원 / 샷 추가 +500원</div>
+          </div>
+          <div class="journey-time">~15초</div>
+        </div>
+        <div class="journey-item">
+          <div class="journey-step">5</div>
+          <div class="journey-content">
+            <div class="journey-title">음료 제조</div>
+            <div class="journey-desc">결제 확인 후 15초 이내 자동 제조 — 기기가 직접 디스펜싱</div>
+          </div>
+          <div class="journey-time">~15초</div>
+        </div>
+        <div class="journey-item">
+          <div class="journey-step">6</div>
+          <div class="journey-content">
+            <div class="journey-title">수령 & 시음</div>
+            <div class="journey-desc">완성된 음료 (물 베이스 + 기능성 샷) 수령 및 시음</div>
+          </div>
+          <div class="journey-time">—</div>
+        </div>
+        <div class="journey-item">
+          <div class="journey-step">7</div>
+          <div class="journey-content">
+            <div class="journey-title">이탈</div>
+            <div class="journey-desc">브랜드 QR·정보 제공 → SNS 업로드 유도</div>
+          </div>
+          <div class="journey-time">~15초</div>
+        </div>
+      </div>
+      <div class="info-bar">
+        <div class="info-bar-item">1 사이클<span>2~3분</span></div>
+        <div class="info-bar-item">제조 시간<span>15초 이내</span></div>
+        <div class="info-bar-item">결제<span>토스 단말기</span></div>
+        <div class="info-bar-item">베이스<span>물</span></div>
+      </div>
+    </div>
+
+    <!-- 07. Operations -->
+    <div class="section">
+      <div class="section-title">Operations</div>
+      <div class="spec-grid" style="margin-bottom: 10px;">
+        <div class="spec-item">
+          <div class="spec-label">운영 요일</div>
+          <div class="spec-value">월~일 풀 운영</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">운영 시간</div>
+          <div class="spec-value">평일 10:30~20:00<br>주말 10:30~20:30</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">인원 & 고용</div>
+          <div class="spec-value">단기 아르바이트 2명<br>역할 분담 없음 (통합 운영)</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">휴게</div>
+          <div class="spec-value">1시간<br>(2명 번갈아 30분씩)</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">유니폼</div>
+          <div class="spec-value">약사 가운 스타일 + VRINK 로고<br><span style="font-size: 11px; color: #999; font-weight: 400;">Clean Lab 컨셉 강화</span></div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">기기 오류 대응</div>
+          <div class="spec-value">VRINK 직원 현장 출동<br>자체 매뉴얼 운용</div>
+        </div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">재고 보충</div>
+        <div class="spec-value" style="font-size: 13px; font-weight: 400; color: #666;">현장 아르바이트 직접 운영. 원료 소진 시점 확인 후 보충.</div>
+      </div>
+    </div>
+
+    <!-- 08. Marketing & Events -->
+    <div class="section">
+      <div class="section-title">Marketing & Events</div>
+      <div style="margin-bottom: 14px; font-size: 13px; color: #666; line-height: 1.8;">
+        오픈 전 인스타그램 SNS 티저 홍보 예정 (세부 일정 확정 중). 현장 이벤트는 러닝 라이프스타일과 연계한 2가지 구조로 운영한다.
+      </div>
+      <div class="event-grid">
+        <div class="event-card">
+          <div class="event-label">Running Verification</div>
+          <div class="event-title">러닝 인증 이벤트</div>
+          <div class="event-cond">
+            당일 5km 러닝 기록 인증 (앱 무관)<br>
+            + 인스타그램 스토리 인증샷 필수
+            <div class="event-note">매일 방문마다 적용 가능</div>
+          </div>
+          <div class="event-reward">음료 1잔 무료</div>
+        </div>
+        <div class="event-card">
+          <div class="event-label">Monthly Challenge</div>
+          <div class="event-title">월간 100km 챌린지</div>
+          <div class="event-cond">
+            당월 러닝 누적 거리 100km<br>
+            달성 인증 제출 시 (앱 무관)
+            <div class="event-note">재방문 루프 유도 — 장기 운영 효과</div>
+          </div>
+          <div class="event-reward">VRINK 텀블러 무료</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 09. KPI -->
+    <div class="section">
+      <div class="section-title">KPI & Targets</div>
+      <div class="stat-row" style="margin-bottom: 12px;">
+        <div class="stat-cell">
+          <div class="stat-num">300</div>
+          <div class="stat-label">일 목표 음료 판매 (잔)</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-num">100</div>
+          <div class="stat-label">월 텀블러 판매 목표 (개)</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-num">3,000만</div>
+          <div class="stat-label">월 최소 매출 목표</div>
+        </div>
+      </div>
+
+      <!-- 목표 근거 계산 -->
+      <div class="spec-grid" style="margin-bottom: 12px;">
+        <div class="spec-item">
+          <div class="spec-label">음료 수익 산출</div>
+          <div class="spec-value" style="font-size: 13px; font-weight: 400; color: #444; line-height: 1.8;">
+            300잔 × <strong>2,900원</strong>(평균 객단가) × 30일<br>
+            = <strong>26,100,000원</strong><br>
+            <span style="font-size: 11px; color: #bbb;">기본 2,400원 + 샷 추가율 50% 가정</span>
+          </div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">텀블러 수익 산출</div>
+          <div class="spec-value" style="font-size: 13px; font-weight: 400; color: #444; line-height: 1.8;">
+            100개 × <strong>34,000원</strong><br>
+            = <strong>3,400,000원</strong><br>
+            <span style="font-size: 11px; color: #bbb;">월간 챌린지 증정 제외 후 순매출</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 달성 조건 -->
+      <div class="background-box">
+        <strong>달성 조건</strong> — 기기 2대 시간당 15잔 이상 × 10시간 = 최대 300잔/일. 평일 200잔 / 주말 500잔 배분 목표로 월 300잔 평균 달성. <strong>샷 추가율 50% 이상 유지</strong>가 객단가·수익의 핵심 변수. <span style="color: #bbb;">SNS KPI 및 인지도 지표는 추후 확정.</span>
+      </div>
+    </div>
+
+    <!-- 10. Goods -->
+    <div class="section">
+      <div class="section-title">Goods</div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px 20px; align-items: start;">
+        <div class="sub-label" style="margin-bottom: 4px;">텀블러</div>
+        <div class="sub-label" style="margin-bottom: 4px;">안내카드</div>
+        <div class="spec-item">
+          <div class="spec-label">사이즈 · 소재</div>
+          <div class="spec-value">500ml · 플라스틱</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">내용</div>
+          <div class="spec-value">기기 사용방법 안내</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">판매가</div>
+          <div class="spec-value">34,000원 (단독 판매)</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">디자인 방향</div>
+          <div class="spec-value">미니멀 흰색 카드<br><span style="font-size: 11px; color: #999; font-weight: 400;">앞면 브랜드 / 뒷면 사용방법</span></div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">패키지 디자인</div>
+          <div class="spec-value" style="color: #888; font-size: 13px; font-weight: 500;">제작 필요</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">제작</div>
+          <div class="spec-value" style="color: #888; font-size: 13px; font-weight: 500;">제작 필요</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11. Production Checklist -->
+    <div class="section">
+      <div class="section-title">Production Checklist</div>
+      <div class="checklist-group">
+        <div class="checklist-group-title">구조물</div>
+        <div class="checklist">
+          <div class="checklist-item">화이트 박스형 천장 캐노피 + 슬림 스팟 라이팅 <div class="check-badge">제작</div></div>
+          <div class="checklist-item">기기 쇼케이스 유리큐브 (스테인리스 + 강화유리) <div class="check-badge">×2</div></div>
+          <div class="checklist-item">체험 카운터 본체 (W1,800 × D600 × H900, 하부 수납 포함) <div class="check-badge">×1</div></div>
+          <div class="checklist-item">제품 진열 유리 선반 유닛 (3단) + 유리 플라스크 오브제 <div class="check-badge">×1</div></div>
+          <div class="checklist-item">기기·카운터 하단 플로팅 LED 언더라이팅 (부유감 조명) <div class="check-badge">시공</div></div>
+          <div class="checklist-item">백패널 — 에스컬레이터 유리벽 협의 후 자체 제작 여부 결정 <div class="check-badge">TBD</div></div>
+        </div>
+      </div>
+      <div class="checklist-group">
+        <div class="checklist-group-title">디스플레이 & 사이니지</div>
+        <div class="checklist">
+          <div class="checklist-item">세로형 대형 디스플레이 (브랜드 콘텐츠 재생용) <div class="check-badge">×1~2</div></div>
+          <div class="checklist-item">VRINK 로고 발광 사이니지 (세로형, 모션 그래픽 재생) <div class="check-badge">×1</div></div>
+          <div class="checklist-item">백패널 브랜드 그래픽 (제품 성분·컨셉 타이포) <div class="check-badge">×1</div></div>
+          <div class="checklist-item">바닥 비닐 래핑 그래픽 <div class="check-badge">옵션</div></div>
+        </div>
+      </div>
+      <div class="checklist-group">
+        <div class="checklist-group-title">운영 집기 & 소모품</div>
+        <div class="checklist">
+          <div class="checklist-item">토스 단말기 <div class="check-badge">×1</div></div>
+          <div class="checklist-item">시음컵, 냅킨, 위생 소모품 <div class="check-badge">월 단위 보충</div></div>
+          <div class="checklist-item">전기 배선·멀티탭 (기기 2대 + 조명) <div class="check-badge">시공 포함</div></div>
+        </div>
+      </div>
+      <div class="checklist-group">
+        <div class="checklist-group-title">굿즈</div>
+        <div class="checklist">
+          <div class="checklist-item">텀블러 500ml 초도 제작 (패키지 디자인 선행 필요) <div class="check-badge">제작 필요</div></div>
+          <div class="checklist-item">기기 사용방법 안내카드 인쇄 <div class="check-badge">제작 필요</div></div>
+          <div class="checklist-item">약사 가운 스타일 유니폼 + VRINK 로고 <div class="check-badge">2벌 이상</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12. Budget -->
+    <div class="section">
+      <div class="section-title">Budget Structure</div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th style="width: 100px;">구분</th>
+            <th>항목</th>
+            <th style="width: 100px;">금액</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-label" rowspan="2" style="border-bottom: 1px solid #f0f0f0;">시공비</td>
+            <td>구조물 제작·설치</td>
+            <td class="td-tbd">추후 결정</td>
+          </tr>
+          <tr>
+            <td>그래픽 출력·사이니지</td>
+            <td class="td-tbd">추후 결정</td>
+          </tr>
+          <tr>
+            <td class="td-label" rowspan="3" style="border-bottom: 1px solid #f0f0f0;">운영비 (월)</td>
+            <td>아르바이트 인건비 2명</td>
+            <td class="td-tbd">추후 결정</td>
+          </tr>
+          <tr>
+            <td>원료 재고 보충</td>
+            <td class="td-tbd">추후 결정</td>
+          </tr>
+          <tr>
+            <td>소모품 (컵, 냅킨 등)</td>
+            <td class="td-tbd">추후 결정</td>
+          </tr>
+          <tr>
+            <td class="td-label" rowspan="2" style="border-bottom: 1px solid #f0f0f0;">마케팅비</td>
+            <td>이벤트 비용 (무료 음료·텀블러 증정)</td>
+            <td class="td-tbd">추후 결정</td>
+          </tr>
+          <tr>
+            <td>사전 홍보 SNS</td>
+            <td class="td-tbd">추후 결정</td>
+          </tr>
+          <tr>
+            <td class="td-label" rowspan="2">굿즈 제작</td>
+            <td>텀블러 초도 제작</td>
+            <td class="td-tbd">추후 결정</td>
+          </tr>
+          <tr>
+            <td>안내카드 인쇄·유니폼</td>
+            <td class="td-tbd">추후 결정</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 13. Timeline -->
+    <div class="section">
+      <div class="section-title">Timeline</div>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-left"><div class="timeline-date">4월 중순</div></div>
+          <div class="timeline-center"><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+          <div class="timeline-right">
+            <div class="timeline-title">기획 확정</div>
+            <div class="timeline-body">레이아웃·소재·컨셉 최종 확정. 에스컬레이터 백월 협의. 더현대 계약 조건 확인.</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-left"><div class="timeline-date">4월 말</div></div>
+          <div class="timeline-center"><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+          <div class="timeline-right">
+            <div class="timeline-title">도면 제작 & 시공사 선정</div>
+            <div class="timeline-body">실시 도면 또는 3D 시각화. 업체 3곳 이상 견적 비교 후 계약 체결.</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-left"><div class="timeline-date">5월 1~3주</div></div>
+          <div class="timeline-center"><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+          <div class="timeline-right">
+            <div class="timeline-title">제작 전체 병행</div>
+            <div class="timeline-body">구조물·그래픽 제작 + 텀블러·안내카드·유니폼 제작 동시 진행.</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-left"><div class="timeline-date">5월 4주</div></div>
+          <div class="timeline-center"><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+          <div class="timeline-right">
+            <div class="timeline-title">더현대 반입 & 설치</div>
+            <div class="timeline-body">반입 일정 사전 조율. 시공 1~2일. 기기 세팅·전기 연결·최종 점검. 아르바이트 교육.</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-left"><div class="timeline-date">5월 말</div></div>
+          <div class="timeline-center"><div class="timeline-dot"></div><div class="timeline-line"></div></div>
+          <div class="timeline-right">
+            <div class="timeline-title">오픈 & 지속 운영</div>
+            <div class="timeline-body">팝업 운영 시작. 5월~8/9월 지속. 월별 재고 보충·KPI 점검·이벤트 운영.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 14. Pending -->
+    <div class="section" style="margin-bottom: 0;">
+      <div class="section-title">Pending Items</div>
+      <div class="background-box">
+        <strong>더현대 협의 진행 중</strong> — 임대·수수료 조건, 음료 현장 판매 허가 (식품위생법 즉석판매제조가공업 신고), 시공 허가 범위 (바닥 고정·전기 공사), 에스컬레이터 유리벽 패널 부착 여부, 반입 규정·시공 시간대. 협의 완료 후 업데이트 예정.<br><br>
+        <strong>미확정 항목</strong> — 전체 매출 목표, SNS KPI, 텀블러 패키지 디자인, 사전 홍보 세부 일정, 비용 항목별 금액.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="brand">VRINK</div>
+    <div class="date">2026. 04. 05 — 더현대 팝업 부스 기획 제안</div>
+  </div>
+
+</div>
+</body>
+</html>
