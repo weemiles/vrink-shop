@@ -279,7 +279,7 @@
     }
     .cart-empty-icon { font-size: 32px; font-weight: bold; opacity: .25; margin-bottom: 8px; }
     .cart-item-row {
-      display: flex; align-items: center; gap: 10px;
+      display: flex; align-items: flex-start; gap: 10px;
       padding: 11px 0; border-bottom: 1px solid #f4f4f4;
     }
     .cart-item-row:last-of-type { border-bottom: none; }
@@ -475,6 +475,7 @@
     }
 
     /* Cart qty ctrl */
+    .ci-bottom { display: flex; align-items: center; justify-content: space-between; margin-top: 6px; }
     .ci-qty-ctrl { display: flex; align-items: center; border: 1px solid var(--border); border-radius: 5px; overflow: hidden; flex-shrink: 0; }
     .ci-qty-btn { width: 24px; height: 24px; background: var(--bg); border: none; cursor: pointer; font-size: 13px; color: var(--sub); display: flex; align-items: center; justify-content: center; }
     .ci-qty-btn:hover { background: #e0e0e0; }
@@ -715,10 +716,6 @@
         <div id="cartSummary" style="display:none">
           <div class="hdivider"></div>
           <div class="sum-row">
-            <span class="sum-lbl">상품 합계</span>
-            <span class="sum-val" id="sumSub">0원</span>
-          </div>
-          <div class="sum-row">
             <span class="sum-lbl">배송비</span>
             <span class="sum-val" style="color:var(--cta)">무료</span>
           </div>
@@ -860,13 +857,15 @@
         <div class="ci-info">
           <div class="ci-name">${NAME[t]} · ${vr}</div>
           <div class="ci-meta">${SPEC[t]}</div>
+          <div class="ci-bottom">
+            <div class="ci-qty-ctrl">
+              <button class="ci-qty-btn" onclick="changeCartQty('${k}',-1)">−</button>
+              <input class="ci-qty-num" type="text" value="${cart[k]}" readonly>
+              <button class="ci-qty-btn" onclick="changeCartQty('${k}',1)">+</button>
+            </div>
+            <div class="ci-price">${fmt(price)}</div>
+          </div>
         </div>
-        <div class="ci-qty-ctrl">
-          <button class="ci-qty-btn" onclick="changeCartQty('${k}',-1)">−</button>
-          <input class="ci-qty-num" type="text" value="${cart[k]}" readonly>
-          <button class="ci-qty-btn" onclick="changeCartQty('${k}',1)">+</button>
-        </div>
-        <div class="ci-price">${fmt(price)}</div>
         <button class="ci-del" onclick="removeCart('${k}')">×</button>
       </div>`;
     });
