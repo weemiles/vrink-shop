@@ -340,44 +340,5 @@ body { font-family: 'Pretendard', sans-serif; background: #F8F8FA; color: #11111
 function toggleGroup(el) { el.classList.toggle('open'); var s = el.nextElementSibling; if(s) s.classList.toggle('show'); }
 </script>
 <script src="admin-common.js"></script>
-<script>
-(async function() {
-  document.body.style.height = 'auto';
-  document.body.style.overflow = 'visible';
-  document.documentElement.style.height = 'auto';
-  document.querySelectorAll('*').forEach(function(el) {
-    var cs = getComputedStyle(el);
-    if (['hidden','auto','scroll'].indexOf(cs.overflow) > -1 ||
-        ['hidden','auto','scroll'].indexOf(cs.overflowY) > -1) {
-      el.style.overflow = 'visible';
-      if (el.scrollHeight > 0) el.style.height = el.scrollHeight + 'px';
-    }
-  });
-  var files = [
-    { weight: '400', url: 'pretendard/Pretendard-Regular.woff2' },
-    { weight: '500', url: 'pretendard/Pretendard-Medium.woff2' },
-    { weight: '700', url: 'pretendard/Pretendard-Bold.woff2' },
-  ];
-  var promises = files.map(function(f) {
-    var ff = new FontFace('Pretendard', "url('" + f.url + "') format('woff2')", { weight: f.weight });
-    document.fonts.add(ff);
-    return ff.load();
-  });
-  await Promise.all(promises);
-  await new Promise(function(r) { requestAnimationFrame(function() { requestAnimationFrame(r); }); });
-  var script = document.createElement('script');
-  script.src = 'https://mcp.figma.com/mcp/html-to-design/capture.js';
-  script.onload = function() {
-    setTimeout(function() {
-      window.figma.captureForDesign({
-        captureId: '89e1b131-9fa4-4d1f-bf4d-acd11744a050',
-        endpoint: 'https://mcp.figma.com/mcp/capture/89e1b131-9fa4-4d1f-bf4d-acd11744a050/submit',
-        selector: 'body'
-      });
-    }, 500);
-  };
-  document.head.appendChild(script);
-})();
-</script>
 </body>
 </html>
