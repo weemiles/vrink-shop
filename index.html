@@ -857,14 +857,12 @@
         <div class="ci-info">
           <div class="ci-name">${NAME[t]} · ${vr}</div>
           <div class="ci-meta">${SPEC[t]}</div>
-          <div class="ci-bottom">
-            <div class="ci-qty-ctrl">
-              <button class="ci-qty-btn" onclick="changeCartQty('${k}',-1)">−</button>
-              <input class="ci-qty-num" type="text" value="${cart[k]}" readonly>
-              <button class="ci-qty-btn" onclick="changeCartQty('${k}',1)">+</button>
-            </div>
-            <div class="ci-price">${fmt(price)}</div>
+          <div class="ci-qty-ctrl" style="margin-top:8px">
+            <button class="ci-qty-btn" onclick="changeCartQty('${k}',-1)">−</button>
+            <input class="ci-qty-num" type="text" value="${cart[k]}" readonly>
+            <button class="ci-qty-btn" onclick="changeCartQty('${k}',1)">+</button>
           </div>
+          <div class="ci-price" style="margin-top:4px;text-align:right">${fmt(price)}</div>
         </div>
         <button class="ci-del" onclick="removeCart('${k}')">×</button>
       </div>`;
