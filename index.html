@@ -745,6 +745,10 @@
 <div id="toast"></div>
 
 <script>
+  if (new URLSearchParams(location.search).get('embed') === '1') {
+    document.querySelector('.sidebar').style.display = 'none';
+  }
+
   const PRICE = { func: 198000, flav: 128000 };
   const NAME  = { func: '기능 샷', flav: '맛' };
   const SPEC  = { func: '5L · 약 500잔', flav: '5L · 약 200잔' };
