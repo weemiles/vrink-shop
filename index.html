@@ -465,6 +465,14 @@
     }
     .variant-select:focus { border-color: var(--cta); color: var(--text); }
     .variant-select.has-value { color: var(--text); }
+    .variant-select.error { border-color: var(--red); animation: shake .35s; }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
+    }
 
     /* Cart qty ctrl */
     .ci-qty-ctrl { display: flex; align-items: center; border: 1px solid var(--border); border-radius: 5px; overflow: hidden; flex-shrink: 0; }
@@ -774,7 +782,16 @@
 
   function buyNow(type) {
     const v = selectedVariant[type];
-    if (!v) { showToast('타입을 먼저 선택해주세요.'); return; }
+    if (!v) {
+      const sel = document.getElementById('sel-' + type);
+      sel.classList.remove('error');
+      void sel.offsetWidth;
+      sel.classList.add('error');
+      sel.focus();
+      setTimeout(() => sel.classList.remove('error'), 400);
+      showToast((type === 'func' ? '샷' : '맛') + ' 종류를 먼저 선택해주세요.');
+      return;
+    }
     const key = type + '_' + v;
     const tempCart = { [key]: 1 };
     const today = new Date();
@@ -796,7 +813,16 @@
 
   function addCart(type) {
     const v = selectedVariant[type];
-    if (!v) { showToast('타입을 먼저 선택해주세요.'); return; }
+    if (!v) {
+      const sel = document.getElementById('sel-' + type);
+      sel.classList.remove('error');
+      void sel.offsetWidth; // reflow to restart animation
+      sel.classList.add('error');
+      sel.focus();
+      setTimeout(() => sel.classList.remove('error'), 400);
+      showToast((type === 'func' ? '샷' : '맛') + ' 종류를 먼저 선택해주세요.');
+      return;
+    }
     const qty = parseInt(document.getElementById('qty-' + type).value) || 1;
     const key = type + '_' + v;
     cart[key] = (cart[key] || 0) + qty;
