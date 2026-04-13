@@ -754,7 +754,8 @@
 
 <script>
   if (new URLSearchParams(location.search).get('embed') === '1') {
-    document.querySelector('.sidebar').style.display = 'none';
+    const _sb = document.querySelector('.sidebar');
+    if (_sb) _sb.style.display = 'none';
   }
 
   const PRICE = { func: 198000, flav: 128000 };
