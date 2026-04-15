@@ -263,14 +263,14 @@
       position: sticky; top: 0; height: fit-content;
     }
     .cart-head {
-      font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 18px;
+      font-size: 16px; font-weight: 500; color: var(--text); margin-bottom: 18px;
       display: flex; align-items: center; justify-content: space-between;
     }
     .cart-count {
       display: inline-flex; align-items: center; justify-content: center;
       width: 20px; height: 20px; background: var(--cta);
       border-radius: 50%; font-family: 'Poppins', sans-serif;
-      font-size: 11px; font-weight: 700; color: #fff;
+      font-size: 11px; font-weight: 500; color: #fff;
     }
     .cart-empty-wrap {
       display: flex; flex-direction: column;
@@ -285,20 +285,20 @@
     .cart-item-row:last-of-type { border-bottom: none; }
     .ci-dot { display: none; }
     .ci-info { flex: 1; min-width: 0; }
-    .ci-name { font-size: 13px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .ci-name { font-size: 13px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .ci-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
-    .ci-price { font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 600; color: var(--text); }
+    .ci-price { font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 500; color: var(--text); }
     .ci-del { width: 20px; height: 20px; border: none; background: none; color: #d1d5db; font-size: 14px; cursor: pointer; border-radius: 3px; display: flex; align-items: center; justify-content: center; }
     .ci-del:hover { color: var(--sub); }
     .hdivider { height: 1px; background: #f0f0f0; margin: 12px 0; }
     .sum-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
     .sum-lbl { font-size: 13px; color: var(--muted); }
-    .sum-val { font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 600; color: var(--text); }
+    .sum-val { font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 500; color: var(--text); }
     .sum-total { font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 600; color: var(--text); }
     .btn-order {
       width: 100%; padding: 13px; margin-top: 14px;
       background: var(--cta); color: #fff; border: none; border-radius: 8px;
-      font-family: 'Noto Sans KR', sans-serif; font-size: 15px; font-weight: 700;
+      font-family: 'Noto Sans KR', sans-serif; font-size: 15px; font-weight: 500;
       cursor: pointer; transition: background .15s;
     }
     .btn-order:hover { background: var(--cta-h); }
@@ -476,19 +476,19 @@
 
     /* Cart qty ctrl */
     .ci-bottom { display: flex; align-items: center; justify-content: space-between; margin-top: 6px; }
-    .ci-qty-ctrl { display: flex; align-items: center; border: 1px solid var(--border); border-radius: 5px; overflow: hidden; flex-shrink: 0; }
+    .ci-qty-ctrl { display: inline-flex; align-items: center; border: 1px solid var(--border); border-radius: 5px; overflow: hidden; }
     .ci-qty-btn { width: 24px; height: 24px; background: var(--bg); border: none; cursor: pointer; font-size: 13px; color: var(--sub); display: flex; align-items: center; justify-content: center; }
     .ci-qty-btn:hover { background: #e0e0e0; }
-    .ci-qty-num { width: 28px; height: 24px; text-align: center; font-family: 'Poppins', sans-serif; font-size: 12px; font-weight: 600; color: var(--text); border: none; background: #fff; outline: none; -moz-appearance: textfield; }
+    .ci-qty-num { width: 28px; height: 24px; text-align: center; font-family: 'Poppins', sans-serif; font-size: 12px; font-weight: 500; color: var(--text); border: none; background: #fff; outline: none; -moz-appearance: textfield; }
     .ci-qty-num::-webkit-outer-spin-button, .ci-qty-num::-webkit-inner-spin-button { -webkit-appearance: none; }
 
     /* 배송지 */
     .addr-section { margin-top: 14px; padding-top: 14px; border-top: 1px solid #f0f0f0; }
-    .addr-lbl { font-size: 11px; font-weight: 600; color: var(--muted); letter-spacing: .3px; text-transform: uppercase; margin-bottom: 5px; }
+    .addr-lbl { font-size: 11px; font-weight: 500; color: var(--muted); letter-spacing: .3px; text-transform: uppercase; margin-bottom: 5px; }
     .addr-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
-    .addr-val { font-size: 13px; font-weight: 600; color: var(--text); line-height: 1.4; }
+    .addr-val { font-size: 13px; font-weight: 500; color: var(--text); line-height: 1.4; }
     .addr-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
-    .addr-change { font-size: 11px; font-weight: 600; color: var(--cta); cursor: pointer; white-space: nowrap; padding-top: 2px; }
+    .addr-change { font-size: 11px; font-weight: 500; color: var(--cta); cursor: pointer; white-space: nowrap; padding-top: 2px; }
     .addr-change:hover { text-decoration: underline; }
 
     /* Toast */
@@ -721,7 +721,7 @@
           </div>
           <div class="hdivider"></div>
           <div class="sum-row">
-            <span class="sum-lbl" style="font-size:16px;font-weight:700;color:var(--text)">총 결제금액</span>
+            <span class="sum-lbl" style="font-size:16px;font-weight:600;color:var(--text)">총 결제금액</span>
             <span class="sum-total" id="sumTotal">0원</span>
           </div>
           <button class="btn-order" id="btnOrder" onclick="placeOrder()">주문하기</button>
