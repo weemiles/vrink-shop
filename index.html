@@ -118,6 +118,203 @@
     .filter-item:hover { color: var(--text); }
     .filter-item.active { font-weight: 700; color: var(--text); }
 
+    /* ═══════════════ CATEGORY TABS ═══════════════ */
+    .cat-tabs {
+      display: flex; gap: 28px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 28px;
+    }
+    .cat-tab {
+      padding: 14px 2px; font-size: 15px; font-weight: 500;
+      color: var(--muted); cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: color .15s, border-color .15s;
+      user-select: none; background: none; border-top: none; border-left: none; border-right: none;
+      font-family: inherit;
+    }
+    .cat-tab:hover { color: var(--sub); }
+    .cat-tab.active { color: var(--cta); font-weight: 700; border-bottom-color: var(--cta); }
+
+    /* ═══════════════ DEVICE DETAIL ═══════════════ */
+    .device-detail {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 48px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .dev-gallery {
+      position: relative;
+      aspect-ratio: 1;
+      background: #fff;
+      border: 1px solid #f0f0f0;
+      overflow: hidden;
+    }
+    .dev-gallery img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .dev-info { display: flex; flex-direction: column; padding-top: 8px; }
+    .dev-info-head {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      padding-bottom: 18px; border-bottom: 1px solid #f0f0f0;
+      margin-bottom: 22px;
+    }
+    .dev-title { font-size: 22px; font-weight: 600; color: var(--text); line-height: 1.3; }
+    .dev-sub { font-size: 13px; color: var(--muted); margin-top: 6px; font-weight: 400; }
+    .dev-heart {
+      width: 32px; height: 32px;
+      background: none; border: none;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: #c8c8c8; flex-shrink: 0; padding: 0;
+      transition: color .15s;
+    }
+    .dev-heart svg { width: 24px; height: 24px; }
+    .dev-heart:hover { color: var(--cta); }
+    .dev-heart.liked { color: var(--cta); }
+    .dev-heart.liked svg path { fill: currentColor; }
+
+    .dev-price-block { margin-bottom: 20px; }
+    .dev-price-line { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+    .dev-price-num {
+      font-family: 'Poppins', sans-serif;
+      font-size: 22px; font-weight: 500; color: var(--text);
+    }
+    .dev-price-vat { font-size: 11px; color: var(--muted); font-weight: 300; }
+    .dev-price-note { font-size: 12px; color: var(--muted); margin-top: 6px; }
+
+    .dev-row {
+      display: grid; grid-template-columns: 100px 1fr;
+      padding: 9px 0;
+      align-items: flex-start; font-size: 13px;
+    }
+    .dev-row-lbl { color: var(--muted); font-weight: 400; padding-top: 2px; }
+    .dev-row-val { color: var(--text); font-weight: 400; line-height: 1.6; }
+    .dev-row-val .muted { color: var(--muted); font-weight: 400; }
+
+    .dev-option-title {
+      font-size: 12px; font-weight: 500; color: var(--sub);
+      letter-spacing: .5px; text-transform: uppercase;
+      margin: 22px 0 10px;
+    }
+    .dev-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .dev-option {
+      padding: 14px 16px;
+      border: 1.5px solid var(--border); border-radius: 8px;
+      background: #fff; cursor: pointer;
+      text-align: left; font-family: inherit;
+      transition: border-color .15s, background .15s;
+    }
+    .dev-option:hover { border-color: #bbb; }
+    .dev-option.active { border-color: var(--cta); background: #EFF6FF; }
+    .dev-option.active .dev-option-lbl { color: var(--cta); }
+    .dev-option.active .dev-option-price { color: var(--cta); }
+    .dev-option-lbl { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .dev-option-price { font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 500; color: var(--text); }
+    .dev-option-desc { font-size: 11px; color: var(--muted); margin-top: 3px; font-weight: 400; }
+
+    .dev-bundle-select {
+      width: 100%; padding: 14px 16px;
+      margin-top: 14px;
+      background: #fff; border: 1.5px solid var(--border); border-radius: 8px;
+      font-family: inherit; font-size: 14px; font-weight: 400; color: var(--text);
+      cursor: pointer; appearance: none; outline: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23aaa' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 16px center;
+    }
+    .dev-bundle-select:focus { border-color: var(--cta); }
+    .dev-bundle-hint { font-size: 11px; color: var(--muted); margin-top: 6px; }
+
+    .dev-rental-period {
+      display: flex; gap: 6px; margin-top: 10px;
+      transition: opacity .15s;
+    }
+    .dev-rental-period.disabled { opacity: .4; pointer-events: none; }
+    .dev-period-btn {
+      flex: 1; padding: 10px 0;
+      background: #fff; border: 1px solid var(--border); border-radius: 6px;
+      font-family: inherit; font-size: 12px; font-weight: 500; color: var(--sub);
+      cursor: pointer; transition: all .15s;
+    }
+    .dev-period-btn:hover { border-color: #bbb; color: var(--text); }
+    .dev-period-btn.active { border-color: var(--cta); background: #EFF6FF; color: var(--cta); }
+
+    .dev-qty-row {
+      display: flex; align-items: center; justify-content: space-between;
+      margin: 18px 0 20px;
+      padding: 14px 16px;
+      background: var(--bg); border-radius: 8px;
+    }
+    .dev-qty-lbl { font-size: 13px; font-weight: 500; color: var(--text); }
+    .dev-qty-total { font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 600; color: var(--text); }
+
+    .dev-actions { display: grid; grid-template-columns: 1fr 1.3fr; gap: 10px; margin-top: 8px; }
+    .dev-btn-cart {
+      padding: 16px 0; background: #fff; color: var(--cta);
+      border: 1.5px solid var(--cta); border-radius: 10px;
+      font-family: inherit; font-size: 15px; font-weight: 600;
+      cursor: pointer; transition: background .15s;
+    }
+    .dev-btn-cart:hover { background: #EFF6FF; }
+    .dev-btn-buy {
+      padding: 16px 0; background: var(--cta); color: #fff;
+      border: none; border-radius: 10px;
+      font-family: inherit; font-size: 15px; font-weight: 600;
+      cursor: pointer; transition: background .15s;
+    }
+    .dev-btn-buy:hover { background: var(--cta-h); }
+
+    /* ── 옵션 상세: 카이저 얼음디스펜서 ── */
+    .dev-addon {
+      margin-top: 56px; padding-top: 40px;
+      border-top: 1px solid var(--border);
+    }
+    .dev-addon-head { margin-bottom: 28px; }
+    .dev-addon-tag {
+      display: inline-block; margin-bottom: 10px;
+      color: var(--muted); font-size: 13px; font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+    .dev-addon-title {
+      margin: 0 0 6px; font-size: 22px; font-weight: 600;
+      color: var(--text); letter-spacing: -0.01em;
+    }
+    .dev-addon-sub { margin: 0; font-size: 13px; color: var(--muted); }
+    .dev-addon-grid {
+      display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 36px;
+      align-items: start;
+    }
+    .dev-addon-img {
+      background: #fafafa; border: 1px solid var(--border);
+      border-radius: 12px; padding: 24px;
+      display: flex; align-items: center; justify-content: center;
+      min-height: 320px;
+    }
+    .dev-addon-img img {
+      max-width: 100%; max-height: 360px;
+      object-fit: contain;
+    }
+    .spec-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .spec-table tr { border-bottom: 1px solid var(--border); }
+    .spec-table tr:first-child { border-top: 1px solid var(--border); }
+    .spec-table th {
+      width: 40%; padding: 14px 12px 14px 0;
+      text-align: left; font-weight: 500; color: var(--muted);
+      vertical-align: top;
+    }
+    .spec-table td {
+      padding: 14px 0; color: var(--text); font-weight: 500;
+      vertical-align: top;
+    }
+    .spec-table .spec-price td { font-weight: 600; font-size: 15px; }
+    .spec-table .vat-mark {
+      margin-left: 6px; font-size: 11px; font-weight: 400;
+      color: var(--muted);
+    }
+
+    @media (max-width: 1100px) {
+      .device-detail { grid-template-columns: 1fr; gap: 28px; }
+      .dev-addon-grid { grid-template-columns: 1fr; gap: 24px; }
+      .dev-addon-img { min-height: 240px; }
+    }
+
     /* ═══════════════ PRODUCT AREA ═══════════════ */
     .product-area { padding: 36px 28px; }
 
@@ -516,6 +713,133 @@
 
       <!-- ─── PRODUCT AREA ─── -->
       <div class="product-area">
+
+        <!-- 카테고리 탭 -->
+        <div class="cat-tabs">
+          <button type="button" class="cat-tab active" data-cat="shots" onclick="switchCategory('shots', this)">원액 · 소모품</button>
+          <button type="button" class="cat-tab" data-cat="device" onclick="switchCategory('device', this)">브링크 기기</button>
+        </div>
+
+        <!-- ── 카테고리: 기기 ── -->
+        <div id="cat-device" style="display:none;">
+          <div class="device-detail">
+            <div class="dev-gallery">
+              <img src="vrink-dispenser.png" alt="Zero Station · VRINK 스마트 디스펜서" />
+            </div>
+            <div class="dev-info">
+              <div class="dev-info-head">
+                <div>
+                  <div class="dev-title">Zero Station</div>
+                  <div class="dev-sub">제로스테이션 · VRINK 스마트 디스펜서</div>
+                </div>
+                <button class="dev-heart" onclick="this.classList.toggle('liked')" aria-label="찜하기">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                  </svg>
+                </button>
+              </div>
+
+              <div class="dev-price-block">
+                <div class="dev-price-line">
+                  <span class="dev-price-num">8,800,000원</span>
+                  <span class="dev-price-vat">(부가세 포함)</span>
+                </div>
+                <div class="dev-price-note">※ 선택 옵션에 따라 결제 금액이 달라질 수 있습니다.</div>
+              </div>
+
+              <div class="dev-row">
+                <div class="dev-row-lbl">배송정보</div>
+                <div class="dev-row-val">설치 일정 협의 후 전문 기사 방문 설치 <span class="muted">(설치비 포함)</span></div>
+              </div>
+              <div class="dev-row">
+                <div class="dev-row-lbl">무이자 할부</div>
+                <div class="dev-row-val">최대 12개월 무이자 할부 지원 <span class="muted">(카드사별 상이)</span></div>
+              </div>
+              <div class="dev-row">
+                <div class="dev-row-lbl">A/S</div>
+                <div class="dev-row-val">1년 무상 보증 · 렌탈 시 관리 서비스 포함</div>
+              </div>
+
+              <div class="dev-option-title">구매 방식</div>
+              <div class="dev-options">
+                <button type="button" class="dev-option active" data-dev="purchase" onclick="selectDevOption('purchase', this)">
+                  <div class="dev-option-lbl">구매</div>
+                  <div class="dev-option-price">8,800,000원</div>
+                  <div class="dev-option-desc">1회 결제 · 소유권 이전</div>
+                </button>
+                <button type="button" class="dev-option" data-dev="rental" onclick="selectDevOption('rental', this)">
+                  <div class="dev-option-lbl">렌탈</div>
+                  <div class="dev-option-price" id="dev-rental-price">월 290,000원</div>
+                  <div class="dev-option-desc" id="dev-rental-desc">36개월 약정 · 관리 포함</div>
+                </button>
+              </div>
+
+              <div class="dev-rental-period disabled" id="dev-period-row">
+                <button type="button" class="dev-period-btn" data-m="24" onclick="selectRentalMonths(24, this)">24개월</button>
+                <button type="button" class="dev-period-btn active" data-m="36" onclick="selectRentalMonths(36, this)">36개월</button>
+                <button type="button" class="dev-period-btn" data-m="48" onclick="selectRentalMonths(48, this)">48개월</button>
+              </div>
+
+              <div class="dev-option-title">구성 선택</div>
+              <select class="dev-bundle-select" id="dev-bundle" onchange="selectBundle(this.value)">
+                <option value="A">A. 브링크 기기 단독</option>
+                <option value="B">B. 브링크 기기 + 카이저 얼음디스펜서 (+3,000,000원 / VAT 포함)</option>
+                <option value="C">C. 브링크 기기 + 카이저 얼음디스펜서 + 하부장 (+3,600,000원 / VAT 포함)</option>
+              </select>
+              <div class="dev-bundle-hint" id="dev-bundle-hint">* 모든 금액은 부가세 포함 · 추가 옵션은 구매 방식에만 적용됩니다.</div>
+
+              <div class="dev-qty-row">
+                <div style="display:flex;align-items:center;gap:14px;">
+                  <span class="dev-qty-lbl">수량</span>
+                  <div class="qty-ctrl">
+                    <button type="button" class="qty-btn" onclick="changeDevQty(-1)">−</button>
+                    <input class="qty-num" id="qty-dev" type="text" inputmode="numeric" value="1" readonly>
+                    <button type="button" class="qty-btn" onclick="changeDevQty(1)">+</button>
+                  </div>
+                </div>
+                <span class="dev-qty-total" id="dev-total">8,800,000원</span>
+              </div>
+
+              <div class="dev-actions">
+                <button class="dev-btn-cart" onclick="addDevCart()">장바구니 담기</button>
+                <button class="dev-btn-buy" onclick="buyDevNow()">바로 구매하기</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 옵션 B/C 상세 정보 — 카이저 얼음디스펜서 -->
+          <section class="dev-addon">
+            <div class="dev-addon-head">
+              <span class="dev-addon-tag">옵션 B · C 포함 구성</span>
+              <h3 class="dev-addon-title">카이저 얼음디스펜서 (IMK-3715A)</h3>
+              <p class="dev-addon-sub">매장 운영을 위한 고품질 얼음 공급 솔루션 · 브링크 기기 옆에 함께 설치</p>
+            </div>
+            <div class="dev-addon-grid">
+              <div class="dev-addon-img">
+                <img src="kaiser-ice.png" alt="카이저 얼음디스펜서 IMK-3715A">
+              </div>
+              <div class="dev-addon-spec">
+                <table class="spec-table">
+                  <tbody>
+                    <tr><th>모델 (Model)</th><td>IMK-3715A</td></tr>
+                    <tr><th>일일 생산량</th><td>130 kg</td></tr>
+                    <tr><th>저장 용량</th><td>5 kg</td></tr>
+                    <tr><th>냉각 방식</th><td>공냉식</td></tr>
+                    <tr><th>냉매 (Refrigerant)</th><td>R-404A</td></tr>
+                    <tr><th>소비 전력</th><td>700 W</td></tr>
+                    <tr><th>사용 전압</th><td>208 ~ 230 V</td></tr>
+                    <tr><th>운전 가능 온도</th><td>2°C 이상</td></tr>
+                    <tr><th>외관 치수 (W×D×H)</th><td>310 × 620 × 750 mm</td></tr>
+                    <tr class="spec-price"><th>소비자 가격</th><td>3,960,000원<span class="vat-mark">(VAT 포함)</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- ── 카테고리: 원액·소모품 ── -->
+        <div id="cat-shots">
         <div class="prod-grid" id="prodGrid">
 
           <!-- 기능 샷 -->
@@ -696,6 +1020,8 @@
           </div>
         </div>
 
+        </div><!-- /cat-shots -->
+
       </div><!-- /product-area -->
 
       <!-- ─── CART PANEL ─── -->
@@ -756,8 +1082,36 @@
   }
 
   const PRICE = { func: 198000, flav: 128000 };
-  const NAME  = { func: '기능 샷', flav: '맛' };
+  const NAME  = { func: '기능 샷', flav: '맛', dev: 'Zero Station' };
   const SPEC  = { func: '5L · 약 500잔', flav: '5L · 약 200잔' };
+  const DEV_PURCHASE_PRICE = 8800000;
+  const DEV_RENTAL = { 24: 380000, 36: 290000, 48: 230000 };
+  const DEV_BUNDLE = {
+    A: { addon: 0,       label: '브링크 기기 단독' },
+    B: { addon: 3000000, label: '+ 카이저 얼음디스펜서' },
+    C: { addon: 3600000, label: '+ 카이저 얼음디스펜서 + 하부장' }
+  };
+  let selectedRentalMonths = 36;
+  let selectedBundle = 'A';
+  const DEV_PRICE   = { purchase: DEV_PURCHASE_PRICE, get rental(){ return DEV_RENTAL[selectedRentalMonths]; } };
+  const DEV_VARIANT = { purchase: '구매',   get rental(){ return `렌탈 (월 · ${selectedRentalMonths}개월)`; } };
+  const DEV_SPEC    = { purchase: '1회 결제 · 부가세 포함', get rental(){ return `${selectedRentalMonths}개월 약정 · 관리 포함`; } };
+
+  function priceOf(key) {
+    const t = typeOf(key);
+    if (t === 'dev') return DEV_PRICE[variantOf(key)] || 0;
+    return PRICE[t];
+  }
+  function specOf(key) {
+    const t = typeOf(key);
+    if (t === 'dev') return DEV_SPEC[variantOf(key)] || '';
+    return SPEC[t];
+  }
+  function variantLabelOf(key) {
+    const t = typeOf(key);
+    if (t === 'dev') return DEV_VARIANT[variantOf(key)] || variantOf(key);
+    return variantOf(key);
+  }
 
   // cart 키: 'func_슬림', 'flav_리커버리' 등
   let cart = {};
@@ -851,12 +1205,13 @@
 
     let html = '', total = 0;
     keys.forEach(k => {
-      const t = typeOf(k), vr = variantOf(k);
-      const price = PRICE[t] * cart[k]; total += price;
+      const t = typeOf(k);
+      const vr = variantLabelOf(k);
+      const price = priceOf(k) * cart[k]; total += price;
       html += `<div class="cart-item-row">
         <div class="ci-info">
           <div class="ci-name">${NAME[t]} · ${vr}</div>
-          <div class="ci-meta">${SPEC[t]}</div>
+          <div class="ci-meta">${specOf(k)}</div>
           <div class="ci-qty-ctrl" style="margin-top:8px">
             <button class="ci-qty-btn" onclick="changeCartQty('${k}',-1)">−</button>
             <input class="ci-qty-num" type="text" value="${cart[k]}" readonly>
@@ -869,6 +1224,76 @@
     });
     document.getElementById('cartItems').innerHTML = html;
     document.getElementById('sumTotal').textContent = fmt(total);
+  }
+
+  /* ── Category tabs ── */
+  function switchCategory(cat, el) {
+    document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('cat-shots').style.display  = (cat === 'shots')  ? '' : 'none';
+    document.getElementById('cat-device').style.display = (cat === 'device') ? '' : 'none';
+    document.querySelector('.content').scrollTop = 0;
+  }
+
+  /* ── Device detail ── */
+  let selectedDev = 'purchase';
+  function selectDevOption(opt, el) {
+    selectedDev = opt;
+    document.querySelectorAll('.dev-option').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('dev-period-row').classList.toggle('disabled', opt !== 'rental');
+    updateDevTotal();
+  }
+  function selectRentalMonths(m, el) {
+    selectedRentalMonths = m;
+    document.querySelectorAll('.dev-period-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('dev-rental-price').textContent = '월 ' + DEV_RENTAL[m].toLocaleString('ko-KR') + '원';
+    document.getElementById('dev-rental-desc').textContent = m + '개월 약정 · 관리 포함';
+    if (selectedDev === 'rental') updateDevTotal();
+  }
+  function changeDevQty(d) {
+    const el = document.getElementById('qty-dev');
+    let v = (parseInt(el.value) || 1) + d;
+    if (v < 1) v = 1; if (v > 10) v = 10;
+    el.value = v;
+    updateDevTotal();
+  }
+  function selectBundle(v) {
+    selectedBundle = v;
+    updateDevTotal();
+  }
+  function updateDevTotal() {
+    const qty = parseInt(document.getElementById('qty-dev').value) || 1;
+    const addon = (selectedDev === 'purchase') ? DEV_BUNDLE[selectedBundle].addon : 0;
+    const total = (DEV_PRICE[selectedDev] + addon) * qty;
+    const suffix = selectedDev === 'rental' ? ' / 월' : '';
+    document.getElementById('dev-total').textContent = fmt(total) + suffix;
+  }
+  function addDevCart() {
+    const qty = parseInt(document.getElementById('qty-dev').value) || 1;
+    const bundleKey = (selectedDev === 'purchase') ? selectedBundle : 'A';
+    const key = 'dev_' + selectedDev + '-' + bundleKey + (selectedDev==='rental'?('-'+selectedRentalMonths):'');
+    cart[key] = (cart[key] || 0) + qty;
+    renderCart();
+    showToast('장바구니에 담았습니다.');
+  }
+  function buyDevNow() {
+    const qty = parseInt(document.getElementById('qty-dev').value) || 1;
+    const addon = (selectedDev === 'purchase') ? DEV_BUNDLE[selectedBundle].addon : 0;
+    const unit = DEV_PRICE[selectedDev] + addon;
+    const total = unit * qty;
+    const today = new Date();
+    const ds = `${today.getFullYear()}.${String(today.getMonth()+1).padStart(2,'0')}.${String(today.getDate()).padStart(2,'0')}`;
+    const bundleLbl = (selectedDev === 'purchase') ? ' · ' + DEV_BUNDLE[selectedBundle].label : '';
+    localStorage.setItem('vrinkOrder', JSON.stringify({
+      orderId: 'ORD-' + Date.now().toString().slice(-8),
+      date: ds, arrival: '설치 일정 협의',
+      branch: '빌드업 피트니스 성수 지점', branchSub: '서울 성동구 성수동',
+      items: [{ key: 'dev_' + selectedDev, name: NAME.dev, variant: DEV_VARIANT[selectedDev] + bundleLbl, spec: DEV_SPEC[selectedDev], qty, price: total }],
+      total
+    }));
+    window.location.href = 'vrink-order-confirm.html';
   }
 
   function filterProd(type, el) {
@@ -921,7 +1346,7 @@
     if (!phone) { document.getElementById('payPhone').focus(); return; }
 
     const keys = Object.keys(cart);
-    const total = keys.reduce((s, k) => s + PRICE[typeOf(k)] * cart[k], 0);
+    const total = keys.reduce((s, k) => s + priceOf(k) * cart[k], 0);
     const orderId = 'ORD-' + Date.now().toString().slice(-8);
     const today = new Date();
     const ds = `${today.getFullYear()}.${String(today.getMonth()+1).padStart(2,'0')}.${String(today.getDate()).padStart(2,'0')}`;
@@ -937,7 +1362,7 @@
     const orderData = {
       orderId, date: ds, arrival,
       branch: '빌드업 피트니스 성수 지점', branchSub: '서울 성동구 성수동',
-      items: keys.map(k => ({ key: k, name: NAME[typeOf(k)], variant: variantOf(k), spec: SPEC[typeOf(k)], qty: cart[k], price: PRICE[typeOf(k)] * cart[k] })),
+      items: keys.map(k => ({ key: k, name: NAME[typeOf(k)], variant: variantLabelOf(k), spec: specOf(k), qty: cart[k], price: priceOf(k) * cart[k] })),
       total
     };
     localStorage.setItem('vrinkOrder', JSON.stringify(orderData));
@@ -946,7 +1371,7 @@
     initToss();
     if (tossPayments) {
       const firstItem = keys[0];
-      const orderName = keys.length === 1 ? `${NAME[typeOf(firstItem)]} ${variantOf(firstItem)}` : `${NAME[typeOf(firstItem)]} ${variantOf(firstItem)} 외 ${keys.length - 1}건`;
+      const orderName = keys.length === 1 ? `${NAME[typeOf(firstItem)]} ${variantLabelOf(firstItem)}` : `${NAME[typeOf(firstItem)]} ${variantLabelOf(firstItem)} 외 ${keys.length - 1}건`;
       tossPayments.requestPayment(window._payMethod || '카드', {
         amount: total,
         orderId: orderId,
