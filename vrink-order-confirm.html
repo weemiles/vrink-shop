@@ -4,9 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>주문 완료 — VRINK 관리자</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    @font-face { font-family: 'Pretendard'; font-weight: 400; src: url('pretendard/Pretendard-Regular.woff2') format('woff2'); }
+    @font-face { font-family: 'Pretendard'; font-weight: 500; src: url('pretendard/Pretendard-Medium.woff2') format('woff2'); }
+    @font-face { font-family: 'Pretendard'; font-weight: 700; src: url('pretendard/Pretendard-Bold.woff2') format('woff2'); }
+  </style>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; line-height: 1.2; }
 
     :root {
       --cta:    #66A6FF;
@@ -20,11 +24,11 @@
     }
 
     body {
-      font-family: 'Noto Sans KR', sans-serif;
+      font-family: Pretendard, sans-serif;
       background: #f5f6fa;
       display: flex;
       height: 100vh;
-      overflow: hidden;
+      overflow: visible;
       color: var(--text);
     }
 
@@ -41,7 +45,7 @@
       border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
     .logo-mark svg { width: 14px; height: 14px; }
-    .logo-text { font-family: 'Poppins', sans-serif; font-size: 17px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
+    .logo-text { font-family: Pretendard, sans-serif; font-size: 17px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
     .divider { height: 2px; background: #f6f6f6; border-radius: 2px; flex-shrink: 0; }
     .nav { display: flex; flex-direction: column; gap: 2px; }
     .nav-lbl-sm { font-size: 10px; font-weight: 600; letter-spacing: .5px; text-transform: uppercase; color: var(--muted); padding: 6px 12px 4px; }
@@ -59,7 +63,7 @@
     .nav-chev { width: 16px; height: 16px; flex-shrink: 0; color: #ccc; }
 
     /* ═══════════════ MAIN ═══════════════ */
-    .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .main { flex: 1; display: flex; flex-direction: column; overflow: visible; }
 
     .header {
       height: 64px; background: #fff; border-bottom: 1px solid #f0f0f0;
@@ -71,20 +75,20 @@
       position: absolute; top: -1px; right: -3px;
       width: 16px; height: 16px; background: var(--red); border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-family: 'Poppins', sans-serif; font-size: 10px; font-weight: 700; color: #fff;
+      font-family: Pretendard, sans-serif; font-size: 10px; font-weight: 700; color: #fff;
     }
     .hdr-branch { display: flex; align-items: center; gap: 6px; cursor: pointer; }
-    .hdr-branch span { font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 600; color: #646464; }
+    .hdr-branch span { font-family: Pretendard, sans-serif; font-size: 14px; font-weight: 600; color: #646464; }
     .hdr-user { display: flex; align-items: center; gap: 10px; }
     .hdr-avatar {
       width: 40px; height: 40px; border-radius: 50%;
       background: linear-gradient(135deg,#667eea,#764ba2);
       display: flex; align-items: center; justify-content: center;
-      font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 13px; color: #fff;
+      font-family: Pretendard, sans-serif; font-weight: 700; font-size: 13px; color: #fff;
     }
     .hdr-info { display: flex; flex-direction: column; }
-    .hdr-name { font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.3; }
-    .hdr-role { font-family: 'Poppins', sans-serif; font-size: 12px; font-weight: 500; color: #565656; }
+    .hdr-name { font-family: Pretendard, sans-serif; font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.3; }
+    .hdr-role { font-family: Pretendard, sans-serif; font-size: 12px; font-weight: 500; color: #565656; }
 
     /* ═══════════════ CONTENT ═══════════════ */
     .content { flex: 1; overflow-y: auto; background: #fff; display: flex; align-items: flex-start; justify-content: center; }
@@ -117,7 +121,7 @@
     /* 주문 정보 카드 */
     .order-card {
       border: 1px solid var(--border);
-      border-radius: 10px; overflow: hidden; margin-bottom: 12px;
+      border-radius: 10px; overflow: visible; margin-bottom: 12px;
     }
     .order-card-head {
       padding: 14px 18px;
@@ -126,8 +130,8 @@
     }
     .order-card-head-lbl { font-size: 12px; font-weight: 600; color: var(--muted); }
     .order-meta { display: flex; align-items: center; gap: 10px; }
-    .order-date { font-family: 'Poppins', sans-serif; font-size: 12px; color: var(--muted); }
-    .order-id { font-family: 'Poppins', sans-serif; font-size: 12px; font-weight: 600; color: var(--sub); }
+    .order-date { font-family: Pretendard, sans-serif; font-size: 12px; color: var(--muted); }
+    .order-id { font-family: Pretendard, sans-serif; font-size: 12px; font-weight: 600; color: var(--sub); }
 
     .order-items { padding: 0 18px; }
     .order-item-row {
@@ -138,8 +142,8 @@
     .oi-info { flex: 1; }
     .oi-name { font-size: 14px; font-weight: 600; color: var(--text); }
     .oi-spec { font-size: 12px; color: var(--muted); margin-top: 2px; }
-    .oi-qty { font-family: 'Poppins', sans-serif; font-size: 13px; color: var(--muted); }
-    .oi-price { font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 700; color: var(--text); white-space: nowrap; }
+    .oi-qty { font-family: Pretendard, sans-serif; font-size: 13px; color: var(--muted); }
+    .oi-price { font-family: Pretendard, sans-serif; font-size: 14px; font-weight: 700; color: var(--text); white-space: nowrap; }
 
     /* 합계 */
     .order-total-wrap {
@@ -149,10 +153,10 @@
     .total-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
     .total-row:last-child { margin-bottom: 0; }
     .total-lbl { font-size: 13px; color: var(--muted); }
-    .total-val { font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 500; color: var(--sub); }
+    .total-val { font-family: Pretendard, sans-serif; font-size: 13px; font-weight: 500; color: var(--sub); }
     .total-divider { height: 1px; background: var(--border); margin: 10px 0; }
     .total-lbl-big { font-size: 14px; font-weight: 700; color: var(--text); }
-    .total-val-big { font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: bold; color: var(--cta); }
+    .total-val-big { font-family: Pretendard, sans-serif; font-size: 20px; font-weight: bold; color: var(--cta); }
 
     /* 배송 안내 */
     .delivery-card {
@@ -167,7 +171,7 @@
     .btn-back {
       flex: 1; padding: 13px;
       background: #fff; color: var(--sub); border: 1px solid var(--border);
-      border-radius: 8px; font-family: 'Noto Sans KR', sans-serif;
+      border-radius: 8px; font-family: Pretendard, sans-serif;
       font-size: 14px; font-weight: 600; cursor: pointer; text-align: center;
       transition: background .15s; text-decoration: none;
       display: flex; align-items: center; justify-content: center;
@@ -176,7 +180,7 @@
     .btn-history {
       flex: 1; padding: 13px;
       background: var(--cta); color: #fff; border: none;
-      border-radius: 8px; font-family: 'Noto Sans KR', sans-serif;
+      border-radius: 8px; font-family: Pretendard, sans-serif;
       font-size: 14px; font-weight: 700; cursor: pointer;
       transition: background .15s;
     }
@@ -299,6 +303,34 @@
   function goHistory() {
     window.location.href = 'index.html#history';
   }
+</script>
+<script>
+(async function() {
+  var files = [
+    { weight: '400', url: 'pretendard/Pretendard-Regular.woff2' },
+    { weight: '500', url: 'pretendard/Pretendard-Medium.woff2' },
+    { weight: '700', url: 'pretendard/Pretendard-Bold.woff2' },
+  ];
+  var promises = files.map(function(f) {
+    var ff = new FontFace('Pretendard', "url('" + f.url + "') format('woff2')", { weight: f.weight });
+    document.fonts.add(ff);
+    return ff.load();
+  });
+  await Promise.all(promises);
+  await new Promise(function(r) { requestAnimationFrame(function() { requestAnimationFrame(r); }); });
+  var script = document.createElement('script');
+  script.src = 'https://mcp.figma.com/mcp/html-to-design/capture.js';
+  script.onload = function() {
+    setTimeout(function() {
+      window.figma.captureForDesign({
+        captureId: '5fc10bed-980c-4955-bc71-21aebcb9a60f',
+        endpoint: 'https://mcp.figma.com/mcp/capture/5fc10bed-980c-4955-bc71-21aebcb9a60f/submit',
+        selector: 'body'
+      });
+    }, 500);
+  };
+  document.head.appendChild(script);
+})();
 </script>
 </body>
 </html>
