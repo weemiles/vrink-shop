@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>브링크 결제요청</title>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+<style>
+  :root{
+    --brink:#56E893; --brink-dk:#22c55e; --brink-soft:#e9fbf1;
+    --g900:#191f28; --g700:#4e5968; --g500:#8b95a1; --g400:#b0b8c1;
+    --g300:#d1d6db; --g200:#e5e8eb; --g100:#f2f4f6; --g50:#f9fafb;
+    --line:#e8ebee; --bg:#f4f5f7; --warn:#f04452;
+    --slack:#4a154b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Pretendard',-apple-system,sans-serif;background:var(--bg);color:var(--g900);-webkit-font-smoothing:antialiased;line-height:1.5;}
+  .top{background:#fff;border-bottom:1px solid var(--line);padding:16px 24px;position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+  .top .lt h1{font-size:18px;font-weight:700;letter-spacing:-0.4px;display:flex;align-items:center;gap:8px;}
+  .top .lt h1 .dot{width:9px;height:9px;border-radius:50%;background:var(--brink);}
+  .top .lt p{font-size:12.5px;color:var(--g500);margin-top:3px;}
+  .conn{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;padding:7px 12px;border-radius:99px;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--g700);transition:.15s;white-space:nowrap;}
+  .conn:hover{background:var(--g50);}
+  .conn .led{width:8px;height:8px;border-radius:50%;background:var(--g300);}
+  .conn.on .led{background:var(--brink);}
+
+  .layout{display:flex;gap:24px;max-width:1080px;margin:0 auto;padding:24px;align-items:flex-start;}
+  .col{flex:1;min-width:0;}
+  .panel{background:#fff;border-radius:18px;padding:22px;box-shadow:0 1px 3px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.04);}
+  .panel + .panel{margin-top:16px;}
+  .sec-t{font-size:13px;font-weight:700;color:var(--g700);margin-bottom:14px;display:flex;align-items:center;gap:7px;}
+  .sec-t::before{content:"";width:3px;height:13px;border-radius:2px;background:var(--brink);}
+
+  .field{margin-bottom:14px;}.field:last-child{margin-bottom:0;}
+  label.lab{display:block;font-size:12.5px;font-weight:600;color:var(--g700);margin-bottom:6px;}
+  .req{color:var(--brink-dk);margin-left:2px;}
+  input[type=text],input[type=number],input[type=url],select,textarea{width:100%;border:1.5px solid var(--g200);border-radius:11px;padding:11px 13px;font-size:14px;font-family:inherit;color:var(--g900);background:#fff;transition:border-color .15s;}
+  input::placeholder,textarea::placeholder{color:var(--g400);}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--brink);}
+  .row2{display:flex;gap:10px;}.row2>*{flex:1;}
+
+  .toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 15px;background:var(--g50);border-radius:12px;}
+  .toggle .tl{font-size:13.5px;font-weight:600;color:var(--g900);}
+  .toggle .ts{font-size:11.5px;color:var(--g500);margin-top:2px;}
+  .sw{position:relative;width:46px;height:28px;flex-shrink:0;}
+  .sw input{opacity:0;width:0;height:0;}
+  .sw .sl{position:absolute;inset:0;background:var(--g300);border-radius:99px;transition:.2s;cursor:pointer;}
+  .sw .sl::before{content:"";position:absolute;width:22px;height:22px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2);}
+  .sw input:checked + .sl{background:var(--brink);}
+  .sw input:checked + .sl::before{transform:translateX(18px);}
+
+  .item-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;}
+  .item-row .num{font-size:13px;font-weight:700;color:var(--g400);width:22px;flex-shrink:0;text-align:center;}
+  .item-row input{flex:1;}
+  .item-del{width:34px;height:42px;flex-shrink:0;border:none;background:none;color:var(--g400);cursor:pointer;font-size:18px;border-radius:9px;transition:.15s;}
+  .item-del:hover{background:var(--g100);color:var(--warn);}
+  .btn-add{margin-top:4px;width:100%;border:1.5px dashed var(--g300);background:none;color:var(--g700);padding:10px;border-radius:11px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:.15s;}
+  .btn-add:hover{border-color:var(--brink);color:var(--brink-dk);background:var(--brink-soft);}
+
+  .preset-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+  .preset-chip{display:inline-flex;align-items:center;gap:6px;background:var(--g100);border:1px solid var(--line);border-radius:99px;padding:6px 8px 6px 13px;font-size:12.5px;font-weight:600;color:var(--g700);cursor:pointer;transition:.15s;}
+  .preset-chip:hover{background:var(--brink-soft);border-color:var(--brink);color:var(--brink-dk);}
+  .preset-chip .x{color:var(--g400);font-size:13px;padding:0 3px;border-radius:50%;}
+  .preset-chip .x:hover{color:var(--warn);background:rgba(0,0,0,.06);}
+  .preset-empty{font-size:12px;color:var(--g400);padding:4px 0;}
+  .btn-save{font-size:12px;font-weight:600;color:var(--brink-dk);background:none;border:none;cursor:pointer;padding:6px 0;}
+  .btn-save:hover{text-decoration:underline;}
+
+  .preview-wrap{position:sticky;top:84px;}
+  .kakao{background:#fef01b;border-radius:4px 18px 18px 18px;padding:18px 20px;font-size:14px;line-height:1.7;color:#1a1a1a;white-space:pre-wrap;word-break:break-all;min-height:120px;font-weight:500;}
+  .send-btn{margin-top:14px;width:100%;background:var(--brink);color:#0a3d23;border:none;padding:16px;border-radius:13px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:.15s;display:flex;align-items:center;justify-content:center;gap:8px;}
+  .send-btn:hover{background:var(--brink-dk);color:#fff;}
+  .send-btn:active{transform:scale(.99);}
+  .send-btn.done{background:var(--g900);color:#fff;}
+  .send-btn:disabled{background:var(--g200);color:var(--g400);cursor:not-allowed;}
+  .copy-link{margin-top:10px;width:100%;background:none;border:none;color:var(--g500);font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;padding:6px;}
+  .copy-link:hover{color:var(--g700);text-decoration:underline;}
+  .hint{font-size:12px;color:var(--g500);margin-top:10px;text-align:center;line-height:1.5;}
+  .hint b{color:var(--brink-dk);}
+
+  /* 설정 모달 */
+  .ov{position:fixed;inset:0;background:rgba(3,24,50,.46);z-index:40;display:none;align-items:center;justify-content:center;padding:20px;}
+  .ov.show{display:flex;}
+  .modal{background:#fff;border-radius:20px;padding:26px;max-width:440px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.2);}
+  .modal h2{font-size:17px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:8px;}
+  .modal .md-sub{font-size:13px;color:var(--g500);line-height:1.6;margin-bottom:18px;}
+  .steps{background:var(--g50);border-radius:12px;padding:14px 16px;margin-bottom:16px;font-size:12.5px;color:var(--g700);line-height:1.8;}
+  .steps b{color:var(--g900);}
+  .steps a{color:var(--brink-dk);font-weight:600;}
+  .md-btns{display:flex;gap:10px;margin-top:18px;}
+  .md-btns button{flex:1;padding:13px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;border:none;transition:.15s;}
+  .b-ghost{background:var(--g100);color:var(--g700);}.b-ghost:hover{background:var(--g200);}
+  .b-primary{background:var(--brink);color:#0a3d23;}.b-primary:hover{background:var(--brink-dk);color:#fff;}
+
+  .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--g900);color:#fff;padding:13px 22px;border-radius:13px;font-size:14px;font-weight:600;z-index:50;opacity:0;transition:.25s;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.25);}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  @media(max-width:860px){.layout{flex-direction:column;}.preview-wrap{position:static;}}
+</style>
+</head>
+<body>
+  <div class="top">
+    <div class="lt">
+      <h1><span class="dot"></span>브링크 결제요청</h1>
+      <p>항목을 채우고 전송하면 슬랙 채널에 자동으로 올라갑니다</p>
+    </div>
+    <button class="conn" id="connBtn"><span class="led"></span><span id="connTxt">슬랙 미연결</span></button>
+  </div>
+
+  <div class="layout">
+    <!-- 입력 -->
+    <div class="col">
+      <div class="panel">
+        <div class="sec-t">요청 설정</div>
+        <div class="field">
+          <div class="toggle">
+            <div><div class="tl">긴급 결제요청</div><div class="ts">마감 안내 문구를 함께 표시합니다</div></div>
+            <label class="sw"><input type="checkbox" id="urgent" checked><span class="sl"></span></label>
+          </div>
+        </div>
+        <div class="field" id="deadlineField">
+          <label class="lab">마감 안내 문구</label>
+          <input type="text" id="deadline" value="오전 11시 이전까지 결제가 완료되어야 당일 배송이 가능합니다">
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="sec-t">품목</div>
+        <div id="items"></div>
+        <button class="btn-add" id="addItem">+ 품목 추가</button>
+      </div>
+
+      <div class="panel">
+        <div class="sec-t">입금 정보</div>
+        <div class="field">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <label class="lab" style="margin:0;">저장된 거래처</label>
+            <button class="btn-save" id="savePreset">＋ 현재 거래처 저장</button>
+          </div>
+          <div class="preset-bar" id="presets"></div>
+        </div>
+        <div class="field row2">
+          <div>
+            <label class="lab">입금은행<span class="req">*</span></label>
+            <input type="text" id="bank" list="bankList" placeholder="우리은행">
+            <datalist id="bankList"><option>우리은행</option><option>국민은행</option><option>신한은행</option><option>하나은행</option><option>농협은행</option><option>기업은행</option><option>카카오뱅크</option><option>토스뱅크</option><option>새마을금고</option></datalist>
+          </div>
+          <div><label class="lab">예금주명<span class="req">*</span></label><input type="text" id="holder" placeholder="비즈하우스"></div>
+        </div>
+        <div class="field"><label class="lab">입금계좌<span class="req">*</span></label><input type="text" id="account" inputmode="numeric" placeholder="27389248218624"></div>
+        <div class="field row2">
+          <div><label class="lab">입금금액<span class="req">*</span></label><input type="text" id="amount" inputmode="numeric" placeholder="41,700"></div>
+          <div><label class="lab">입금자명<span class="req">*</span></label><input type="text" id="sender" value="주식회사브링크"></div>
+        </div>
+        <div class="field">
+          <div class="toggle">
+            <div><div class="tl">세금계산서 요청</div><div class="ts">"세금계산서 요청 완료" 문구 추가</div></div>
+            <label class="sw"><input type="checkbox" id="tax" checked><span class="sl"></span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 미리보기 + 전송 -->
+    <div class="col">
+      <div class="preview-wrap">
+        <div class="panel">
+          <div class="sec-t">미리보기</div>
+          <div class="kakao" id="preview"></div>
+          <button class="send-btn" id="sendBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 11.5 20 4l-7.5 17-2.5-7-7-2.5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+            슬랙 채널로 전송
+          </button>
+          <button class="copy-link" id="copyBtn">또는 텍스트만 복사하기</button>
+          <p class="hint" id="hintTxt"><b>슬랙 미연결</b> · 우측 상단 버튼에서 Webhook을 먼저 연결하세요</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 설정 모달 -->
+  <div class="ov" id="ov">
+    <div class="modal">
+      <h2>🔗 슬랙 채널 연결</h2>
+      <p class="md-sub">결제정보가 자동으로 올라갈 슬랙 채널의 <b>Incoming Webhook URL</b>을 입력하세요. 이 브라우저에만 저장됩니다.</p>
+      <div class="steps">
+        <b>발급 방법 (최초 1회)</b><br>
+        1. <a href="https://api.slack.com/apps" target="_blank">api.slack.com/apps</a> → Create New App → From scratch<br>
+        2. 좌측 <b>Incoming Webhooks</b> → Activate On<br>
+        3. <b>Add New Webhook to Workspace</b> → 채널 선택 → URL 복사
+      </div>
+      <div class="field">
+        <label class="lab">Webhook URL</label>
+        <input type="url" id="webhookInput" placeholder="https://hooks.slack.com/services/...">
+      </div>
+      <div class="md-btns">
+        <button class="b-ghost" id="ovClose">취소</button>
+        <button class="b-primary" id="ovSave">연결 저장</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+const $ = s => document.querySelector(s);
+const itemsBox = $('#items');
+const WKEY = 'vrink_slack_webhook';
+
+/* ---------- toast ---------- */
+let tT;
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(tT); tT=setTimeout(()=>t.classList.remove('show'),2200); }
+
+/* ---------- 품목 ---------- */
+function renumber(){ [...itemsBox.children].forEach((r,i)=> r.querySelector('.num').textContent=(i+1)+')'); }
+function addItem(value=''){
+  const row=document.createElement('div'); row.className='item-row';
+  row.innerHTML=`<span class="num"></span><input type="text" placeholder="예: 배너 3장" value="${value.replace(/"/g,'&quot;')}"><button class="item-del" title="삭제">×</button>`;
+  row.querySelector('input').addEventListener('input',render);
+  row.querySelector('.item-del').addEventListener('click',()=>{ if(itemsBox.children.length>1){row.remove();renumber();render();} else {row.querySelector('input').value='';render();} });
+  itemsBox.appendChild(row); renumber();
+}
+$('#addItem').addEventListener('click',()=>{ addItem(); render(); itemsBox.lastChild.querySelector('input').focus(); });
+
+/* ---------- 입력 포맷 ---------- */
+$('#amount').addEventListener('input',e=>{ const n=e.target.value.replace(/[^\d]/g,''); e.target.value=n?Number(n).toLocaleString('ko-KR'):''; render(); });
+$('#account').addEventListener('input',e=>{ e.target.value=e.target.value.replace(/[^\d-]/g,''); render(); });
+$('#urgent').addEventListener('change',e=>{ $('#deadlineField').style.display=e.target.checked?'':'none'; render(); });
+
+/* ---------- 거래처 프리셋 ---------- */
+const PKEY='vrink_payment_presets';
+const loadP=()=>{ try{return JSON.parse(localStorage.getItem(PKEY)||'[]');}catch{return[];} };
+const saveP=a=>localStorage.setItem(PKEY,JSON.stringify(a));
+function renderPresets(){
+  const box=$('#presets'),arr=loadP();
+  if(!arr.length){ box.innerHTML='<span class="preset-empty">저장된 거래처가 없습니다. 자주 쓰는 거래처를 저장해두세요.</span>'; return; }
+  box.innerHTML='';
+  arr.forEach((p,i)=>{
+    const c=document.createElement('span'); c.className='preset-chip';
+    c.innerHTML=`<span class="nm">${p.holder||p.bank}</span><span class="x" title="삭제">×</span>`;
+    c.querySelector('.nm').addEventListener('click',()=>{ $('#bank').value=p.bank;$('#holder').value=p.holder;$('#account').value=p.account;$('#sender').value=p.sender||'주식회사브링크';render(); });
+    c.querySelector('.x').addEventListener('click',e=>{ e.stopPropagation(); const a=loadP();a.splice(i,1);saveP(a);renderPresets(); });
+    box.appendChild(c);
+  });
+}
+$('#savePreset').addEventListener('click',()=>{
+  const p={bank:$('#bank').value.trim(),holder:$('#holder').value.trim(),account:$('#account').value.trim(),sender:$('#sender').value.trim()};
+  if(!p.bank&&!p.holder&&!p.account){ toast('은행·예금주·계좌를 먼저 입력해주세요'); return; }
+  const a=loadP(); if(a.some(x=>x.account===p.account&&x.bank===p.bank)){ toast('이미 저장된 거래처입니다'); return; }
+  a.push(p); saveP(a); renderPresets(); toast('거래처를 저장했습니다');
+});
+
+/* ---------- 출력 생성 ---------- */
+function buildText(){
+  const lines=[];
+  if($('#urgent').checked){ const d=$('#deadline').value.trim(); lines.push(`✅긴급결제요청${d?`(${d})`:''}`); }
+  else lines.push('결제요청');
+  lines.push('');
+  const items=[...itemsBox.querySelectorAll('input')].map(i=>i.value.trim()).filter(Boolean);
+  if(items.length){ items.forEach((it,i)=>lines.push(`${i+1}) ${it}`)); lines.push(''); }
+  lines.push(`입금은행 : ${$('#bank').value.trim()}`);
+  lines.push(`입금계좌 : ${$('#account').value.trim()}`);
+  lines.push(`예금주명 : ${$('#holder').value.trim()}`);
+  const amt=$('#amount').value.trim();
+  lines.push(`입금금액 : ${amt?amt+'원':''}`);
+  lines.push(`입금자명 : ${$('#sender').value.trim()}`);
+  if($('#tax').checked){ lines.push(''); lines.push('세금계산서 요청 완료'); }
+  return lines.join('\n');
+}
+function render(){ $('#preview').textContent=buildText(); }
+
+/* ---------- 유효성 ---------- */
+function validate(){
+  const need={입금은행:$('#bank').value.trim(),입금계좌:$('#account').value.trim(),예금주명:$('#holder').value.trim(),입금금액:$('#amount').value.trim(),입금자명:$('#sender').value.trim()};
+  const miss=Object.entries(need).filter(([k,v])=>!v).map(([k])=>k);
+  return miss;
+}
+
+/* ---------- 슬랙 연결 상태 ---------- */
+function refreshConn(){
+  const url=localStorage.getItem(WKEY);
+  const on=!!url;
+  $('#connBtn').classList.toggle('on',on);
+  $('#connTxt').textContent=on?'슬랙 연결됨':'슬랙 미연결';
+  $('#hintTxt').innerHTML = on
+    ? '전송하면 연결된 슬랙 채널에 결제정보가 자동으로 올라갑니다'
+    : '<b>슬랙 미연결</b> · 우측 상단 버튼에서 Webhook을 먼저 연결하세요';
+}
+
+/* ---------- 설정 모달 ---------- */
+function openOv(){ $('#webhookInput').value=localStorage.getItem(WKEY)||''; $('#ov').classList.add('show'); }
+function closeOv(){ $('#ov').classList.remove('show'); }
+$('#connBtn').addEventListener('click',openOv);
+$('#ovClose').addEventListener('click',closeOv);
+$('#ov').addEventListener('click',e=>{ if(e.target===$('#ov')) closeOv(); });
+$('#ovSave').addEventListener('click',()=>{
+  const u=$('#webhookInput').value.trim();
+  if(u && !/^https:\/\/hooks\.slack\.com\/services\//.test(u)){ toast('올바른 슬랙 Webhook URL이 아닙니다'); return; }
+  if(u) localStorage.setItem(WKEY,u); else localStorage.removeItem(WKEY);
+  refreshConn(); closeOv(); toast(u?'슬랙 채널이 연결되었습니다':'연결을 해제했습니다');
+});
+
+/* ---------- 전송 ---------- */
+$('#sendBtn').addEventListener('click',async()=>{
+  const url=localStorage.getItem(WKEY);
+  if(!url){ openOv(); toast('먼저 슬랙 채널을 연결해주세요'); return; }
+  const miss=validate();
+  if(miss.length){ toast(`입력 누락: ${miss.join(', ')}`); return; }
+  const text=buildText();
+  const btn=$('#sendBtn'); const orig=btn.innerHTML; btn.disabled=true; btn.innerHTML='전송 중...';
+  try{
+    // 슬랙 Webhook은 브라우저 직접 호출 시 CORS로 응답을 읽을 수 없어 no-cors로 전송 (메시지는 정상 게시됨)
+    await fetch(url,{method:'POST',mode:'no-cors',body:JSON.stringify({text})});
+    btn.classList.add('done'); btn.innerHTML='✓ 채널에 전송되었습니다';
+    toast('슬랙 채널에 결제요청을 올렸습니다');
+  }catch(e){
+    toast('전송 실패: '+e.message); btn.innerHTML=orig;
+  }
+  setTimeout(()=>{ btn.disabled=false; btn.classList.remove('done'); btn.innerHTML=orig; },1800);
+});
+
+/* ---------- 복사 ---------- */
+$('#copyBtn').addEventListener('click',async()=>{
+  const t=buildText();
+  try{ await navigator.clipboard.writeText(t); }
+  catch{ const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove(); }
+  toast('텍스트를 복사했습니다');
+});
+
+/* ---------- init ---------- */
+['deadline','bank','holder','account','sender'].forEach(id=>$('#'+id).addEventListener('input',render));
+$('#tax').addEventListener('change',render);
+addItem('배너 3장'); renderPresets(); refreshConn(); render();
+</script>
+</body>
+</html>
