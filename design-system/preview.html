@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VRINK Admin Design System</title>
+<link rel="stylesheet" href="vrink-admin-ds.css">
+<style>
+  body { padding: 40px; line-height: 1.2; }
+  .wrap { max-width: 1080px; margin: 0 auto; display: flex; flex-direction: column; gap: 32px; }
+  h1 { font-size: 28px; font-weight: 500; color: var(--text-strong); }
+  h1 small { display:block; font-size: 14px; color: var(--text-muted); margin-top: 6px; font-weight: 400; }
+  .sec-title { font-size: 13px; font-weight: 500; color: var(--text-faint); letter-spacing: .5px; text-transform: uppercase; margin-bottom: 14px; }
+  .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); gap: 12px; }
+  .sw { border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
+  .sw-color { height: 56px; }
+  .sw-meta { padding: 8px 10px; font-size: 11px; color: var(--text-body); }
+  .sw-meta b { display:block; font-weight: 500; color: var(--text-strong); font-size: 12px; }
+  .type-row { display:flex; align-items: baseline; gap: 14px; padding: 8px 0; border-bottom: 1px solid var(--border-subtle); }
+  .type-row span:first-child { color: var(--text-faint); font-size: 12px; width: 70px; flex-shrink: 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>VRINK Admin Design System
+    <small>weemiles.github.io/vrink-shop 추출 · Pretendard · #0095FF</small>
+  </h1>
+
+  <!-- COLORS -->
+  <section>
+    <div class="sec-title">Colors</div>
+    <div class="swatches">
+      <div class="sw"><div class="sw-color" style="background:#0095FF"></div><div class="sw-meta"><b>Primary</b>#0095FF</div></div>
+      <div class="sw"><div class="sw-color" style="background:#F8F8FA"></div><div class="sw-meta"><b>Background</b>#F8F8FA</div></div>
+      <div class="sw"><div class="sw-color" style="background:#111111"></div><div class="sw-meta"><b>Text strong</b>#111111</div></div>
+      <div class="sw"><div class="sw-color" style="background:#505050"></div><div class="sw-meta"><b>Text body</b>#505050</div></div>
+      <div class="sw"><div class="sw-color" style="background:#767676"></div><div class="sw-meta"><b>Text muted</b>#767676</div></div>
+      <div class="sw"><div class="sw-color" style="background:#EDF2F6"></div><div class="sw-meta"><b>Border</b>#EDF2F6</div></div>
+      <div class="sw"><div class="sw-color" style="background:#00B377"></div><div class="sw-meta"><b>Success</b>#00B377</div></div>
+      <div class="sw"><div class="sw-color" style="background:#E0A830"></div><div class="sw-meta"><b>Warning</b>#E0A830</div></div>
+      <div class="sw"><div class="sw-color" style="background:#EC3D3D"></div><div class="sw-meta"><b>Danger</b>#EC3D3D</div></div>
+    </div>
+  </section>
+
+  <!-- TYPOGRAPHY -->
+  <section class="card">
+    <div class="sec-title">Typography · Pretendard (400 / 500)</div>
+    <div class="type-row"><span>24 / 500</span><span style="font-size:24px;font-weight:500;">페이지 타이틀</span></div>
+    <div class="type-row"><span>18 / 500</span><span style="font-size:18px;font-weight:500;">모달 타이틀</span></div>
+    <div class="type-row"><span>14 / 500</span><span style="font-size:14px;font-weight:500;">네비게이션 · 기본 UI</span></div>
+    <div class="type-row"><span>13 / 400</span><span style="font-size:13px;">본문 · 테이블 셀 텍스트입니다.</span></div>
+    <div class="type-row"><span>12 / 500</span><span style="font-size:12px;font-weight:500;color:var(--text-muted);">테이블 헤더 · 폼 라벨</span></div>
+    <div class="type-row" style="border:none"><span>11 / 500</span><span style="font-size:11px;font-weight:500;color:var(--text-faint);">배지 · 힌트</span></div>
+  </section>
+
+  <!-- BUTTONS -->
+  <section>
+    <div class="sec-title">Buttons</div>
+    <div class="row">
+      <button class="btn btn-primary">Primary</button>
+      <button class="btn btn-outline">Outline</button>
+      <button class="btn btn-danger">Danger</button>
+      <button class="btn btn-primary btn-sm">Small</button>
+    </div>
+  </section>
+
+  <!-- BADGES -->
+  <section>
+    <div class="sec-title">Badges</div>
+    <div class="row">
+      <span class="badge badge-success">정상</span>
+      <span class="badge badge-warning">재고 부족</span>
+      <span class="badge badge-error">연결 끊김</span>
+      <span class="badge badge-primary">신규</span>
+    </div>
+  </section>
+
+  <!-- TABLE -->
+  <section>
+    <div class="sec-title">Table</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>지점</th><th>품목</th><th>재고</th><th>상태</th></tr></thead>
+        <tbody>
+          <tr><td>빌드업 강남점</td><td>단백질 파우더</td><td>82%</td><td><span class="badge badge-success">정상</span></td></tr>
+          <tr><td>빌드업 성수점</td><td>비타민 원액</td><td>12%</td><td><span class="badge badge-warning">부족</span></td></tr>
+          <tr><td>빌드업 서대문점</td><td>아미노 원액</td><td>0%</td><td><span class="badge badge-error">소진</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- FORM -->
+  <section class="card">
+    <div class="sec-title">Form</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">품목명</label>
+        <input class="form-input" placeholder="예: 단백질 파우더">
+      </div>
+      <div class="form-group">
+        <label class="form-label">상태</label>
+        <select class="form-select"><option>정상</option><option>부족</option></select>
+      </div>
+    </div>
+    <div class="row" style="margin-top:16px;align-items:center;gap:10px">
+      <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+      <span style="font-size:13px;color:var(--text-strong)">자동 발주 알림</span>
+    </div>
+  </section>
+
+  <!-- BUTTON to open modal -->
+  <section>
+    <div class="sec-title">Modal</div>
+    <button class="btn btn-primary" onclick="document.getElementById('m').classList.add('open')">모달 열기</button>
+  </section>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="m">
+  <div class="modal" style="width:420px">
+    <div class="modal-header">
+      <div class="modal-title">품목 추가</div>
+      <button class="modal-close" onclick="document.getElementById('m').classList.remove('open')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">품목명</label>
+        <input class="form-input" placeholder="입력">
+      </div>
+      <div class="form-group">
+        <label class="form-label">메모</label>
+        <textarea class="form-textarea" placeholder="특이사항"></textarea>
+        <span class="form-hint">선택 입력 항목입니다.</span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="document.getElementById('m').classList.remove('open')">취소</button>
+      <button class="btn btn-primary">저장</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

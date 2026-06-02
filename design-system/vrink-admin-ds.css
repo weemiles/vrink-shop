@@ -1,0 +1,245 @@
+/* ============================================================
+   VRINK Admin Design System
+   weemiles.github.io/vrink-shop 어드민에서 추출
+   사용법: <link rel="stylesheet" href="vrink-admin-ds.css">
+   ============================================================ */
+
+/* ---------- Font ---------- */
+@font-face { font-family: 'Pretendard'; src: url('../pretendard/Pretendard-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Pretendard'; src: url('../pretendard/Pretendard-Medium.woff2')  format('woff2'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Pretendard'; src: url('../pretendard/Pretendard-Bold.woff2')    format('woff2'); font-weight: 700; font-display: swap; }
+
+/* ============================================================
+   1. DESIGN TOKENS
+   ============================================================ */
+:root {
+  /* — Brand / Primary — */
+  --color-primary:        #0095FF;
+  --color-primary-dark:   #0077CC;
+  --color-primary-soft:   #EFF6FF;   /* nav active / selected bg */
+  --color-primary-soft-2: #E6F4FF;   /* info / badge bg */
+
+  /* — Surface & Background — */
+  --color-bg:        #F8F8FA;   /* page background */
+  --color-surface:   #FFFFFF;   /* card / sidebar / topbar */
+  --color-hover:     #F6F6F6;   /* row / item hover */
+  --color-hover-2:   #FAFAFA;   /* table row hover */
+  --color-fill:      #F4F5F7;   /* close button bg */
+
+  /* — Text — */
+  --text-strong:  #111111;   /* titles, primary text */
+  --text-body:    #505050;   /* labels, body */
+  --text-muted:   #767676;   /* captions, th */
+  --text-faint:   #A0A8B3;   /* hints, placeholders */
+  --text-faint-2: #A098AE;   /* section title */
+
+  /* — Border / Divider — */
+  --border:        #EDF2F6;   /* default border / divider */
+  --border-subtle: #F6F6F6;   /* table cell divider */
+  --border-input:  #E2E8F0;   /* form field border */
+  --border-radio:  #D0D6DF;   /* unchecked radio/toggle */
+
+  /* — Semantic (text on soft bg) — */
+  --success:      #00B377;  --success-bg: #E6FBF4;
+  --warning:      #E0A830;  --warning-bg: #FEF6E6;
+  --error:        #D32F2F;  --error-bg:   #FDE8E8;
+  --danger:       #EC3D3D;  /* destructive action / logout */
+
+  /* — Radius — */
+  --r-xs: 4px;    /* badge, sm button */
+  --r-sm: 6px;    /* button, sub-item */
+  --r-md: 8px;    /* nav item, input, topbar button */
+  --r-lg: 14px;   /* notification dropdown */
+  --r-xl: 20px;   /* card, modal, table */
+  --r-full: 9999px;
+
+  /* — Shadow — */
+  --shadow-card:     0px 4px 20px rgba(238,238,238,.5);
+  --shadow-dropdown: 0 4px 16px rgba(0,0,0,.08);
+  --shadow-pop:      0 12px 40px rgba(0,0,0,.13);
+  --shadow-modal:    0 24px 64px rgba(0,0,0,.18);
+
+  /* — Layout — */
+  --sidebar-w: 256px;
+  --topbar-h:  64px;
+  --page-pad:  28px;
+
+  /* — Type scale (px) — */
+  --fs-title:  24px;  /* page title */
+  --fs-modal:  18px;  /* modal title */
+  --fs-lg:     16px;  /* empty title */
+  --fs-md:     14px;  /* nav, base ui */
+  --fs-base:   13px;  /* body, table, button */
+  --fs-sm:     12px;  /* th, form label */
+  --fs-xs:     11px;  /* badge, hint, section title */
+  --fs-2xs:    10px;  /* notif badge, arrow */
+}
+
+/* ============================================================
+   2. RESET & BASE
+   ============================================================ */
+* { box-sizing: border-box; margin: 0; padding: 0; line-height: 1.2; }
+body {
+  font-family: 'Pretendard', sans-serif;
+  background: var(--color-bg);
+  color: var(--text-strong);
+}
+/* 강조는 Bold가 아닌 Medium(500)으로 — 시스템 규칙 */
+b, strong { font-weight: 500; }
+
+/* ============================================================
+   3. BUTTONS
+   ============================================================ */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--r-sm);
+  font-size: var(--fs-base); font-weight: 500;
+  cursor: pointer; border: none; font-family: inherit;
+}
+.btn-primary { background: var(--color-primary); color: #fff; }
+.btn-outline { background: #fff; color: var(--text-body); border: 1px solid var(--border); }
+.btn-danger  { background: var(--danger); color: #fff; }
+.btn-sm      { padding: 5px 10px; font-size: var(--fs-sm); border-radius: var(--r-xs); }
+
+/* ============================================================
+   4. BADGES
+   ============================================================ */
+.badge {
+  display: inline-flex; align-items: center;
+  padding: 3px 8px; border-radius: var(--r-xs);
+  font-size: var(--fs-xs); font-weight: 500;
+}
+.badge-success { background: var(--success-bg); color: var(--success); }
+.badge-warning { background: var(--warning-bg); color: var(--warning); }
+.badge-error   { background: var(--error-bg);   color: var(--error); }
+.badge-primary { background: var(--color-primary-soft-2); color: var(--color-primary-dark); }
+
+/* ============================================================
+   5. CARD
+   ============================================================ */
+.card {
+  background: var(--color-surface);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-card);
+  padding: 20px 24px;
+}
+
+/* ============================================================
+   6. TABLE
+   ============================================================ */
+.table-wrap {
+  background: #fff; border-radius: var(--r-xl);
+  box-shadow: var(--shadow-card); overflow: hidden;
+}
+table { width: 100%; border-collapse: collapse; }
+th {
+  padding: 12px 16px; text-align: left;
+  font-size: var(--fs-sm); font-weight: 500;
+  color: var(--text-muted); background: var(--color-bg);
+  border-bottom: 1px solid var(--border); white-space: nowrap;
+}
+td {
+  padding: 14px 16px; font-size: var(--fs-base);
+  color: var(--text-strong); border-bottom: 1px solid var(--border-subtle);
+  vertical-align: middle;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--color-hover-2); }
+
+/* ============================================================
+   7. FORM
+   ============================================================ */
+.form-row   { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-label { font-size: var(--fs-sm); font-weight: 500; color: var(--text-body); }
+.form-input, .form-select {
+  padding: 0 12px; height: 42px; box-sizing: border-box;
+  border: 1.5px solid var(--border-input); border-radius: var(--r-md);
+  font-size: var(--fs-base); color: var(--text-strong); outline: none;
+  font-family: inherit; background: #fff; transition: border-color .15s;
+}
+.form-textarea {
+  padding: 10px 12px; border: 1.5px solid var(--border-input);
+  border-radius: var(--r-md); font-size: var(--fs-base);
+  color: var(--text-strong); outline: none; font-family: inherit;
+  background: #fff; transition: border-color .15s; resize: vertical; min-height: 80px;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--color-primary); }
+.form-hint { font-size: var(--fs-xs); color: var(--text-faint); }
+input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--color-primary); cursor: pointer; }
+
+/* ============================================================
+   8. TOGGLE SWITCH
+   ============================================================ */
+.toggle-switch { position: relative; width: 38px; height: 22px; flex-shrink: 0; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-slider { position: absolute; inset: 0; background: var(--border-radio); border-radius: var(--r-full); cursor: pointer; transition: background .2s; }
+.toggle-slider:before { content: ''; position: absolute; left: 3px; top: 3px; width: 16px; height: 16px; background: #fff; border-radius: 50%; transition: transform .2s; }
+.toggle-switch input:checked + .toggle-slider { background: var(--color-primary); }
+.toggle-switch input:checked + .toggle-slider:before { transform: translateX(16px); }
+
+/* ============================================================
+   9. MODAL
+   ============================================================ */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: none; align-items: center; justify-content: center; z-index: 1000; }
+.modal-overlay.open { display: flex; }
+.modal {
+  background: #fff; border-radius: var(--r-xl); padding: 28px 28px 24px;
+  box-shadow: var(--shadow-modal); animation: modalIn .18s ease;
+}
+@keyframes modalIn { from { opacity: 0; transform: scale(.96) translateY(8px); } to { opacity: 1; transform: none; } }
+.modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
+.modal-title  { font-size: var(--fs-modal); font-weight: 500; color: var(--text-strong); }
+.modal-close  { background: var(--color-fill); border: none; cursor: pointer; color: var(--text-body); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; line-height: 1; }
+.modal-close:hover { background: #EAEAEA; }
+.modal-body   { display: flex; flex-direction: column; gap: 16px; }
+.modal-divider{ height: 1px; background: var(--border); }
+.modal-footer { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+
+/* ============================================================
+   10. LAYOUT (sidebar / topbar / page)
+   ============================================================ */
+.layout      { display: flex; height: 100vh; overflow: hidden; }
+.sidebar     { width: var(--sidebar-w); min-width: var(--sidebar-w); height: 100vh; background: #fff; border-right: 1px solid rgba(0,0,0,.1); display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
+.main-wrapper{ flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar      { height: var(--topbar-h); background: #fff; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: flex-end; padding: 0 24px; gap: 12px; flex-shrink: 0; }
+.page-content{ flex: 1; overflow-y: auto; padding: var(--page-pad); }
+.page-title  { font-size: var(--fs-title); font-weight: 500; color: var(--text-strong); margin-bottom: 20px; }
+
+/* — sidebar inner — */
+.sidebar-logo { padding: 20px 20px 16px; border-bottom: 1px solid var(--border); cursor: pointer; }
+.sidebar-nav  { flex: 1; padding: 12px; display: flex; flex-direction: column; gap: 2px; }
+.sidebar-bottom { padding: 12px 12px 16px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 2px; }
+.sidebar-section-title { font-size: var(--fs-xs); font-weight: 500; color: var(--text-faint-2); letter-spacing: .91px; padding: 4px 12px 8px; text-transform: uppercase; }
+
+/* nav items */
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: var(--r-md); text-decoration: none; color: var(--text-body); font-size: var(--fs-md); font-weight: 500; cursor: pointer; transition: background .15s; }
+.nav-item:hover  { background: var(--color-hover); }
+.nav-item.active { background: var(--color-primary-soft); color: var(--color-primary); }
+.nav-item.nav-logout { color: var(--danger); }
+.nav-icon  { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.nav-label { flex: 1; }
+
+/* collapsible nav group */
+.nav-group { display: flex; flex-direction: column; }
+.nav-group-trigger { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: var(--r-md); color: var(--text-body); font-size: var(--fs-md); font-weight: 500; cursor: pointer; }
+.nav-group-trigger:hover { background: var(--color-hover); }
+.nav-group-trigger.open { color: var(--text-strong); }
+.nav-arrow { margin-left: auto; font-size: var(--fs-2xs); color: var(--text-muted); transition: transform .2s; display: inline-block; }
+.nav-group-trigger.open .nav-arrow { transform: rotate(180deg); }
+.nav-sub { display: none; flex-direction: column; padding-left: 32px; gap: 1px; }
+.nav-sub.show { display: flex; }
+.nav-sub-item { padding: 7px 12px; border-radius: var(--r-sm); font-size: var(--fs-base); color: var(--text-body); text-decoration: none; font-weight: 400; }
+.nav-sub-item:hover  { background: var(--color-hover); color: var(--text-strong); }
+.nav-sub-item.active { color: var(--color-primary); font-weight: 500; background: var(--color-primary-soft); }
+
+/* — topbar inner — */
+.topbar-btn { background: none; border: 1px solid var(--border); border-radius: var(--r-md); padding: 8px; cursor: pointer; position: relative; display: flex; align-items: center; justify-content: center; }
+.notif-badge { position: absolute; top: -4px; right: -4px; background: var(--color-primary); color: #fff; font-size: var(--fs-2xs); font-weight: 500; border-radius: var(--r-full); width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; }
+.topbar-branch { background: none; border: 1px solid var(--border); border-radius: var(--r-md); padding: 7px 12px; font-size: var(--fs-base); font-weight: 500; cursor: pointer; color: var(--text-body); }
+.topbar-user { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 8px; border-radius: var(--r-md); }
+.topbar-user:hover { background: var(--color-hover); }
+.user-avatar { width: 32px; height: 32px; background: var(--border); border-radius: var(--r-full); display: flex; align-items: center; justify-content: center; font-size: var(--fs-sm); font-weight: 500; color: var(--text-body); }
+.user-info { display: flex; flex-direction: column; }
+.user-name { font-size: var(--fs-base); font-weight: 500; color: var(--text-strong); }
+.user-role { font-size: var(--fs-xs); color: var(--text-muted); }
