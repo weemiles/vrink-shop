@@ -304,33 +304,5 @@
     window.location.href = 'index.html#history';
   }
 </script>
-<script>
-(async function() {
-  var files = [
-    { weight: '400', url: 'pretendard/Pretendard-Regular.woff2' },
-    { weight: '500', url: 'pretendard/Pretendard-Medium.woff2' },
-    { weight: '700', url: 'pretendard/Pretendard-Bold.woff2' },
-  ];
-  var promises = files.map(function(f) {
-    var ff = new FontFace('Pretendard', "url('" + f.url + "') format('woff2')", { weight: f.weight });
-    document.fonts.add(ff);
-    return ff.load();
-  });
-  await Promise.all(promises);
-  await new Promise(function(r) { requestAnimationFrame(function() { requestAnimationFrame(r); }); });
-  var script = document.createElement('script');
-  script.src = 'https://mcp.figma.com/mcp/html-to-design/capture.js';
-  script.onload = function() {
-    setTimeout(function() {
-      window.figma.captureForDesign({
-        captureId: '5fc10bed-980c-4955-bc71-21aebcb9a60f',
-        endpoint: 'https://mcp.figma.com/mcp/capture/5fc10bed-980c-4955-bc71-21aebcb9a60f/submit',
-        selector: 'body'
-      });
-    }, 500);
-  };
-  document.head.appendChild(script);
-})();
-</script>
 </body>
 </html>
