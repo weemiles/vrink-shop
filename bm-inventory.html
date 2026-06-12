@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="logo_spinner.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>브링크 지점 관리자 - 재고 관리</title>
+<style>
+@font-face { font-family: 'Pretendard'; src: url('pretendard/Pretendard-Regular.woff2') format('woff2'); font-weight: 400; }
+@font-face { font-family: 'Pretendard'; src: url('pretendard/Pretendard-Medium.woff2') format('woff2'); font-weight: 500; }
+@font-face { font-family: 'Pretendard'; src: url('pretendard/Pretendard-Bold.woff2') format('woff2'); font-weight: 700; }
+</style>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; line-height: 1.2; }
+body { font-family: 'Pretendard', sans-serif; background: #F8F8FA; color: #111111; display: flex; height: 100vh; overflow: hidden; }
+.sidebar { width: 256px; min-width: 256px; height: 100vh; background: #fff; border-right: 1px solid rgba(0,0,0,.1); display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
+.sidebar-logo { padding: 20px 20px 16px; border-bottom: 1px solid #EDF2F6; }
+.sidebar-nav { flex: 1; padding: 12px 12px; display: flex; flex-direction: column; gap: 2px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; text-decoration: none; color: #505050; font-size: 14px; font-weight: 500; cursor: pointer; transition: background .15s; }
+.nav-item:hover { background: #F6F6F6; }
+.nav-item.active { background: #EFF6FF; color: #0095FF; font-weight: 500; }
+.nav-item.nav-logout { color: #EC3D3D; }
+.nav-icon { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.nav-label { flex: 1; }
+.nav-group { display: flex; flex-direction: column; }
+.nav-group-trigger { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; color: #505050; font-size: 14px; font-weight: 500; cursor: pointer; }
+.nav-group-trigger:hover { background: #F6F6F6; }
+.nav-group-trigger.open { color: #111111; font-weight: 500; }
+.nav-arrow { margin-left: auto; font-size: 10px; color: #767676; transition: transform .2s; display: inline-block; }
+.nav-group-trigger.open .nav-arrow { transform: rotate(180deg); }
+.nav-sub { display: none; flex-direction: column; padding-left: 32px; gap: 1px; }
+.nav-sub.show { display: flex; }
+.nav-sub-item { padding: 7px 12px; border-radius: 6px; font-size: 13px; color: #505050; text-decoration: none; font-weight: 400; }
+.nav-sub-item:hover { background: #F6F6F6; color: #111111; }
+.nav-sub-item.active { color: #0095FF; font-weight: 500; background: #EFF6FF; }
+.sidebar-bottom { padding: 12px 12px 16px; border-top: 1px solid #EDF2F6; display: flex; flex-direction: column; gap: 2px; }
+.sidebar-section-title { font-size: 11px; font-weight: 500; color: #A098AE; letter-spacing: .91px; padding: 4px 12px 8px; text-transform: uppercase; }
+.main-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { height: 64px; background: #fff; border-bottom: 1px solid #EDF2F6; display: flex; align-items: center; justify-content: flex-end; padding: 0 24px; gap: 12px; flex-shrink: 0; }
+.topbar-btn { background: none; border: 1px solid #EDF2F6; border-radius: 8px; padding: 8px; cursor: pointer; position: relative; display: flex; align-items: center; justify-content: center; }
+.notif-badge { position: absolute; top: -4px; right: -4px; background: #0095FF; color: #fff; font-size: 10px; font-weight: 500; border-radius: 9999px; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; }
+.topbar-branch { background: none; border: 1px solid #EDF2F6; border-radius: 8px; padding: 7px 12px; font-size: 13px; font-weight: 500; cursor: pointer; color: #505050; }
+.topbar-user { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 8px; border-radius: 8px; }
+.topbar-user:hover { background: #F6F6F6; }
+.user-avatar { width: 32px; height: 32px; background: #EDF2F6; border-radius: 9999px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; color: #505050; }
+.user-info { display: flex; flex-direction: column; }
+.user-name { font-size: 13px; font-weight: 500; color: #111111; }
+.user-role { font-size: 11px; color: #767676; }
+.page-content { flex: 1; overflow-y: auto; padding: 28px 28px; }
+.page-title { font-size: 24px; font-weight: 500; color: #111111; margin-bottom: 20px; }
+.card { background: #fff; border-radius: 20px; box-shadow: 0px 4px 20px rgba(238,238,238,.5); padding: 20px 24px; }
+.badge { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; }
+.badge-success { background: #E6FBF4; color: #00B377; }
+.badge-warning { background: #FEF6E6; color: #E0A830; }
+.badge-error { background: #FDE8E8; color: #D32F2F; }
+.badge-primary { background: #E6F4FF; color: #0077CC; }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; }
+.btn-primary { background: #0095FF; color: #fff; }
+.btn-outline { background: #fff; color: #505050; border: 1px solid #EDF2F6; }
+.btn-danger { background: #EC3D3D; color: #fff; }
+.btn-sm { padding: 5px 10px; font-size: 12px; border-radius: 4px; }
+.table-wrap { background: #fff; border-radius: 20px; box-shadow: 0px 4px 20px rgba(238,238,238,.5); overflow: hidden; }
+table { width: 100%; border-collapse: collapse; }
+th { padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 500; color: #767676; background: #F8F8FA; border-bottom: 1px solid #EDF2F6; white-space: nowrap; }
+td { padding: 14px 16px; font-size: 13px; color: #111111; border-bottom: 1px solid #F6F6F6; vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #FAFAFA; }
+.filter-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.filter-select-btn { padding: 7px 14px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid #EDF2F6; background: #fff; color: #505050; }
+input[type="checkbox"] { width: 15px; height: 15px; accent-color: #0095FF; cursor: pointer; }
+.empty-state { text-align: center; padding: 60px 20px; color: #767676; }
+.empty-state svg { margin-bottom: 16px; opacity: .4; }
+.empty-title { font-size: 16px; font-weight: 500; color: #505050; margin-bottom: 6px; }
+.empty-desc { font-size: 13px; color: #767676; }
+.stock-bar-wrap { width: 100px; background: #EDF2F6; border-radius: 4px; height: 6px; } .stock-bar { height: 6px; border-radius: 4px; }
+.dropdown-menu { position:absolute; top:calc(100% + 4px); left:0; background:#fff; border:1px solid #EDF2F6; border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,.08); min-width:140px; padding:4px; z-index:100; display:none; }
+.dropdown-menu.show { display:block; }
+.dropdown-item { padding:8px 12px; border-radius:6px; font-size:13px; color:#505050; cursor:pointer; transition:background .1s; }
+.dropdown-item:hover { background:#F6F6F6; }
+.dropdown-item.active { color:#0095FF; font-weight:500; }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo" style="display:flex;align-items:center;gap:8px;">
+    <img src="logo_spinner.png" alt="VRINK" style="height:28px;width:auto;">
+    <span style="background:#EFF6FF;color:#0095FF;font-size:11px;font-weight:500;border-radius:4px;padding:3px 7px;">성수점</span>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="admin-branch-manager.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg></span>
+      <span class="nav-label">홈</span>
+    </a>
+    <a href="bm-storefront.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.98 1.61h9.72a2 2 0 001.98-1.61L23 6H6"/></svg></span>
+      <span class="nav-label">자사몰</span>
+    </a>
+    <a href="bm-inventory.html" class="nav-item active">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27,6.96 12,12.01 20.73,6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span>
+      <span class="nav-label">재고 관리</span>
+    </a>
+    <a href="bm-orders.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="13" y2="15"/></svg></span>
+      <span class="nav-label">주문 내역</span>
+    </a>
+    <a href="bm-sales.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+      <span class="nav-label">종합 매출</span>
+    </a>
+    <a href="bm-menu.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></span>
+      <span class="nav-label">메뉴</span>
+    </a>
+    <a href="bm-members.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+      <span class="nav-label">회원</span>
+    </a>
+    <a href="bm-notice.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l18-7-7 18-2.5-7.5z"/></svg></span>
+      <span class="nav-label">공지사항</span>
+    </a>
+    <a href="bm-notification.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></span>
+      <span class="nav-label">알림</span>
+    </a>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="sidebar-section-title">SETTINGS</div>
+    <a href="#" class="nav-item" onclick="event.preventDefault();alert('설정은 준비 중입니다.')">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></span>
+      <span class="nav-label">설정</span>
+    </a>
+    <a href="admin-help.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></span>
+      <span class="nav-label">도움말</span>
+    </a>
+    <button class="nav-item nav-logout" style="background:none;border:none;width:100%;text-align:left;cursor:pointer;" onclick="if(confirm('로그아웃 하시겠습니까?')) location.href='admin-adminusers.html'">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EC3D3D" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
+      <span class="nav-label">로그아웃</span>
+    </button>
+  </div>
+</aside>
+
+<div class="main-wrapper">
+  <header class="topbar">
+    <button class="topbar-btn notif-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" stroke="#505050" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <span class="notif-badge">2</span>
+    </button>
+    <span class="topbar-branch" style="background:#EFF6FF;border:1px solid #D6EBFF;color:#0095FF;cursor:default;">빌드업 성수점</span>
+    <div class="topbar-user">
+      <div class="user-avatar" style="background:#EFF6FF;color:#0095FF;">김</div>
+      <div class="user-info"><span class="user-name">김성수</span><span class="user-role">지점 관리자</span></div>
+      <button style="background:none;border:none;cursor:pointer;color:#767676;font-size:11px;">▾</button>
+    </div>
+  </header>
+
+  <div class="page-content">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <div class="page-title" style="margin-bottom:0;">재고 관리</div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-outline" onclick="openModal('inventoryAlertModal')">재고 알림 설정</button>
+        <button class="btn btn-primary" onclick="openModal('inventoryInModal')">재고 입고</button>
+      </div>
+    </div>
+    <div class="filter-bar">
+      <button class="filter-select-btn" id="invBranchBtn" style="pointer-events:none;background:#EFF6FF;border-color:#D6EBFF;color:#0095FF;">빌드업 성수점</button>
+      <button class="filter-select-btn" id="invStatusBtn">재고 상태 ▾</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>원료명</th><th>현재 재고</th><th>안전 재고</th><th>재고 현황</th><th>상태</th><th>마지막 입고일</th><th>관리</th></tr></thead>
+        <tbody id="adminInvTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<script>
+function toggleGroup(el){el.classList.toggle('open');var s=el.nextElementSibling;if(s)s.classList.toggle('show');}
+
+/* ─── 재고 데이터 (localStorage persistence) ─── */
+var _adminDefaultInv = [
+  {name:'부스터 원액', current:24, safe:10, unit:'박스', lastDate:'2026-03-25'},
+  {name:'비타민 원액', current:8,  safe:10, unit:'박스', lastDate:'2026-03-20'},
+  {name:'컷팅 원액',   current:3,  safe:10, unit:'박스', lastDate:'2026-03-15'},
+  {name:'릴렉스 원액', current:18, safe:10, unit:'박스', lastDate:'2026-03-28'},
+  {name:'아미노 원액', current:12, safe:10, unit:'박스', lastDate:'2026-03-22'},
+  {name:'레몬 농축액', current:30, safe:15, unit:'박스', lastDate:'2026-03-29'},
+];
+function loadAdminInv() {
+  try { var s = localStorage.getItem('admin_inv'); return s ? JSON.parse(s) : _adminDefaultInv.map(function(i){return Object.assign({},i);}); }
+  catch(e) { return _adminDefaultInv.map(function(i){return Object.assign({},i);}); }
+}
+function saveAdminInv() { localStorage.setItem('admin_inv', JSON.stringify(adminInvData)); }
+var adminInvData = loadAdminInv();
+
+function adminGetStatus(cur, safe) {
+  var r = cur/safe;
+  if (r >= 1) return '양호';
+  if (r >= 0.5) return '부족';
+  return '위험';
+}
+function adminStatusBadge(st) {
+  if (st === '양호') return '<span class="badge badge-success">'+st+'</span>';
+  if (st === '부족') return '<span class="badge badge-warning">'+st+'</span>';
+  return '<span class="badge badge-error">'+st+'</span>';
+}
+function adminBarColor(st) {
+  if (st === '양호') return '#00B377';
+  if (st === '부족') return '#F4BE5E';
+  return '#EC3D3D';
+}
+
+function renderAdminInv() {
+  var statusFilter = window._adminInvStatusFilter || '';
+  var tbody = document.getElementById('adminInvTableBody');
+  tbody.innerHTML = adminInvData.filter(function(row){
+    return !statusFilter || adminGetStatus(row.current, row.safe) === statusFilter;
+  }).map(function(row){
+    var st = adminGetStatus(row.current, row.safe);
+    var pct = Math.min(100, Math.round(row.current / row.safe * 100));
+    var isLow = st === '위험';
+    var btn = isLow
+      ? '<button class="btn btn-danger btn-sm" onclick="openAdminInvIn(\''+row.name+'\')">긴급입고</button>'
+      : '<button class="btn btn-outline btn-sm" onclick="openAdminInvIn(\''+row.name+'\')">입고</button>';
+    return '<tr>'
+      +'<td><strong>'+row.name+'</strong></td>'
+      +'<td>'+row.current+row.unit+'</td>'
+      +'<td>'+row.safe+row.unit+'</td>'
+      +'<td><div style="display:flex;align-items:center;gap:8px;"><div class="stock-bar-wrap"><div class="stock-bar" style="width:'+pct+'%;background:'+adminBarColor(st)+';"></div></div><span style="font-size:12px;color:#505050;">'+pct+'%</span></div></td>'
+      +'<td>'+adminStatusBadge(st)+'</td>'
+      +'<td>'+row.lastDate+'</td>'
+      +'<td>'+btn+'</td>'
+      +'</tr>';
+  }).join('');
+}
+
+window.openAdminInvIn = function(name) {
+  var sel = document.querySelector('#inventoryInModal select');
+  if (sel) {
+    for (var i=0;i<sel.options.length;i++) {
+      if (sel.options[i].text.includes(name.replace(' 원액','').replace(' 농축액',''))) {sel.selectedIndex=i;break;}
+    }
+  }
+  openModal('inventoryInModal');
+};
+
+window.saveAdminInvIn = function() {
+  var sel = document.querySelector('#inventoryInModal select');
+  var qtyInput = document.querySelector('#inventoryInModal input[type="number"]');
+  var dateInput = document.querySelector('#inventoryInModal input[type="date"]');
+  var qty = qtyInput ? parseInt(qtyInput.value)||0 : 0;
+  var dateVal = dateInput ? dateInput.value : '';
+  if (qty > 0 && sel) {
+    var productName = sel.options[sel.selectedIndex].text;
+    var matched = adminInvData.find(function(row){
+      return productName.includes(row.name.replace(' 원액','').replace(' 농축액',''));
+    });
+    if (matched) { matched.current += qty; if(dateVal) matched.lastDate = dateVal; saveAdminInv(); }
+  }
+  renderAdminInv();
+  alert('재고 입고가 등록되었습니다.');
+  closeModal('inventoryInModal');
+  if(qtyInput) qtyInput.value='';
+};
+
+renderAdminInv();
+
+(function(){
+  var branchOpts = ['전체','빌드업 성수점','빌드업 강남점','빌드업 서대문점'];
+  var statusOpts = ['전체','양호','부족','위험'];
+
+  function makeDropHTML(id, opts) {
+    return '<div class="dropdown-menu" id="'+id+'">'
+      + opts.map(function(o){ return '<div class="dropdown-item" onclick="invSelectFilter(\''+id+'\',\''+o+'\')">'+o+'</div>'; }).join('')
+      + '</div>';
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    var branchBtn = document.getElementById('invBranchBtn');
+    var statusBtn = document.getElementById('invStatusBtn');
+
+    function wrapBtn(btn, html) {
+      var wrap = document.createElement('div');
+      wrap.style.cssText = 'position:relative;display:inline-block;';
+      btn.parentNode.insertBefore(wrap, btn);
+      wrap.appendChild(btn);
+      wrap.insertAdjacentHTML('beforeend', html);
+    }
+    wrapBtn(branchBtn, makeDropHTML('invBranchDrop', branchOpts));
+    wrapBtn(statusBtn, makeDropHTML('invStatusDrop', statusOpts));
+
+    branchBtn.addEventListener('click', function(e){
+      e.stopPropagation();
+      document.getElementById('invStatusDrop').classList.remove('show');
+      document.getElementById('invBranchDrop').classList.toggle('show');
+    });
+    statusBtn.addEventListener('click', function(e){
+      e.stopPropagation();
+      document.getElementById('invBranchDrop').classList.remove('show');
+      document.getElementById('invStatusDrop').classList.toggle('show');
+    });
+    document.addEventListener('click', function(){
+      document.querySelectorAll('.dropdown-menu').forEach(function(m){ m.classList.remove('show'); });
+    });
+  });
+})();
+
+window.invSelectFilter = function(dropId, val) {
+  document.getElementById(dropId).classList.remove('show');
+  if (dropId === 'invBranchDrop') {
+    setFilterBtnLabel('invBranchBtn', val === '전체' ? '전체 지점' : val);
+  } else {
+    setFilterBtnLabel('invStatusBtn', val === '전체' ? '재고 상태' : val);
+    window._adminInvStatusFilter = (val === '전체') ? '' : val;
+    renderAdminInv();
+  }
+};
+</script>
+<div class="modal-overlay" id="inventoryAlertModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">재고 알림 설정</span>
+      <button class="modal-close" onclick="closeModal('inventoryAlertModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="toggle-row">
+        <div><div class="toggle-label">재고 부족 알림</div><div class="toggle-sub">안전 재고 이하 시 알림</div></div>
+        <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
+      </div>
+      <div class="toggle-row">
+        <div><div class="toggle-label">재고 소진 알림</div><div class="toggle-sub">재고 0 도달 시 즉시 알림</div></div>
+        <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
+      </div>
+      <div class="toggle-row">
+        <div><div class="toggle-label">입고 완료 알림</div><div class="toggle-sub">재고 입고 처리 완료 시</div></div>
+        <label class="toggle-switch"><input type="checkbox" /><span class="toggle-slider"></span></label>
+      </div>
+      <div class="modal-divider"></div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">알림 기준 재고 비율 (%)</label>
+          <input class="form-input" type="number" value="20" />
+          <span class="form-hint">안전 재고 대비 이 비율 이하일 때 알림</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">알림 채널</label>
+          <select class="form-select">
+            <option>관리자 앱 푸시</option>
+            <option>이메일</option>
+            <option>앱 + 이메일</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('inventoryAlertModal')">취소</button>
+      <button class="btn btn-primary" onclick="alert('알림 설정이 저장되었습니다.');closeModal('inventoryAlertModal')">저장</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="inventoryInModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">재고 입고</span>
+      <button class="modal-close" onclick="closeModal('inventoryInModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">원료명 *</label>
+          <select class="form-select">
+            <option>단백질 파우더 (WPC)</option>
+            <option>유청 단백질 (WPI)</option>
+            <option>크레아틴</option>
+            <option>BCAA</option>
+            <option>글루타민</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">지점</label>
+          <select class="form-select">
+            <option>빌드업 성수점</option>
+            <option>빌드업 강남점</option>
+            <option>빌드업 서대문점</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">입고 수량 *</label>
+          <input class="form-input" type="number" placeholder="100" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">단위</label>
+          <select class="form-select">
+            <option selected>박스</option>
+            <option>kg</option>
+            <option>g</option>
+            <option>개</option>
+            <option>포</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">입고일</label>
+          <input class="form-input" type="date" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">공급업체</label>
+          <input class="form-input" placeholder="예: (주)뉴트리코어" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">메모</label>
+        <textarea class="form-textarea" placeholder="특이사항 입력..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('inventoryInModal')">취소</button>
+      <button class="btn btn-primary" onclick="saveAdminInvIn()">저장</button>
+    </div>
+  </div>
+</div>
+
+<script src="admin-common.js"></script>
+</body>
+</html>

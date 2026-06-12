@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="logo_spinner.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>브링크 지점 관리자 - 회원 관리</title>
+<style>
+@font-face { font-family: 'Pretendard'; src: url('pretendard/Pretendard-Regular.woff2') format('woff2'); font-weight: 400; }
+@font-face { font-family: 'Pretendard'; src: url('pretendard/Pretendard-Medium.woff2') format('woff2'); font-weight: 500; }
+@font-face { font-family: 'Pretendard'; src: url('pretendard/Pretendard-Bold.woff2') format('woff2'); font-weight: 700; }
+</style>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; line-height: 1.2; }
+body { font-family: 'Pretendard', sans-serif; background: #F8F8FA; color: #111111; display: flex; height: 100vh; overflow: hidden; }
+
+.sidebar { width: 256px; min-width: 256px; height: 100vh; background: #fff; border-right: 1px solid rgba(0,0,0,.1); display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
+.sidebar-logo { padding: 20px 20px 16px; border-bottom: 1px solid #EDF2F6; }
+.sidebar-nav { flex: 1; padding: 12px 12px; display: flex; flex-direction: column; gap: 2px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; text-decoration: none; color: #505050; font-size: 14px; font-weight: 500; cursor: pointer; transition: background .15s; }
+.nav-item:hover { background: #F6F6F6; }
+.nav-item.active { background: #EFF6FF; color: #0095FF; font-weight: 500; }
+.nav-item.nav-logout { color: #EC3D3D; }
+.nav-icon { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.nav-label { flex: 1; }
+.nav-group { display: flex; flex-direction: column; }
+.nav-group-trigger { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; color: #505050; font-size: 14px; font-weight: 500; cursor: pointer; }
+.nav-group-trigger:hover { background: #F6F6F6; }
+.nav-group-trigger.open { color: #111111; font-weight: 500; }
+.nav-arrow { margin-left: auto; font-size: 10px; color: #767676; }
+.nav-sub { display: none; flex-direction: column; padding-left: 32px; gap: 1px; }
+.nav-sub.show { display: flex; }
+.nav-sub-item { padding: 7px 12px; border-radius: 6px; font-size: 13px; color: #505050; text-decoration: none; font-weight: 400; }
+.nav-sub-item:hover { background: #F6F6F6; color: #111111; }
+.nav-sub-item.active { color: #0095FF; font-weight: 500; background: #EFF6FF; }
+.sidebar-bottom { padding: 12px 12px 16px; border-top: 1px solid #EDF2F6; display: flex; flex-direction: column; gap: 2px; }
+.sidebar-section-title { font-size: 11px; font-weight: 500; color: #A098AE; letter-spacing: .91px; padding: 4px 12px 8px; text-transform: uppercase; }
+
+.main-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { height: 64px; background: #fff; border-bottom: 1px solid #EDF2F6; display: flex; align-items: center; justify-content: flex-end; padding: 0 24px; gap: 12px; flex-shrink: 0; }
+.topbar-btn { background: none; border: 1px solid #EDF2F6; border-radius: 8px; padding: 8px; cursor: pointer; position: relative; display: flex; align-items: center; justify-content: center; }
+.notif-badge { position: absolute; top: -4px; right: -4px; background: #0095FF; color: #fff; font-size: 10px; font-weight: 500; border-radius: 9999px; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; }
+.topbar-branch { background: none; border: 1px solid #EDF2F6; border-radius: 8px; padding: 7px 12px; font-size: 13px; font-weight: 500; cursor: pointer; color: #505050; }
+.topbar-user { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 8px; border-radius: 8px; }
+.topbar-user:hover { background: #F6F6F6; }
+.user-avatar { width: 32px; height: 32px; background: #EDF2F6; border-radius: 9999px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; color: #505050; }
+.user-info { display: flex; flex-direction: column; }
+.user-name { font-size: 13px; font-weight: 500; color: #111111; }
+.user-role { font-size: 11px; color: #767676; }
+
+.page-content { flex: 1; overflow-y: auto; padding: 28px 28px; }
+.page-title { font-size: 24px; font-weight: 500; color: #111111; margin-bottom: 20px; }
+
+.badge { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; }
+.badge-success { background: #E6FBF4; color: #00B377; }
+.badge-warning { background: #FEF6E6; color: #E0A830; }
+.badge-error { background: #FDE8E8; color: #D32F2F; }
+.badge-primary { background: #E6F4FF; color: #0077CC; }
+
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; }
+.btn-primary { background: #0095FF; color: #fff; }
+.btn-outline { background: #fff; color: #505050; border: 1px solid #EDF2F6; }
+.btn-danger { background: #EC3D3D; color: #fff; }
+.btn-sm { padding: 5px 10px; font-size: 12px; border-radius: 4px; }
+
+.table-wrap { background: #fff; border-radius: 20px; box-shadow: 0px 4px 20px rgba(238,238,238,.5); overflow: hidden; }
+table { width: 100%; border-collapse: collapse; }
+th { padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 500; color: #767676; background: #F8F8FA; border-bottom: 1px solid #EDF2F6; white-space: nowrap; }
+td { padding: 14px 16px; font-size: 13px; color: #111111; border-bottom: 1px solid #F6F6F6; vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #FAFAFA; }
+
+.pagination { display: flex; align-items: center; justify-content: center; gap: 4px; padding: 16px; }
+.page-btn { width: 32px; height: 32px; border-radius: 6px; border: 1px solid #EDF2F6; background: #fff; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.page-btn.active { background: #0095FF; color: #fff; border-color: #0095FF; }
+
+.filter-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.filter-select-btn { padding: 7px 14px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid #EDF2F6; background: #fff; color: #505050; }
+.date-input { padding: 7px 12px; border-radius: 6px; border: 1px solid #EDF2F6; font-size: 12px; color: #505050; background: #fff; outline: none; width: 140px; }
+.dropdown-menu { position:absolute; top:calc(100% + 4px); left:0; background:#fff; border:1px solid #EDF2F6; border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,.08); min-width:140px; padding:4px; z-index:100; display:none; }
+.dropdown-menu.show { display:block; }
+.dropdown-item { padding:8px 12px; border-radius:6px; font-size:13px; color:#505050; cursor:pointer; transition:background .1s; }
+.dropdown-item:hover { background:#F6F6F6; }
+.dropdown-item.active { color:#0095FF; font-weight:500; }
+.text-muted { color: #C0C0C0; }
+.delete-text-btn { background: none; border: none; color: #EC3D3D; font-size: 13px; font-weight: 500; cursor: pointer; padding: 7px 6px; }
+
+/* Checkbox */
+input[type="checkbox"] { width: 15px; height: 15px; accent-color: #0095FF; cursor: pointer; }
+.nav-group-trigger.open .nav-arrow { transform: rotate(180deg); }
+.nav-arrow { transition: transform .2s; display: inline-block; }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo" style="display:flex;align-items:center;gap:8px;">
+    <img src="logo_spinner.png" alt="VRINK" style="height:28px;width:auto;">
+    <span style="background:#EFF6FF;color:#0095FF;font-size:11px;font-weight:500;border-radius:4px;padding:3px 7px;">성수점</span>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="admin-branch-manager.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg></span>
+      <span class="nav-label">홈</span>
+    </a>
+    <a href="bm-storefront.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.98 1.61h9.72a2 2 0 001.98-1.61L23 6H6"/></svg></span>
+      <span class="nav-label">자사몰</span>
+    </a>
+    <a href="bm-inventory.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27,6.96 12,12.01 20.73,6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span>
+      <span class="nav-label">재고 관리</span>
+    </a>
+    <a href="bm-orders.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="13" y2="15"/></svg></span>
+      <span class="nav-label">주문 내역</span>
+    </a>
+    <a href="bm-sales.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+      <span class="nav-label">종합 매출</span>
+    </a>
+    <a href="bm-menu.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></span>
+      <span class="nav-label">메뉴</span>
+    </a>
+    <a href="bm-members.html" class="nav-item active">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+      <span class="nav-label">회원</span>
+    </a>
+    <a href="bm-notice.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l18-7-7 18-2.5-7.5z"/></svg></span>
+      <span class="nav-label">공지사항</span>
+    </a>
+    <a href="bm-notification.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></span>
+      <span class="nav-label">알림</span>
+    </a>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="sidebar-section-title">SETTINGS</div>
+    <a href="#" class="nav-item" onclick="event.preventDefault();alert('설정은 준비 중입니다.')">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></span>
+      <span class="nav-label">설정</span>
+    </a>
+    <a href="admin-help.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></span>
+      <span class="nav-label">도움말</span>
+    </a>
+    <button class="nav-item nav-logout" style="background:none;border:none;width:100%;text-align:left;cursor:pointer;" onclick="if(confirm('로그아웃 하시겠습니까?')) location.href='admin-adminusers.html'">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EC3D3D" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
+      <span class="nav-label">로그아웃</span>
+    </button>
+  </div>
+</aside>
+
+<div class="main-wrapper">
+  <header class="topbar">
+    <button class="topbar-btn notif-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" stroke="#505050" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="notif-badge">2</span>
+    </button>
+    <span class="topbar-branch" style="background:#EFF6FF;border:1px solid #D6EBFF;color:#0095FF;cursor:default;">빌드업 성수점</span>
+    <div class="topbar-user">
+      <div class="user-avatar" style="background:#EFF6FF;color:#0095FF;">김</div>
+      <div class="user-info"><span class="user-name">김성수</span><span class="user-role">지점 관리자</span></div>
+      <button style="background:none;border:none;cursor:pointer;color:#767676;font-size:11px;">▾</button>
+    </div>
+  </header>
+
+  <div class="page-content">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <div class="page-title" style="margin-bottom:0;">회원 관리</div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-outline" onclick="openMembershipModal()">멤버십 적용하기</button>
+        <button class="btn btn-outline">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          액셀로 추출하기
+        </button>
+      </div>
+    </div>
+
+    <div class="filter-bar" style="justify-content:space-between;">
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button class="filter-select-btn" id="memSortBtn">이름 ▾</button>
+        <button class="filter-select-btn" id="memMembershipBtn">멤버십 ▾</button>
+        <button class="filter-select-btn" id="memStatusBtn">상태 ▾</button>
+        <button class="delete-text-btn">삭제하기</button>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button class="date-input" id="dateFromBtn" onclick="openDatePicker('from')" style="cursor:pointer;text-align:left;color:#767676;">From 날짜 선택</button>
+        <span style="color:#767676;font-size:13px;">—</span>
+        <button class="date-input" id="dateToBtn" onclick="openDatePicker('to')" style="cursor:pointer;text-align:left;color:#767676;">To 날짜 선택</button>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th><input type="checkbox" id="selectAllChk" onchange="toggleSelectAll(this)"></th>
+            <th>No</th>
+            <th>이름</th>
+            <th>연락처</th>
+            <th>보유 멤버쉽</th>
+            <th>상태</th>
+            <th>마지막 사용 시간</th>
+            <th>최초 등록일</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td style="color:#767676;font-size:12px;">01</td>
+            <td style="font-weight:500;">김재현</td>
+            <td style="font-size:12px;color:#505050;">010****4119</td>
+            <td class="text-muted">-</td>
+            <td><span class="badge badge-error">만료</span></td>
+            <td class="text-muted">-</td>
+            <td style="font-size:12px;color:#767676;">2026/03/29</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td style="color:#767676;font-size:12px;">02</td>
+            <td style="font-weight:500;">임성진</td>
+            <td style="font-size:12px;color:#505050;">010****5336</td>
+            <td class="text-muted">-</td>
+            <td><span class="badge badge-error">만료</span></td>
+            <td class="text-muted">-</td>
+            <td style="font-size:12px;color:#767676;">2026/03/29</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td style="color:#767676;font-size:12px;">03</td>
+            <td style="font-weight:500;">전찬우</td>
+            <td style="font-size:12px;color:#505050;">010****3751</td>
+            <td class="text-muted">-</td>
+            <td><span class="badge badge-error">만료</span></td>
+            <td class="text-muted">-</td>
+            <td style="font-size:12px;color:#767676;">2026/03/27</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td style="color:#767676;font-size:12px;">04</td>
+            <td style="font-weight:500;">오원준</td>
+            <td style="font-size:12px;color:#505050;">010****1945</td>
+            <td class="text-muted">-</td>
+            <td><span class="badge badge-error">만료</span></td>
+            <td style="font-size:12px;color:#767676;">2026/03/22 12:39:53</td>
+            <td style="font-size:12px;color:#767676;">2026/03/22</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td style="color:#767676;font-size:12px;">05</td>
+            <td style="font-weight:500;">백영웅</td>
+            <td style="font-size:12px;color:#505050;">010****7267</td>
+            <td class="text-muted">-</td>
+            <td><span class="badge badge-error">만료</span></td>
+            <td class="text-muted">-</td>
+            <td style="font-size:12px;color:#767676;">2026/03/20</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td style="color:#767676;font-size:12px;">06</td>
+            <td style="font-weight:500;">김민이</td>
+            <td style="font-size:12px;color:#505050;">010****6070</td>
+            <td class="text-muted">-</td>
+            <td><span class="badge badge-error">만료</span></td>
+            <td style="font-size:12px;color:#767676;">2026/03/19 20:36:33</td>
+            <td style="font-size:12px;color:#767676;">2026/03/19</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td style="color:#767676;font-size:12px;">07</td>
+            <td style="font-weight:500;">김민수</td>
+            <td style="font-size:12px;color:#505050;">010****6070</td>
+            <td class="text-muted">-</td>
+            <td><span class="badge badge-error">만료</span></td>
+            <td style="font-size:12px;color:#767676;">2026/03/26 00:03:26</td>
+            <td style="font-size:12px;color:#767676;">2026/03/19</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td style="color:#767676;font-size:12px;">08</td>
+            <td style="font-weight:500;">리뷰어</td>
+            <td style="font-size:12px;color:#505050;">010****0000</td>
+            <td class="text-muted">-</td>
+            <td><span class="badge badge-error">만료</span></td>
+            <td class="text-muted">-</td>
+            <td style="font-size:12px;color:#767676;">2026/03/16</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td style="color:#767676;font-size:12px;">09</td>
+            <td style="font-weight:500;">이인규이</td>
+            <td style="font-size:12px;color:#505050;">010****3662</td>
+            <td class="text-muted">-</td>
+            <td><span class="badge badge-error">만료</span></td>
+            <td style="font-size:12px;color:#767676;">2026/03/24 17:52:50</td>
+            <td style="font-size:12px;color:#767676;">2026/03/13</td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td style="color:#767676;font-size:12px;">10</td>
+            <td style="font-weight:500;">김민우</td>
+            <td style="font-size:12px;color:#505050;">010****6549</td>
+            <td class="text-muted">-</td>
+            <td><span class="badge badge-error">만료</span></td>
+            <td style="font-size:12px;color:#767676;">2026/03/16 20:55:27</td>
+            <td style="font-size:12px;color:#767676;">2026/03/11</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="pagination">
+        <button class="page-btn">‹</button>
+        <button class="page-btn active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">›</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleGroup(el) {
+  el.classList.toggle('open');
+  var sub = el.nextElementSibling;
+  if (sub) sub.classList.toggle('show');
+}
+
+(function() {
+  const PAGE_SIZE = 8;
+  let currentPage = 1;
+
+  function renderPage() {
+    var rows = Array.from(document.querySelectorAll('tbody tr'));
+    var totalPages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+    if (currentPage > totalPages) currentPage = totalPages;
+
+    rows.forEach(function(row, i) {
+      row.style.display = (i >= (currentPage-1)*PAGE_SIZE && i < currentPage*PAGE_SIZE) ? '' : 'none';
+    });
+
+    var pag = document.querySelector('.pagination');
+    if (!pag) return;
+    pag.innerHTML = '';
+
+    var prev = document.createElement('button');
+    prev.className = 'page-btn';
+    prev.textContent = '‹';
+    prev.onclick = function() { if (currentPage > 1) { currentPage--; renderPage(); } };
+    pag.appendChild(prev);
+
+    for (var p = 1; p <= totalPages; p++) {
+      (function(pg) {
+        var btn = document.createElement('button');
+        btn.className = 'page-btn' + (pg === currentPage ? ' active' : '');
+        btn.textContent = pg;
+        btn.onclick = function() { currentPage = pg; renderPage(); };
+        pag.appendChild(btn);
+      })(p);
+    }
+
+    var next = document.createElement('button');
+    next.className = 'page-btn';
+    next.textContent = '›';
+    next.onclick = function() { if (currentPage < totalPages) { currentPage++; renderPage(); } };
+    pag.appendChild(next);
+  }
+
+  renderPage();
+})();
+
+(function(){
+  var sortOpts = ['이름 순','가입일 순','최근 방문 순'];
+  var membershipOpts = ['전체','일반','실버','골드','VIP'];
+  var statusOpts = ['전체','활성','휴면','탈퇴'];
+
+  function makeDropHTML(id, opts) {
+    return '<div class="dropdown-menu" id="'+id+'">'
+      + opts.map(function(o){ return '<div class="dropdown-item" onclick="memSelectFilter(\''+id+'\',\''+o+'\')">'+o+'</div>'; }).join('')
+      + '</div>';
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    var btns = [
+      {btn: document.getElementById('memSortBtn'), dropId: 'memSortDrop', opts: sortOpts},
+      {btn: document.getElementById('memMembershipBtn'), dropId: 'memMembershipDrop', opts: membershipOpts},
+      {btn: document.getElementById('memStatusBtn'), dropId: 'memStatusDrop', opts: statusOpts}
+    ];
+
+    btns.forEach(function(item){
+      var wrap = document.createElement('div');
+      wrap.style.cssText = 'position:relative;display:inline-block;';
+      item.btn.parentNode.insertBefore(wrap, item.btn);
+      wrap.appendChild(item.btn);
+      wrap.insertAdjacentHTML('beforeend', makeDropHTML(item.dropId, item.opts));
+      item.btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        btns.forEach(function(b){ if(b.dropId !== item.dropId) document.getElementById(b.dropId).classList.remove('show'); });
+        document.getElementById(item.dropId).classList.toggle('show');
+      });
+    });
+
+    document.addEventListener('click', function(){
+      document.querySelectorAll('.dropdown-menu').forEach(function(m){ m.classList.remove('show'); });
+    });
+  });
+})();
+
+window.toggleSelectAll = function(chk) {
+  document.querySelectorAll('tbody input[type="checkbox"]').forEach(function(c) { c.checked = chk.checked; });
+};
+
+window.openMembershipModal = function() {
+  var selected = Array.from(document.querySelectorAll('tbody tr')).filter(function(row) {
+    return row.querySelector('input[type="checkbox"]').checked;
+  }).map(function(row) {
+    return row.querySelector('td[style*="font-weight:500"]').textContent.trim();
+  });
+  var list = document.getElementById('membershipTargetList');
+  if (selected.length === 0) {
+    list.innerHTML = '<div style="color:#767676;font-size:13px;">선택된 회원이 없습니다. 먼저 회원을 선택해주세요.</div>';
+  } else {
+    list.innerHTML = selected.map(function(n){ return '<span style="display:inline-block;background:#EFF6FF;color:#0095FF;padding:4px 10px;border-radius:6px;font-size:13px;margin:3px;">' + n + '</span>'; }).join('');
+  }
+  openModal('membershipApplyModal');
+};
+
+window.applyMembership = function() {
+  var type = document.getElementById('membershipTypeSelect').value;
+  var period = document.getElementById('membershipPeriodInput').value;
+  var rows = document.querySelectorAll('tbody tr');
+  rows.forEach(function(row) {
+    if (row.querySelector('input[type="checkbox"]').checked) {
+      var memberCell = row.querySelectorAll('td')[4];
+      memberCell.textContent = type;
+      memberCell.className = '';
+      memberCell.style.cssText = 'font-size:12px;font-weight:500;color:#0095FF;';
+      var statusCell = row.querySelectorAll('td')[5];
+      statusCell.innerHTML = '<span class="badge badge-success">활성</span>';
+    }
+  });
+  document.getElementById('selectAllChk').checked = false;
+  document.querySelectorAll('tbody input[type="checkbox"]').forEach(function(c){ c.checked = false; });
+  closeModal('membershipApplyModal');
+};
+
+window.memSelectFilter = function(dropId, val) {
+  document.getElementById(dropId).classList.remove('show');
+  var labelMap = {'memSortDrop':'memSortBtn','memMembershipDrop':'memMembershipBtn','memStatusDrop':'memStatusBtn'};
+  var defaultMap = {'memSortBtn':'이름','memMembershipBtn':'멤버십','memStatusBtn':'상태'};
+  var btnId = labelMap[dropId];
+  if (btnId) {
+    var defVal = defaultMap[btnId];
+    document.getElementById(btnId).textContent = (val.indexOf('전체') !== -1 ? defVal : val) + ' ▾';
+  }
+};
+</script>
+<div class="modal-overlay" id="datePickerModal" style="z-index:900;">
+  <div class="modal" style="width:320px;padding:20px;">
+    <div class="modal-header" style="margin-bottom:16px;">
+      <span class="modal-title" id="datePickerTitle">날짜 선택</span>
+      <button class="modal-close" onclick="closeModal('datePickerModal')">✕</button>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+      <button onclick="changeCalMonth(-1)" style="background:none;border:none;cursor:pointer;font-size:18px;color:#505050;padding:4px 8px;">‹</button>
+      <span id="calMonthLabel" style="font-size:14px;font-weight:500;color:#111;"></span>
+      <button onclick="changeCalMonth(1)" style="background:none;border:none;cursor:pointer;font-size:18px;color:#505050;padding:4px 8px;">›</button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:6px;">
+      <div style="text-align:center;font-size:11px;color:#A0A8B3;padding:4px;">일</div>
+      <div style="text-align:center;font-size:11px;color:#A0A8B3;padding:4px;">월</div>
+      <div style="text-align:center;font-size:11px;color:#A0A8B3;padding:4px;">화</div>
+      <div style="text-align:center;font-size:11px;color:#A0A8B3;padding:4px;">수</div>
+      <div style="text-align:center;font-size:11px;color:#A0A8B3;padding:4px;">목</div>
+      <div style="text-align:center;font-size:11px;color:#A0A8B3;padding:4px;">금</div>
+      <div style="text-align:center;font-size:11px;color:#A0A8B3;padding:4px;">토</div>
+    </div>
+    <div id="calDays" style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;"></div>
+    <div style="margin-top:14px;text-align:center;">
+      <button class="btn btn-outline btn-sm" onclick="clearDateFilter()" style="margin-right:6px;">초기화</button>
+      <button class="btn btn-primary btn-sm" onclick="closeModal('datePickerModal')">확인</button>
+    </div>
+  </div>
+</div>
+
+<style>
+.cal-day { text-align:center;padding:6px 2px;border-radius:6px;font-size:13px;color:#111;cursor:pointer;transition:background .1s; }
+.cal-day:hover { background:#EFF6FF;color:#0095FF; }
+.cal-day.selected { background:#0095FF;color:#fff; }
+.cal-day.other-month { color:#D0D6DF; }
+.cal-day.today { font-weight:700;border:1px solid #0095FF;color:#0095FF; }
+</style>
+<script>
+var _calTarget = 'from';
+var _calYear = 2026, _calMonth = 2; // 0-indexed
+var _dateFrom = null, _dateTo = null;
+
+function openDatePicker(target) {
+  _calTarget = target;
+  var now = new Date();
+  _calYear = now.getFullYear(); _calMonth = now.getMonth();
+  document.getElementById('datePickerTitle').textContent = target === 'from' ? '시작 날짜 선택' : '종료 날짜 선택';
+  renderCal();
+  openModal('datePickerModal');
+}
+function changeCalMonth(d) { _calMonth += d; if(_calMonth>11){_calMonth=0;_calYear++;}else if(_calMonth<0){_calMonth=11;_calYear--;} renderCal(); }
+function renderCal() {
+  var months = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+  document.getElementById('calMonthLabel').textContent = _calYear + '년 ' + months[_calMonth];
+  var first = new Date(_calYear, _calMonth, 1).getDay();
+  var days = new Date(_calYear, _calMonth+1, 0).getDate();
+  var prevDays = new Date(_calYear, _calMonth, 0).getDate();
+  var today = new Date(); var todayStr = fmt3(today.getFullYear(), today.getMonth()+1, today.getDate());
+  var sel = _calTarget === 'from' ? _dateFrom : _dateTo;
+  var html = '';
+  for (var i=0;i<first;i++) { html += '<div class="cal-day other-month">'+(prevDays-first+1+i)+'</div>'; }
+  for (var d=1;d<=days;d++) {
+    var ds = fmt3(_calYear, _calMonth+1, d);
+    var cls = 'cal-day' + (ds===todayStr?' today':'') + (ds===sel?' selected':'');
+    html += '<div class="'+cls+'" onclick="selectCalDay('+_calYear+','+(+_calMonth+1)+','+d+')">'+d+'</div>';
+  }
+  document.getElementById('calDays').innerHTML = html;
+}
+function fmt3(y,m,d){ return y+'/'+String(m).padStart(2,'0')+'/'+String(d).padStart(2,'0'); }
+function selectCalDay(y,m,d) {
+  var ds = fmt3(y,m,d);
+  if (_calTarget==='from') { _dateFrom=ds; document.getElementById('dateFromBtn').textContent=ds; document.getElementById('dateFromBtn').style.color='#111'; }
+  else { _dateTo=ds; document.getElementById('dateToBtn').textContent=ds; document.getElementById('dateToBtn').style.color='#111'; }
+  renderCal();
+  setTimeout(function(){ closeModal('datePickerModal'); },200);
+}
+function clearDateFilter() {
+  _dateFrom=null; _dateTo=null;
+  document.getElementById('dateFromBtn').textContent='From 날짜 선택'; document.getElementById('dateFromBtn').style.color='#767676';
+  document.getElementById('dateToBtn').textContent='To 날짜 선택'; document.getElementById('dateToBtn').style.color='#767676';
+  closeModal('datePickerModal');
+}
+</script>
+
+<div class="modal-overlay" id="membershipApplyModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">멤버십 적용하기</span>
+      <button class="modal-close" onclick="closeModal('membershipApplyModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">적용 대상 회원</label>
+        <div id="membershipTargetList" style="min-height:40px;padding:8px;border:1px solid #EDF2F6;border-radius:8px;"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">멤버십 종류</label>
+          <select class="form-select" id="membershipTypeSelect">
+            <option value="일반">일반</option>
+            <option value="실버">실버</option>
+            <option value="골드">골드</option>
+            <option value="VIP">VIP</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">기간 (개월)</label>
+          <input class="form-input" id="membershipPeriodInput" type="number" value="1" min="1" max="24" />
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('membershipApplyModal')">취소</button>
+      <button class="btn btn-primary" onclick="applyMembership()">적용하기</button>
+    </div>
+  </div>
+</div>
+<script src="admin-common.js"></script>
+</body>
+</html>
