@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="logo_spinner.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>브링크 지점 관리자 - 내 지점 관리</title>
+<style>
+@font-face { font-family: 'Pretendard'; src: url('pretendard/Pretendard-Regular.woff2') format('woff2'); font-weight: 400; }
+@font-face { font-family: 'Pretendard'; src: url('pretendard/Pretendard-Medium.woff2') format('woff2'); font-weight: 500; }
+@font-face { font-family: 'Pretendard'; src: url('pretendard/Pretendard-Bold.woff2') format('woff2'); font-weight: 700; }
+</style>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; line-height: 1.2; }
+body { font-family: 'Pretendard', sans-serif; background: #F8F8FA; color: #111111; display: flex; height: 100vh; overflow: hidden; }
+
+.sidebar { width: 256px; min-width: 256px; height: 100vh; background: #fff; border-right: 1px solid rgba(0,0,0,.1); display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
+.sidebar-logo { padding: 20px 20px 16px; border-bottom: 1px solid #EDF2F6; display: flex; align-items: center; gap: 8px; }
+.branch-chip { background: #EFF6FF; color: #0095FF; font-size: 11px; font-weight: 500; border-radius: 4px; padding: 3px 7px; }
+.sidebar-nav { flex: 1; padding: 12px 12px; display: flex; flex-direction: column; gap: 2px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; text-decoration: none; color: #505050; font-size: 14px; font-weight: 500; cursor: pointer; transition: background .15s; }
+.nav-item:hover { background: #F6F6F6; }
+.nav-item.active { background: #EFF6FF; color: #0095FF; font-weight: 500; }
+.nav-item.nav-logout { color: #EC3D3D; }
+.nav-icon { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.nav-label { flex: 1; }
+.nav-group { display: flex; flex-direction: column; }
+.nav-group-trigger { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; color: #505050; font-size: 14px; font-weight: 500; cursor: pointer; }
+.nav-group-trigger:hover { background: #F6F6F6; }
+.nav-group-trigger.open { color: #111111; font-weight: 500; }
+.nav-arrow { margin-left: auto; font-size: 10px; color: #767676; transition: transform .2s; display: inline-block; }
+.nav-group-trigger.open .nav-arrow { transform: rotate(180deg); }
+.nav-sub { display: none; flex-direction: column; padding-left: 32px; gap: 1px; }
+.nav-sub.show { display: flex; }
+.nav-sub-item { padding: 7px 12px; border-radius: 6px; font-size: 13px; color: #505050; text-decoration: none; font-weight: 400; }
+.nav-sub-item:hover { background: #F6F6F6; color: #111111; }
+.nav-sub-item.active { color: #0095FF; font-weight: 500; background: #EFF6FF; }
+.sidebar-bottom { padding: 12px 12px 16px; border-top: 1px solid #EDF2F6; display: flex; flex-direction: column; gap: 2px; }
+.sidebar-section-title { font-size: 11px; font-weight: 500; color: #A098AE; letter-spacing: .91px; padding: 4px 12px 8px; text-transform: uppercase; }
+
+.main-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { height: 64px; background: #fff; border-bottom: 1px solid #EDF2F6; display: flex; align-items: center; justify-content: flex-end; padding: 0 24px; gap: 12px; flex-shrink: 0; }
+.topbar-btn { background: none; border: 1px solid #EDF2F6; border-radius: 8px; padding: 8px; cursor: pointer; position: relative; display: flex; align-items: center; justify-content: center; }
+.notif-badge { position: absolute; top: -4px; right: -4px; background: #0095FF; color: #fff; font-size: 10px; font-weight: 500; border-radius: 9999px; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; }
+.topbar-branch { background: #EFF6FF; border: 1px solid #D6EBFF; border-radius: 8px; padding: 7px 12px; font-size: 13px; font-weight: 500; color: #0095FF; cursor: default; }
+.topbar-user { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 8px; border-radius: 8px; }
+.topbar-user:hover { background: #F6F6F6; }
+.user-avatar { width: 32px; height: 32px; background: #EFF6FF; border-radius: 9999px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; color: #0095FF; }
+.user-info { display: flex; flex-direction: column; }
+.user-name { font-size: 13px; font-weight: 500; color: #111111; }
+.user-role { font-size: 11px; color: #767676; }
+
+.page-content { flex: 1; overflow-y: auto; padding: 28px 28px; }
+.page-title { font-size: 24px; font-weight: 500; color: #111111; }
+.page-sub { font-size: 13px; color: #767676; margin-top: 6px; }
+
+.badge { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; }
+.badge-success { background: #E6FBF4; color: #00B377; }
+.badge-warning { background: #FEF6E6; color: #E0A830; }
+.badge-error { background: #FDE8E8; color: #D32F2F; }
+.badge-primary { background: #E6F4FF; color: #0077CC; }
+
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; }
+.btn-primary { background: #0095FF; color: #fff; }
+.btn-outline { background: #fff; color: #505050; border: 1px solid #EDF2F6; }
+.btn-sm { padding: 5px 10px; font-size: 12px; border-radius: 4px; }
+
+.perm-banner { display: flex; align-items: center; gap: 10px; background: #EFF6FF; border: 1px solid #D6EBFF; border-radius: 12px; padding: 12px 16px; margin: 16px 0 20px; font-size: 13px; color: #0077CC; }
+.perm-banner svg { flex-shrink: 0; }
+
+.stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+.stat-card { background: #fff; border-radius: 16px; box-shadow: 0px 4px 20px rgba(238,238,238,.5); padding: 18px 20px; }
+.stat-label { font-size: 12px; color: #767676; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
+.stat-value { font-size: 24px; font-weight: 700; color: #111111; }
+.stat-meta { font-size: 12px; margin-top: 8px; color: #767676; }
+.stat-up { color: #00B377; font-weight: 500; }
+.stat-warn { color: #E0A830; font-weight: 500; }
+
+.card-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; align-items: start; }
+.panel { background: #fff; border-radius: 20px; box-shadow: 0px 4px 20px rgba(238,238,238,.5); overflow: hidden; }
+.panel-header { padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #EDF2F6; }
+.panel-title { font-size: 15px; font-weight: 500; color: #111111; }
+.info-rows { padding: 8px 24px 16px; }
+.info-row { display: flex; align-items: center; padding: 11px 0; border-bottom: 1px solid #F6F6F6; }
+.info-row:last-child { border-bottom: none; }
+.info-key { width: 110px; font-size: 12px; color: #767676; flex-shrink: 0; }
+.info-val { font-size: 13px; color: #111111; }
+.lock-note { display: inline-flex; align-items: center; gap: 4px; margin-left: 8px; font-size: 11px; color: #A098AE; }
+
+table { width: 100%; border-collapse: collapse; }
+th { padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 500; color: #767676; background: #F8F8FA; border-bottom: 1px solid #EDF2F6; white-space: nowrap; }
+td { padding: 13px 16px; font-size: 13px; color: #111111; border-bottom: 1px solid #F6F6F6; }
+tr:last-child td { border-bottom: none; }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <img src="logo_spinner.png" alt="VRINK" style="height:28px;width:auto;">
+    <span class="branch-chip">성수점</span>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="admin-branch-manager.html" class="nav-item active">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg></span>
+      <span class="nav-label">내 지점</span>
+    </a>
+    <div class="nav-group">
+      <div class="nav-group-trigger open" onclick="toggleGroup(this)">
+        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg></span>
+        <span class="nav-label">지점 운영</span>
+        <span class="nav-arrow">▾</span>
+      </div>
+      <div class="nav-sub show">
+        <a href="#" class="nav-sub-item" onclick="demoNav(event,'재고 관리')">재고 관리</a>
+        <a href="#" class="nav-sub-item" onclick="demoNav(event,'키오스크')">키오스크</a>
+        <a href="#" class="nav-sub-item" onclick="demoNav(event,'디바이스')">디바이스</a>
+        <a href="#" class="nav-sub-item" onclick="demoNav(event,'디스펜서')">디스펜서</a>
+      </div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-trigger" onclick="toggleGroup(this)">
+        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+        <span class="nav-label">주문 / 매출</span>
+        <span class="nav-arrow">▾</span>
+      </div>
+      <div class="nav-sub">
+        <a href="#" class="nav-sub-item" onclick="demoNav(event,'주문 내역')">주문 내역</a>
+        <a href="#" class="nav-sub-item" onclick="demoNav(event,'지점 매출')">지점 매출</a>
+      </div>
+    </div>
+    <a href="#" class="nav-item" onclick="demoNav(event,'메뉴 (조회 전용)')">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></span>
+      <span class="nav-label">메뉴 <span style="font-size:11px;color:#A098AE;">조회 전용</span></span>
+    </a>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="sidebar-section-title">SETTINGS</div>
+    <a href="#" class="nav-item" onclick="demoNav(event,'설정')">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></span>
+      <span class="nav-label">설정</span>
+    </a>
+    <a href="admin-help.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></span>
+      <span class="nav-label">도움말</span>
+    </a>
+    <button class="nav-item nav-logout" style="background:none;border:none;width:100%;text-align:left;cursor:pointer;" onclick="if(confirm('로그아웃 하시겠습니까?')) location.href='admin-adminusers.html'">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EC3D3D" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
+      <span class="nav-label">로그아웃</span>
+    </button>
+  </div>
+</aside>
+
+<div class="main-wrapper">
+  <header class="topbar">
+    <button class="topbar-btn notif-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" stroke="#505050" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="notif-badge">1</span>
+    </button>
+    <span class="topbar-branch">빌드업 성수점</span>
+    <div class="topbar-user">
+      <div class="user-avatar">김</div>
+      <div class="user-info">
+        <span class="user-name">김성수</span>
+        <span class="user-role">지점 관리자</span>
+      </div>
+      <button style="background:none;border:none;cursor:pointer;color:#767676;font-size:11px;">▾</button>
+    </div>
+  </header>
+
+  <div class="page-content">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;">
+      <div>
+        <div class="page-title">내 지점 관리</div>
+        <div class="page-sub">빌드업 성수점 (BR-001) 운영 현황을 확인하세요.</div>
+      </div>
+      <button class="btn btn-primary" onclick="openModal('branchInfoEditModal')">지점 정보 수정</button>
+    </div>
+
+    <div class="perm-banner">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#0077CC" stroke-width="2"/><path d="M12 8v5M12 16h.01" stroke="#0077CC" stroke-width="2" stroke-linecap="round"/></svg>
+      지점 관리자 계정은 <b>&nbsp;빌드업 성수점&nbsp;</b> 데이터만 조회·관리할 수 있어요. 지점 추가/삭제와 전체 지점 통계는 본사 관리자 권한입니다.
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-label">오늘 주문</div>
+        <div class="stat-value">142건</div>
+        <div class="stat-meta"><span class="stat-up">▲ 12%</span> 어제 대비</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">오늘 매출</div>
+        <div class="stat-value">268,400원</div>
+        <div class="stat-meta"><span class="stat-up">▲ 8%</span> 어제 대비</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">재고 부족</div>
+        <div class="stat-value">2종</div>
+        <div class="stat-meta"><span class="stat-warn">부스터 원액 · 레몬 원액</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">키오스크</div>
+        <div class="stat-value">2 / 2대</div>
+        <div class="stat-meta"><span class="stat-up">● 전체 정상</span></div>
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">지점 정보</span>
+          <span class="badge badge-success">운영중</span>
+        </div>
+        <div class="info-rows">
+          <div class="info-row">
+            <span class="info-key">지점 코드</span>
+            <span class="info-val">BR-001
+              <span class="lock-note"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="9" rx="2" fill="#A098AE"/><path d="M8 11V8a4 4 0 018 0v3" stroke="#A098AE" stroke-width="2"/></svg>본사 관리</span>
+            </span>
+          </div>
+          <div class="info-row">
+            <span class="info-key">지점명</span>
+            <span class="info-val">빌드업 성수점
+              <span class="lock-note"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="9" rx="2" fill="#A098AE"/><path d="M8 11V8a4 4 0 018 0v3" stroke="#A098AE" stroke-width="2"/></svg>본사 관리</span>
+            </span>
+          </div>
+          <div class="info-row"><span class="info-key">주소</span><span class="info-val">서울시 강남구 테헤란로 123</span></div>
+          <div class="info-row"><span class="info-key">연락처</span><span class="info-val">02-1234-5678</span></div>
+          <div class="info-row"><span class="info-key">운영 시간</span><span class="info-val">06:00 ~ 23:00</span></div>
+          <div class="info-row"><span class="info-key">등록일</span><span class="info-val" style="color:#767676;">2026/03/06 17:23:31</span></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">내 계정</span>
+          <span class="badge badge-warning">지점 관리자</span>
+        </div>
+        <div class="info-rows">
+          <div class="info-row"><span class="info-key">이름</span><span class="info-val">김성수</span></div>
+          <div class="info-row"><span class="info-key">이메일</span><span class="info-val">seongsu.kim@vrink.com</span></div>
+          <div class="info-row"><span class="info-key">담당 지점</span><span class="info-val">빌드업 성수점</span></div>
+          <div class="info-row"><span class="info-key">마지막 로그인</span><span class="info-val" style="color:#767676;">방금 전</span></div>
+          <div class="info-row">
+            <span class="info-key">비밀번호</span>
+            <span class="info-val"><button class="btn btn-outline btn-sm" onclick="alert('비밀번호 변경 메일을 발송했습니다.')">비밀번호 변경</button></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:16px;">
+      <div class="panel-header">
+        <span class="panel-title">오늘 주문 (최근 5건)</span>
+        <button class="btn btn-outline btn-sm" onclick="demoNav(event,'주문 내역')">전체 보기</button>
+      </div>
+      <table>
+        <thead><tr><th>Order No</th><th>주문 상세</th><th>결제 수단</th><th>금액</th><th>키오스크</th><th>시간</th><th>상태</th></tr></thead>
+        <tbody>
+          <tr><td style="color:#767676;font-size:12px;">OD-20260612-0142</td><td>부스터 샷 + 사과 (보통/비탄산)</td><td>N잔권 차감</td><td>1,900원</td><td>KSK-01</td><td style="color:#767676;font-size:12px;">14:22</td><td><span class="badge badge-success">출수 완료</span></td></tr>
+          <tr><td style="color:#767676;font-size:12px;">OD-20260612-0141</td><td>N잔권 10잔 충전</td><td>현장 결제 (카드)</td><td>19,000원</td><td>KSK-02</td><td style="color:#767676;font-size:12px;">14:08</td><td><span class="badge badge-success">결제 완료</span></td></tr>
+          <tr><td style="color:#767676;font-size:12px;">OD-20260612-0140</td><td>레몬 수 (보통/탄산)</td><td>현장 결제 (카드)</td><td>1,900원</td><td>KSK-01</td><td style="color:#767676;font-size:12px;">13:51</td><td><span class="badge badge-success">출수 완료</span></td></tr>
+          <tr><td style="color:#767676;font-size:12px;">OD-20260612-0139</td><td>아미노 샷 + 청포도 (진하게/비탄산)</td><td>N잔권 차감</td><td>1,900원</td><td>KSK-02</td><td style="color:#767676;font-size:12px;">13:34</td><td><span class="badge badge-error">출수 오류</span></td></tr>
+          <tr><td style="color:#767676;font-size:12px;">OD-20260612-0138</td><td>비타민 샷 + 망고 (보통/비탄산)</td><td>무료 이벤트 차감</td><td>0원</td><td>KSK-01</td><td style="color:#767676;font-size:12px;">13:12</td><td><span class="badge badge-success">출수 완료</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="branchInfoEditModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">지점 정보 수정</span>
+      <button class="modal-close" onclick="closeModal('branchInfoEditModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">지점 코드</label>
+          <input class="form-input" value="BR-001" disabled style="background:#F8F8FA;color:#A098AE;cursor:not-allowed;" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">지점명</label>
+          <input class="form-input" value="빌드업 성수점" disabled style="background:#F8F8FA;color:#A098AE;cursor:not-allowed;" />
+        </div>
+      </div>
+      <div style="font-size:12px;color:#A098AE;margin:-6px 0 12px;">지점 코드·지점명 변경은 본사 관리자에게 요청해주세요.</div>
+      <div class="form-group">
+        <label class="form-label">주소</label>
+        <input class="form-input" value="서울시 강남구 테헤란로 123" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">연락처</label>
+          <input class="form-input" value="02-1234-5678" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">운영 상태</label>
+          <input class="form-input" value="운영중" disabled style="background:#F8F8FA;color:#A098AE;cursor:not-allowed;" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">오픈 시간</label>
+          <input class="form-input" type="time" value="06:00" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">마감 시간</label>
+          <input class="form-input" type="time" value="23:00" />
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('branchInfoEditModal')">취소</button>
+      <button class="btn btn-primary" onclick="alert('지점 정보가 수정되었습니다.');closeModal('branchInfoEditModal')">저장</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleGroup(el) {
+  el.classList.toggle('open');
+  var sub = el.nextElementSibling;
+  if (sub) sub.classList.toggle('show');
+}
+function demoNav(e, name) {
+  e.preventDefault();
+  alert(name + ' — 지점 관리자 데모에서는 이 페이지(내 지점 관리)만 제공됩니다.\n빌드업 성수점 데이터만 표시되는 화면으로 구성될 예정입니다.');
+}
+</script>
+<script src="admin-common.js"></script>
+</body>
+</html>
