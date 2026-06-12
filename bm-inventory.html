@@ -160,8 +160,8 @@ input[type="checkbox"] { width: 15px; height: 15px; accent-color: #0095FF; curso
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
       <div class="page-title" style="margin-bottom:0;">재고 관리</div>
       <div style="display:flex;gap:8px;">
-        <button class="btn btn-outline" onclick="openModal('inventoryAlertModal')">재고 알림 설정</button>
-        <button class="btn btn-primary" onclick="openModal('inventoryInModal')">재고 입고</button>
+        <button class="btn btn-outline" onclick="openModal('inventoryInModal')">재고 조정</button>
+        <button class="btn btn-primary" onclick="location.href='bm-storefront.html'">원액 주문</button>
       </div>
     </div>
     <div class="filter-bar">
@@ -222,8 +222,8 @@ function renderAdminInv() {
     var pct = Math.min(100, Math.round(row.current / row.safe * 100));
     var isLow = st === '위험';
     var btn = isLow
-      ? '<button class="btn btn-danger btn-sm" onclick="openAdminInvIn(\''+row.name+'\')">긴급입고</button>'
-      : '<button class="btn btn-outline btn-sm" onclick="openAdminInvIn(\''+row.name+'\')">입고</button>';
+      ? '<button class="btn btn-danger btn-sm" onclick="location.href=\'bm-storefront.html\'">긴급 주문</button>'
+      : '<button class="btn btn-outline btn-sm" onclick="location.href=\'bm-storefront.html\'">주문</button>';
     return '<tr>'
       +'<td><strong>'+row.name+'</strong></td>'
       +'<td>'+row.current+row.unit+'</td>'
@@ -260,7 +260,7 @@ window.saveAdminInvIn = function() {
     if (matched) { matched.current += qty; if(dateVal) matched.lastDate = dateVal; saveAdminInv(); }
   }
   renderAdminInv();
-  alert('재고 입고가 등록되었습니다.');
+  alert('재고가 조정되었습니다.');
   closeModal('inventoryInModal');
   if(qtyInput) qtyInput.value='';
 };
@@ -364,7 +364,7 @@ window.invSelectFilter = function(dropId, val) {
 <div class="modal-overlay" id="inventoryInModal">
   <div class="modal">
     <div class="modal-header">
-      <span class="modal-title">재고 입고</span>
+      <span class="modal-title">재고 조정</span>
       <button class="modal-close" onclick="closeModal('inventoryInModal')">✕</button>
     </div>
     <div class="modal-body">
@@ -390,7 +390,7 @@ window.invSelectFilter = function(dropId, val) {
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label">입고 수량 *</label>
+          <label class="form-label">조정 수량 (+/-) *</label>
           <input class="form-input" type="number" placeholder="100" />
         </div>
         <div class="form-group">
