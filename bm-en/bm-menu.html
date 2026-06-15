@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="logo_spinner.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VRINK Branch Admin - Menu Management</title>
+<style>
+@font-face { font-family: 'Pretendard'; src: url('pretendard/Pretendard-Regular.woff2') format('woff2'); font-weight: 400; }
+@font-face { font-family: 'Pretendard'; src: url('pretendard/Pretendard-Medium.woff2') format('woff2'); font-weight: 500; }
+@font-face { font-family: 'Pretendard'; src: url('pretendard/Pretendard-Bold.woff2') format('woff2'); font-weight: 700; }
+</style>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; line-height: 1.2; }
+body { font-family: 'Pretendard', sans-serif; background: #F8F8FA; color: #111111; display: flex; height: 100vh; overflow: hidden; }
+.sidebar { width: 256px; min-width: 256px; height: 100vh; background: #fff; border-right: 1px solid rgba(0,0,0,.1); display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
+.sidebar-logo { padding: 20px 20px 16px; border-bottom: 1px solid #EDF2F6; }
+.sidebar-nav { flex: 1; padding: 12px 12px; display: flex; flex-direction: column; gap: 2px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; text-decoration: none; color: #505050; font-size: 14px; font-weight: 500; cursor: pointer; transition: background .15s; }
+.nav-item:hover { background: #F6F6F6; }
+.nav-item.active { background: #EFF6FF; color: #0095FF; font-weight: 500; }
+.nav-item.nav-logout { color: #EC3D3D; }
+.nav-icon { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.nav-label { flex: 1; }
+.nav-group { display: flex; flex-direction: column; }
+.nav-group-trigger { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; color: #505050; font-size: 14px; font-weight: 500; cursor: pointer; }
+.nav-group-trigger:hover { background: #F6F6F6; }
+.nav-group-trigger.open { color: #111111; font-weight: 500; }
+.nav-arrow { margin-left: auto; font-size: 10px; color: #767676; transition: transform .2s; display: inline-block; }
+.nav-group-trigger.open .nav-arrow { transform: rotate(180deg); }
+.nav-sub { display: none; flex-direction: column; padding-left: 32px; gap: 1px; }
+.nav-sub.show { display: flex; }
+.nav-sub-item { padding: 7px 12px; border-radius: 6px; font-size: 13px; color: #505050; text-decoration: none; font-weight: 400; }
+.nav-sub-item:hover { background: #F6F6F6; color: #111111; }
+.nav-sub-item.active { color: #0095FF; font-weight: 500; background: #EFF6FF; }
+.sidebar-bottom { padding: 12px 12px 16px; border-top: 1px solid #EDF2F6; display: flex; flex-direction: column; gap: 2px; }
+.sidebar-section-title { font-size: 11px; font-weight: 500; color: #A098AE; letter-spacing: .91px; padding: 4px 12px 8px; text-transform: uppercase; }
+.main-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { height: 64px; background: #fff; border-bottom: 1px solid #EDF2F6; display: flex; align-items: center; justify-content: flex-end; padding: 0 24px; gap: 12px; flex-shrink: 0; }
+.topbar-btn { background: none; border: 1px solid #EDF2F6; border-radius: 8px; padding: 8px; cursor: pointer; position: relative; display: flex; align-items: center; justify-content: center; }
+.notif-badge { position: absolute; top: -4px; right: -4px; background: #0095FF; color: #fff; font-size: 10px; font-weight: 500; border-radius: 9999px; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; }
+.topbar-branch { background: none; border: 1px solid #EDF2F6; border-radius: 8px; padding: 7px 12px; font-size: 13px; font-weight: 500; cursor: pointer; color: #505050; }
+.topbar-user { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 8px; border-radius: 8px; }
+.topbar-user:hover { background: #F6F6F6; }
+.user-avatar { width: 32px; height: 32px; background: #EDF2F6; border-radius: 9999px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; color: #505050; }
+.user-info { display: flex; flex-direction: column; }
+.user-name { font-size: 13px; font-weight: 500; color: #111111; }
+.user-role { font-size: 11px; color: #767676; }
+.page-content { flex: 1; overflow-y: auto; padding: 28px 28px; }
+.page-title { font-size: 24px; font-weight: 500; color: #111111; margin-bottom: 20px; }
+.card { background: #fff; border-radius: 20px; box-shadow: 0px 4px 20px rgba(238,238,238,.5); padding: 20px 24px; }
+.badge { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; }
+.badge-success { background: #E6FBF4; color: #00B377; }
+.badge-warning { background: #FEF6E6; color: #E0A830; }
+.badge-error { background: #FDE8E8; color: #D32F2F; }
+.badge-primary { background: #E6F4FF; color: #0077CC; }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; }
+.btn-primary { background: #0095FF; color: #fff; }
+.btn-outline { background: #fff; color: #505050; border: 1px solid #EDF2F6; }
+.btn-danger { background: #EC3D3D; color: #fff; }
+.btn-sm { padding: 5px 10px; font-size: 12px; border-radius: 4px; }
+.table-wrap { background: #fff; border-radius: 20px; box-shadow: 0px 4px 20px rgba(238,238,238,.5); overflow: hidden; }
+table { width: 100%; border-collapse: collapse; }
+th { padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 500; color: #767676; background: #F8F8FA; border-bottom: 1px solid #EDF2F6; white-space: nowrap; }
+td { padding: 14px 16px; font-size: 13px; color: #111111; border-bottom: 1px solid #F6F6F6; vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #FAFAFA; }
+.filter-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.filter-select-btn { padding: 7px 14px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid #EDF2F6; background: #fff; color: #505050; }
+.tab-bar { display:flex; gap:4px; margin-bottom:16px; }
+.tab-btn { padding:7px 18px; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; border:1px solid #EDF2F6; background:#fff; color:#505050; transition:all .15s; }
+.tab-btn.active { background:#0095FF; color:#fff; border-color:#0095FF; }
+.dropdown-menu { position:absolute; top:calc(100% + 4px); left:0; background:#fff; border:1px solid #EDF2F6; border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,.08); min-width:140px; padding:4px; z-index:100; display:none; }
+.dropdown-menu.show { display:block; }
+.dropdown-item { padding:8px 12px; border-radius:6px; font-size:13px; color:#505050; cursor:pointer; transition:background .1s; }
+.dropdown-item:hover { background:#F6F6F6; }
+.dropdown-item.active { color:#0095FF; font-weight:500; }
+input[type="checkbox"] { width: 15px; height: 15px; accent-color: #0095FF; cursor: pointer; }
+.empty-state { text-align: center; padding: 60px 20px; color: #767676; }
+.empty-state svg { margin-bottom: 16px; opacity: .4; }
+.empty-title { font-size: 16px; font-weight: 500; color: #505050; margin-bottom: 6px; }
+.empty-desc { font-size: 13px; color: #767676; }
+.img-thumb { width: 44px; height: 44px; border-radius: 8px; background: #EDF2F6; object-fit: cover; }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo" style="display:flex;align-items:center;gap:8px;">
+    <img src="logo_spinner.png" alt="VRINK" style="height:28px;width:auto;">
+    <span style="background:#EFF6FF;color:#0095FF;font-size:11px;font-weight:500;border-radius:4px;padding:3px 7px;">Seongsu</span>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="admin-branch-manager.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg></span>
+      <span class="nav-label">Home</span>
+    </a>
+    <a href="bm-storefront.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.98 1.61h9.72a2 2 0 001.98-1.61L23 6H6"/></svg></span>
+      <span class="nav-label">Store</span>
+    </a>
+    <a href="bm-inventory.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27,6.96 12,12.01 20.73,6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span>
+      <span class="nav-label">Inventory</span>
+    </a>
+    <a href="bm-orders.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="13" y2="15"/></svg></span>
+      <span class="nav-label">Order History</span>
+    </a>
+    <a href="bm-sales.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+      <span class="nav-label">Sales</span>
+    </a>
+    <a href="bm-menu.html" class="nav-item active">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></span>
+      <span class="nav-label">Menu</span>
+    </a>
+    <a href="bm-members.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+      <span class="nav-label">Members</span>
+    </a>
+    <a href="bm-notice.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l18-7-7 18-2.5-7.5z"/></svg></span>
+      <span class="nav-label">Notices</span>
+    </a>
+    <a href="bm-notification.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></span>
+      <span class="nav-label">Notifications</span>
+    </a>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="sidebar-section-title">SETTINGS</div>
+    <a href="#" class="nav-item" onclick="event.preventDefault();alert('Settings are coming soon.')">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></span>
+      <span class="nav-label">Settings</span>
+    </a>
+    <a href="admin-help.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></span>
+      <span class="nav-label">Help</span>
+    </a>
+    <button class="nav-item nav-logout" style="background:none;border:none;width:100%;text-align:left;cursor:pointer;" onclick="if(confirm('Do you want to log out?')) location.href='admin-adminusers.html'">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EC3D3D" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
+      <span class="nav-label">Log out</span>
+    </button>
+  </div>
+</aside>
+
+<div class="main-wrapper">
+  <header class="topbar">
+    <button class="topbar-btn notif-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" stroke="#505050" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <span class="notif-badge">2</span>
+    </button>
+    <span class="topbar-branch" style="background:#EFF6FF;border:1px solid #D6EBFF;color:#0095FF;cursor:default;">BuildUp Seongsu</span>
+    <div class="topbar-user">
+      <div class="user-avatar" style="background:#EFF6FF;color:#0095FF;">K</div>
+      <div class="user-info"><span class="user-name">Seongsu Kim</span><span class="user-role">Branch Admin</span></div>
+      <button style="background:none;border:none;cursor:pointer;color:#767676;font-size:11px;">▾</button>
+    </div>
+  </header>
+
+  <div class="page-content">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <div class="page-title" style="margin-bottom:0;">Menu Management</div>
+      <button class="btn btn-primary" onclick="openModal('menuAddModal')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add Menu</button>
+    </div>
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="setMenuTab('all', this)">All</button>
+      <button class="tab-btn" onclick="setMenuTab('functional', this)">Functional Shot</button>
+      <button class="tab-btn" onclick="setMenuTab('flavor', this)">Flavor</button>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th><input type="checkbox"></th><th>Image</th><th>Menu Name</th><th>Category</th><th>Base Price</th><th>Status</th><th>Orders</th><th>Manage</th></tr></thead>
+        <tbody id="menuTbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<style>
+.icon-upload-wrap { position: relative; }
+.icon-upload-wrap:hover::after { content: '📷'; position: absolute; inset: 0; background: rgba(0,0,0,.35); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+</style>
+<script>
+function toggleGroup(el){el.classList.toggle('open');var s=el.nextElementSibling;if(s)s.classList.toggle('show');}
+
+/* ── Menu data (stored in localStorage) ── */
+var _defaultMenuItems = [
+  {name:'Booster Shot',  type:'functional', category:'Functional Shot', price:'₩5,500',   status:'On Sale', orders:142, imgBg:'#DBEAFE', imgEmoji:'💊', imgData:null},
+  {name:'Vitamin Shot',  type:'functional', category:'Functional Shot', price:'₩5,000',   status:'On Sale', orders:98,  imgBg:'#FEF9C3', imgEmoji:'🌟', imgData:null},
+  {name:'Cutting Shot',  type:'functional', category:'Functional Shot', price:'₩5,500',   status:'On Sale', orders:76,  imgBg:'#FCE7F3', imgEmoji:'✂️', imgData:null},
+  {name:'Relax Shot',    type:'functional', category:'Functional Shot', price:'₩5,000',   status:'On Sale', orders:54,  imgBg:'#ECFDF5', imgEmoji:'🌿', imgData:null},
+  {name:'Amino Shot',    type:'functional', category:'Functional Shot', price:'₩5,500',   status:'On Sale', orders:67,  imgBg:'#EDE9FE', imgEmoji:'💪', imgData:null},
+  {name:'Flavor · Lemon',     type:'flavor', category:'Flavor', price:'₩128,000', status:'On Sale', orders:203, imgBg:'#FFF7ED', imgEmoji:'🍋', imgData:null},
+  {name:'Flavor · Green Grape',type:'flavor', category:'Flavor', price:'₩128,000', status:'On Sale', orders:87,  imgBg:'#E0FFF4', imgEmoji:'🍇', imgData:null},
+  {name:'Flavor · Apple',     type:'flavor', category:'Flavor', price:'₩128,000', status:'On Sale', orders:64,  imgBg:'#FFF0F0', imgEmoji:'🍎', imgData:null},
+  {name:'Flavor · Cherry',    type:'flavor', category:'Flavor', price:'₩128,000', status:'On Sale', orders:51,  imgBg:'#FFF0F8', imgEmoji:'🍒', imgData:null},
+  {name:'Flavor · Mango',     type:'flavor', category:'Flavor', price:'₩128,000', status:'On Sale', orders:45,  imgBg:'#FFFBE0', imgEmoji:'🥭', imgData:null},
+];
+
+function loadMenuItems() {
+  try { var s = localStorage.getItem('vrink_menu_items'); return s ? JSON.parse(s) : _defaultMenuItems.map(function(i){ return Object.assign({},i); }); }
+  catch(e) { return _defaultMenuItems.map(function(i){ return Object.assign({},i); }); }
+}
+function saveMenuItems() { localStorage.setItem('vrink_menu_items', JSON.stringify(menuItems)); }
+
+var menuItems = loadMenuItems();
+var _editIdx = null;
+
+function getThumbInner(item) {
+  if (item.imgData) return '<img src="'+item.imgData+'" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">';
+  return item.imgEmoji;
+}
+
+function renderMenuTable() {
+  var sbc = {'On Sale':'badge-success','Sold Out':'badge-error','Hidden':'badge-warning'};
+  var cbc = {'Functional Shot':'badge-primary','Flavor':'badge-warning'};
+  document.getElementById('menuTbody').innerHTML = menuItems.map(function(item, idx) {
+    var bg = item.imgData ? '#fff' : item.imgBg;
+    return '<tr data-type="'+item.type+'">'
+      +'<td><input type="checkbox"></td>'
+      +'<td><div class="img-thumb icon-upload-wrap" title="Click to change image" style="background:'+bg+';display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;" onclick="triggerIconUpload(this,'+idx+')">'
+      +getThumbInner(item)+'</div></td>'
+      +'<td><strong>'+item.name+'</strong></td>'
+      +'<td><span class="badge '+(cbc[item.category]||'badge-primary')+'">'+item.category+'</span></td>'
+      +'<td>'+item.price+'</td>'
+      +'<td><span class="badge '+(sbc[item.status]||'badge-warning')+'">'+item.status+'</span></td>'
+      +'<td>'+item.orders+'</td>'
+      +'<td><button class="btn btn-outline btn-sm" onclick="openMenuEdit('+idx+')">Edit</button></td>'
+      +'</tr>';
+  }).join('');
+  applyMenuFilter();
+}
+
+/* ── Tabs / Filters ── */
+function setMenuTab(type, btn) {
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  applyMenuFilter();
+}
+
+var _catFilter = 'All', _statusFilter = 'All';
+
+(function initFilterDrops() {
+  var catOpts = ['All','Functional Shot','Flavor'];
+  var statusOpts = ['All','On Sale','Sold Out','Hidden'];
+  function makeDropHTML(id, opts) {
+    return '<div class="dropdown-menu" id="'+id+'">'
+      +opts.map(function(o){ return '<div class="dropdown-item" onclick="selectFilter(\''+id+'\',\''+o+'\')">'+o+'</div>'; }).join('')+'</div>';
+  }
+  document.addEventListener('DOMContentLoaded', function(){
+    var catBtn = document.getElementById('catFilterBtn');
+    var statusBtn = document.getElementById('statusFilterBtn');
+    if (catBtn && statusBtn) {
+      function wrapBtn(btn, html) {
+        var wrap = document.createElement('div'); wrap.style.cssText = 'position:relative;display:inline-block;';
+        btn.parentNode.insertBefore(wrap, btn); wrap.appendChild(btn); wrap.insertAdjacentHTML('beforeend', html);
+      }
+      wrapBtn(catBtn, makeDropHTML('catDrop', catOpts));
+      wrapBtn(statusBtn, makeDropHTML('statusDrop', statusOpts));
+      catBtn.addEventListener('click', function(e){ e.stopPropagation(); document.getElementById('statusDrop').classList.remove('show'); document.getElementById('catDrop').classList.toggle('show'); });
+      statusBtn.addEventListener('click', function(e){ e.stopPropagation(); document.getElementById('catDrop').classList.remove('show'); document.getElementById('statusDrop').classList.toggle('show'); });
+      document.addEventListener('click', function(){ document.querySelectorAll('.dropdown-menu').forEach(function(m){ m.classList.remove('show'); }); });
+    }
+    renderMenuTable();
+  });
+})();
+
+window.selectFilter = function(dropId, val) {
+  document.getElementById(dropId).classList.remove('show');
+  if (dropId === 'catDrop') { _catFilter = val; document.getElementById('catFilterBtn').textContent = (val==='All'?'All Categories':val)+' ▾'; }
+  else { _statusFilter = val; document.getElementById('statusFilterBtn').textContent = (val==='All'?'Status':val)+' ▾'; }
+  applyMenuFilter();
+};
+
+function applyMenuFilter() {
+  var tabActive = document.querySelector('.tab-btn.active');
+  var tabType = tabActive ? tabActive.textContent.trim() : 'All';
+  var typeMap = {'All':'all','Functional Shot':'functional','Flavor':'flavor'};
+  var activeType = typeMap[tabType] || 'all';
+  document.querySelectorAll('#menuTbody tr[data-type]').forEach(function(tr){
+    var catTd = tr.querySelector('td:nth-child(4) .badge');
+    var statusTd = tr.querySelector('td:nth-child(6) .badge');
+    var catMatch = (_catFilter==='All') || (catTd && catTd.textContent.indexOf(_catFilter)!==-1);
+    var statusMatch = (_statusFilter==='All') || (statusTd && statusTd.textContent===_statusFilter);
+    var tabMatch = (activeType==='all') || (tr.dataset.type===activeType);
+    tr.style.display = (catMatch && statusMatch && tabMatch) ? '' : 'none';
+  });
+}
+
+/* ── Image upload (direct table click) ── */
+var _currentIconIdx = null;
+var _iconFileInput = (function() {
+  var inp = document.createElement('input'); inp.type='file'; inp.accept='image/*'; inp.style.display='none';
+  inp.onchange = function() {
+    if (!inp.files[0] || _currentIconIdx===null) return;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      menuItems[_currentIconIdx].imgData = e.target.result;
+      saveMenuItems();
+      renderMenuTable();
+    };
+    reader.readAsDataURL(inp.files[0]); inp.value='';
+  };
+  document.body.appendChild(inp); return inp;
+})();
+
+function triggerIconUpload(el, idx) { _currentIconIdx = idx; _iconFileInput.click(); }
+
+/* ── Edit modal ── */
+var _editImgPending = null;
+
+function openMenuEdit(idx) {
+  _editIdx = idx; _editImgPending = null;
+  var item = menuItems[idx];
+  var preview = document.getElementById('editIconPreview');
+  if (item.imgData) { preview.innerHTML='<img src="'+item.imgData+'" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">'; preview.style.background='#fff'; }
+  else { preview.innerHTML=item.imgEmoji; preview.style.background=item.imgBg; }
+  document.getElementById('editMenuName').value = item.name;
+  document.getElementById('editMenuCat').value = item.category;
+  document.getElementById('editMenuPrice').value = item.price.replace(/[^0-9]/g,'');
+  document.getElementById('editMenuStatus').value = item.status;
+  openModal('menuEditModal');
+}
+
+function previewEditIcon(inp) {
+  if (!inp.files[0]) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    _editImgPending = e.target.result;
+    var preview = document.getElementById('editIconPreview');
+    preview.innerHTML='<img src="'+e.target.result+'" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">'; preview.style.background='#fff';
+  };
+  reader.readAsDataURL(inp.files[0]);
+}
+
+function saveMenuEdit() {
+  if (_editIdx===null) return;
+  var item = menuItems[_editIdx];
+  item.name = document.getElementById('editMenuName').value.trim() || item.name;
+  item.category = document.getElementById('editMenuCat').value;
+  item.type = item.category==='Functional Shot' ? 'functional' : 'flavor';
+  var pv = parseInt(document.getElementById('editMenuPrice').value) || 0;
+  item.price = '₩'+pv.toLocaleString('en-US');
+  item.status = document.getElementById('editMenuStatus').value;
+  if (_editImgPending) item.imgData = _editImgPending;
+  saveMenuItems(); renderMenuTable();
+  alert('Saved.'); closeModal('menuEditModal');
+}
+
+function deleteMenuItem() {
+  if (_editIdx===null) return;
+  if (!confirm('Delete the menu item "'+menuItems[_editIdx].name+'"?')) return;
+  menuItems.splice(_editIdx, 1); _editIdx=null;
+  saveMenuItems(); renderMenuTable();
+  closeModal('menuEditModal');
+}
+
+/* ── Add modal ── */
+function saveMenuAdd() {
+  var name = document.getElementById('addMenuName').value.trim();
+  if (!name) { alert('Please enter a menu name.'); return; }
+  var cat = document.getElementById('addMenuCat').value;
+  var pv = parseInt(document.getElementById('addMenuPrice').value)||0;
+  var status = document.getElementById('addMenuStatus').value;
+  var newItem = {name:name, type:cat==='Functional Shot'?'functional':'flavor', category:cat, price:'₩'+pv.toLocaleString('en-US'), status:status, orders:0, imgBg:'#EDF2F6', imgEmoji:'🍹', imgData:null};
+  var fileInp = document.getElementById('addMenuFile');
+  if (fileInp.files[0]) {
+    var reader = new FileReader();
+    reader.onload = function(e) { newItem.imgData = e.target.result; menuItems.push(newItem); saveMenuItems(); renderMenuTable(); };
+    reader.readAsDataURL(fileInp.files[0]);
+  } else { menuItems.push(newItem); saveMenuItems(); renderMenuTable(); }
+  alert('Menu added.'); closeModal('menuAddModal');
+}
+</script>
+<div class="modal-overlay" id="menuAddModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Add Menu</span>
+      <button class="modal-close" onclick="closeModal('menuAddModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Menu Name *</label>
+          <input class="form-input" id="addMenuName" placeholder="e.g. Premium Protein Shake" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select class="form-select" id="addMenuCat"><option>Functional Shot</option><option>Flavor</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Base Price *</label>
+          <input class="form-input" type="number" id="addMenuPrice" placeholder="4500" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <select class="form-select" id="addMenuStatus"><option>On Sale</option><option>Sold Out</option><option>Hidden</option></select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Cover Image</label>
+        <input class="form-input" type="file" accept="image/*" id="addMenuFile" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('menuAddModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveMenuAdd()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="menuEditModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Edit Menu</span>
+      <button class="modal-close" onclick="closeModal('menuEditModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Menu Name</label>
+          <input class="form-input" id="editMenuName" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select class="form-select" id="editMenuCat"><option>Functional Shot</option><option>Flavor</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Base Price</label>
+          <input class="form-input" type="number" id="editMenuPrice" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <select class="form-select" id="editMenuStatus"><option>On Sale</option><option>Sold Out</option><option>Hidden</option></select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <textarea class="form-textarea">A Booster Shot to replenish energy before your workout</textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Menu Icon Image</label>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div id="editIconPreview" style="width:52px;height:52px;border-radius:8px;background:#DBEAFE;display:flex;align-items:center;justify-content:center;font-size:22px;overflow:hidden;flex-shrink:0;">💊</div>
+          <button type="button" class="btn btn-outline" onclick="document.getElementById('editIconInput').click()">Change Image</button>
+          <input id="editIconInput" type="file" accept="image/*" style="display:none;" onchange="previewEditIcon(this)">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger btn-sm" onclick="deleteMenuItem()">Delete</button>
+      <button class="btn btn-outline" onclick="closeModal('menuEditModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveMenuEdit()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script src="admin-common.js"></script>
+<script src="admin-tour.js"></script>
+</body>
+</html>

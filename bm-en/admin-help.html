@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="logo_spinner.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VRINK Admin - Help</title>
+<style>
+@font-face { font-family: 'Pretendard'; src: url('pretendard/Pretendard-Regular.woff2') format('woff2'); font-weight: 400; font-style: normal; }
+@font-face { font-family: 'Pretendard'; src: url('pretendard/Pretendard-Medium.woff2') format('woff2'); font-weight: 500; font-style: normal; }
+@font-face { font-family: 'Pretendard'; src: url('pretendard/Pretendard-Bold.woff2') format('woff2'); font-weight: 700; font-style: normal; }
+* { box-sizing: border-box; margin: 0; padding: 0; line-height: 1.2; }
+body { font-family: 'Pretendard', sans-serif; background: #F8F8FA; color: #111111; display: flex; height: 100vh; overflow: hidden; }
+
+.sidebar { width: 256px; min-width: 256px; height: 100vh; background: #fff; border-right: 1px solid rgba(0,0,0,.1); display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
+.sidebar-logo { padding: 20px 20px 16px; border-bottom: 1px solid #EDF2F6; }
+.sidebar-nav { flex: 1; padding: 12px 12px; display: flex; flex-direction: column; gap: 2px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; text-decoration: none; color: #505050; font-size: 14px; font-weight: 500; cursor: pointer; transition: background .15s; }
+.nav-item:hover { background: #F6F6F6; }
+.nav-item.active { background: #EFF6FF; color: #0095FF; font-weight: 500; }
+.nav-item.nav-logout { color: #EC3D3D; }
+.nav-icon { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.nav-label { flex: 1; }
+.nav-group { display: flex; flex-direction: column; }
+.nav-group-trigger { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; color: #505050; font-size: 14px; font-weight: 500; cursor: pointer; }
+.nav-group-trigger:hover { background: #F6F6F6; }
+.nav-group-trigger.open { color: #111111; font-weight: 500; }
+.nav-arrow { margin-left: auto; font-size: 10px; color: #767676; }
+.nav-sub { display: none; flex-direction: column; padding-left: 32px; gap: 1px; }
+.nav-sub.show { display: flex; }
+.nav-sub-item { padding: 7px 12px; border-radius: 6px; font-size: 13px; color: #505050; text-decoration: none; font-weight: 400; }
+.nav-sub-item:hover { background: #F6F6F6; color: #111111; }
+.nav-sub-item.active { color: #0095FF; font-weight: 500; background: #EFF6FF; }
+.sidebar-bottom { padding: 12px 12px 16px; border-top: 1px solid #EDF2F6; display: flex; flex-direction: column; gap: 2px; }
+.sidebar-section-title { font-size: 11px; font-weight: 500; color: #A098AE; letter-spacing: .91px; padding: 4px 12px 8px; text-transform: uppercase; }
+
+.main-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { height: 64px; background: #fff; border-bottom: 1px solid #EDF2F6; display: flex; align-items: center; justify-content: flex-end; padding: 0 24px; gap: 12px; flex-shrink: 0; }
+.topbar-btn { background: none; border: 1px solid #EDF2F6; border-radius: 8px; padding: 8px; cursor: pointer; position: relative; display: flex; align-items: center; justify-content: center; }
+.notif-badge { position: absolute; top: -4px; right: -4px; background: #0095FF; color: #fff; font-size: 10px; font-weight: 500; border-radius: 9999px; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; }
+.topbar-branch { background: none; border: 1px solid #EDF2F6; border-radius: 8px; padding: 7px 12px; font-size: 13px; font-weight: 500; cursor: pointer; color: #505050; }
+.topbar-user { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 8px; border-radius: 8px; }
+.topbar-user:hover { background: #F6F6F6; }
+.user-avatar { width: 32px; height: 32px; background: #EDF2F6; border-radius: 9999px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; color: #505050; }
+.user-info { display: flex; flex-direction: column; }
+.user-name { font-size: 13px; font-weight: 500; color: #111111; }
+.user-role { font-size: 11px; color: #767676; }
+
+.page-content { flex: 1; overflow-y: auto; padding: 28px 28px; }
+.page-title { font-size: 24px; font-weight: 500; color: #111111; margin-bottom: 20px; }
+
+.card { background: #fff; border-radius: 20px; box-shadow: 0px 4px 20px rgba(238,238,238,.5); padding: 24px; margin-bottom: 20px; }
+.card-title { font-size: 16px; font-weight: 500; color: #111111; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #EDF2F6; }
+
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; text-decoration: none; }
+.btn-primary { background: #0095FF; color: #fff; }
+.btn-outline { background: #fff; color: #505050; border: 1px solid #EDF2F6; }
+
+/* Search bar */
+.search-bar { width: 100%; height: 46px; border: 1px solid #EDF2F6; border-radius: 12px; padding: 0 16px; font-size: 14px; font-family: inherit; outline: none; margin-bottom: 24px; background: #fff; }
+.search-bar:focus { border-color: #0095FF; font-weight: 500; }
+
+/* Guide card grid */
+.guide-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.guide-card { border: 1px solid #EDF2F6; border-radius: 12px; padding: 20px; cursor: pointer; transition: box-shadow .15s, border-color .15s; }
+.guide-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.08); border-color: #C8DEFF; }
+.guide-card-icon { width: 40px; height: 40px; background: #EFF6FF; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+.guide-card-title { font-size: 14px; font-weight: 500; color: #111; margin-bottom: 6px; }
+.guide-card-desc { font-size: 12px; color: #767676; line-height: 1.5; }
+
+/* FAQ accordion */
+.faq-list { display: flex; flex-direction: column; gap: 0; }
+.faq-item { border-bottom: 1px solid #EDF2F6; }
+.faq-item:last-child { border-bottom: none; }
+.faq-question { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; cursor: pointer; font-size: 14px; font-weight: 500; color: #111; gap: 12px; }
+.faq-question:hover { color: #0095FF; font-weight: 500; }
+.faq-arrow { font-size: 12px; color: #767676; flex-shrink: 0; transition: transform .2s; }
+.faq-arrow.open { transform: rotate(180deg); }
+.faq-answer { display: none; padding: 0 0 16px; font-size: 13px; color: #505050; line-height: 1.7; }
+.faq-answer.show { display: block; }
+
+/* Contact card */
+.contact-info { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+.contact-row { display: flex; align-items: center; gap: 10px; font-size: 14px; color: #111; }
+.contact-label { font-size: 12px; font-weight: 500; color: #767676; width: 60px; flex-shrink: 0; }
+.contact-value { font-size: 14px; color: #111; }
+
+.nav-group-trigger.open .nav-arrow { transform: rotate(180deg); }
+.nav-arrow { transition: transform .2s; display: inline-block; }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo" onclick="location.href='admin-index.html'" style="cursor:pointer;">
+    <img src="logo_spinner.png" alt="VRINK" style="height:28px;width:auto;">
+  </div>
+  <nav class="sidebar-nav">
+    <a href="admin-index.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg></span>
+      <span class="nav-label">Home</span>
+    </a>
+    <a href="admin-storefront.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.98 1.61h9.72a2 2 0 001.98-1.61L23 6H6"/></svg></span>
+      <span class="nav-label">Store</span>
+    </a>
+    <div class="nav-group">
+      <div class="nav-group-trigger" onclick="toggleGroup(this)">
+        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg></span>
+        <span class="nav-label">Branch Management</span>
+        <span class="nav-arrow">▾</span>
+      </div>
+      <div class="nav-sub">
+        <a href="admin-branch.html" class="nav-sub-item">Branch List</a>
+        <a href="admin-inventory.html" class="nav-sub-item">Inventory</a>
+        <a href="admin-kiosk.html" class="nav-sub-item">Kiosk</a>
+        <a href="admin-device.html" class="nav-sub-item">Device</a>
+        <a href="admin-dispenser.html" class="nav-sub-item">Dispenser</a>
+      </div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-trigger" onclick="toggleGroup(this)">
+        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+        <span class="nav-label">Orders / Sales</span>
+        <span class="nav-arrow">▾</span>
+      </div>
+      <div class="nav-sub">
+        <a href="admin-orders.html" class="nav-sub-item">Order History</a>
+        <a href="admin-sales.html" class="nav-sub-item">Sales</a>
+        <a href="admin-store-sales.html" class="nav-sub-item">Branch Sales Ranking</a>
+      </div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-trigger" onclick="toggleGroup(this)">
+        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></span>
+        <span class="nav-label">Menu Management</span>
+        <span class="nav-arrow">▾</span>
+      </div>
+      <div class="nav-sub">
+        <a href="admin-menu.html" class="nav-sub-item">Menu</a>
+        <a href="admin-nutrition.html" class="nav-sub-item">Nutrition</a>
+        <a href="admin-combo.html" class="nav-sub-item">Recommended Combos</a>
+      </div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-trigger" onclick="toggleGroup(this)">
+        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+        <span class="nav-label">Members & Marketing</span>
+        <span class="nav-arrow">▾</span>
+      </div>
+      <div class="nav-sub">
+        <a href="admin-members.html" class="nav-sub-item">Members</a>
+        <a href="admin-notice.html" class="nav-sub-item">Notices</a>
+        <a href="admin-popup.html" class="nav-sub-item">Popups</a>
+        <a href="admin-promotion.html" class="nav-sub-item">Promotion</a>
+        <a href="admin-ad.html" class="nav-sub-item">Ad Videos</a>
+      </div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-trigger" onclick="toggleGroup(this)">
+        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg></span>
+        <span class="nav-label">Operations</span>
+        <span class="nav-arrow">▾</span>
+      </div>
+      <div class="nav-sub">
+        <a href="admin-policy.html" class="nav-sub-item">Policy</a>
+        <a href="admin-adminusers.html" class="nav-sub-item">Admin Accounts</a>
+        <a href="admin-notification.html" class="nav-sub-item">Notifications</a>
+        <a href="admin-tossplace.html" class="nav-sub-item">TossPlace Terminal</a>
+        <a href="admin-prereservation.html" class="nav-sub-item">Pre-registration</a>
+      </div>
+    </div>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="sidebar-section-title">SETTINGS</div>
+    <a href="admin-settings.html" class="nav-item">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></span>
+      <span class="nav-label">Settings</span>
+    </a>
+    <a href="admin-help.html" class="nav-item active">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></span>
+      <span class="nav-label">Help</span>
+    </a>
+    <button class="nav-item nav-logout" style="background:none;border:none;width:100%;text-align:left;cursor:pointer;">
+      <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EC3D3D" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
+      <span class="nav-label">Log out</span>
+    </button>
+  </div>
+</aside>
+
+<div class="main-wrapper">
+  <header class="topbar">
+    <button class="topbar-btn notif-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" stroke="#505050" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="notif-badge">2</span>
+    </button>
+    <button class="topbar-branch">BuildUp Seongsu ▾</button>
+    <div class="topbar-user">
+      <div class="user-avatar">A</div>
+      <div class="user-info">
+        <span class="user-name">admin</span>
+        <span class="user-role">Branch Admin</span>
+      </div>
+      <button style="background:none;border:none;cursor:pointer;color:#767676;font-size:11px;">▾</button>
+    </div>
+  </header>
+
+  <div class="page-content">
+    <div class="page-title">Help</div>
+
+    <!-- Search bar -->
+    <input class="search-bar" id="helpSearch" type="text" placeholder="Search for what you need" oninput="filterHelp(this.value)">
+
+    <!-- Card 1: Getting Started Guide -->
+    <div class="card">
+      <div class="card-title">Getting Started Guide</div>
+      <div class="guide-grid">
+        <div class="guide-card" onclick="location.href='admin-menu.html'">
+          <div class="guide-card-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0095FF" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          </div>
+          <div class="guide-card-title">Setting Up Your Menu</div>
+          <div class="guide-card-desc">How to set prices and shot policies</div>
+        </div>
+        <div class="guide-card" onclick="location.href='admin-members.html'">
+          <div class="guide-card-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0095FF" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+          </div>
+          <div class="guide-card-title">Member Management</div>
+          <div class="guide-card-desc">View the member list and membership status</div>
+        </div>
+        <div class="guide-card" onclick="location.href='admin-branch.html'">
+          <div class="guide-card-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0095FF" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
+          </div>
+          <div class="guide-card-title">Branch Management</div>
+          <div class="guide-card-desc">View the branch list and stock status</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2: Frequently Asked Questions -->
+    <div class="card">
+      <div class="card-title">Frequently Asked Questions</div>
+      <div class="faq-list">
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>Can I set a menu price lower than the HQ standard price?</span>
+            <span class="faq-arrow">▾</span>
+          </div>
+          <div class="faq-answer">Yes, you can freely adjust prices based on your branch's situation. However, HQ policy may set a minimum price threshold.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>How do I configure the shot add-on policy?</span>
+            <span class="faq-arrow">▾</span>
+          </div>
+          <div class="faq-answer">On the menu settings page, you can set the add-on shot price and maximum number of shots for each menu item.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>Can I create membership products myself?</span>
+            <span class="faq-arrow">▾</span>
+          </div>
+          <div class="faq-answer">Yes, under Members & Marketing > Members, you can check the membership status and freely create products as subscription, cup pass, or pass types.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>Can a branch change the ad videos?</span>
+            <span class="faq-arrow">▾</span>
+          </div>
+          <div class="faq-answer">Ad videos are managed under Members & Marketing > Ad Videos. To maintain brand consistency, they are configured with HQ admin permissions.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>Where do I manage inventory?</span>
+            <span class="faq-arrow">▾</span>
+          </div>
+          <div class="faq-answer">You can check your branch's stock status under Branch Management > Inventory.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Card 3: Contact Us -->
+    <div class="card">
+      <div class="card-title">Contact Us</div>
+      <p style="font-size:14px;color:#505050;margin-bottom:20px;">Have additional questions? Please reach out to HQ.</p>
+      <div class="contact-info">
+        <div class="contact-row">
+          <span class="contact-label">Email</span>
+          <span class="contact-value">help@vrink.kr</span>
+        </div>
+        <div class="contact-row">
+          <span class="contact-label">Hours</span>
+          <span class="contact-value">Weekdays 9:00 - 18:00</span>
+        </div>
+      </div>
+      <a href="mailto:help@vrink.kr" class="btn btn-primary">Email Us</a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function toggleGroup(trigger) {
+    trigger.classList.toggle('open');
+    trigger.nextElementSibling.classList.toggle('show');
+  }
+
+  function toggleFaq(questionEl) {
+    const answer = questionEl.nextElementSibling;
+    const arrow = questionEl.querySelector('.faq-arrow');
+    const isOpen = answer.classList.contains('show');
+    answer.classList.toggle('show', !isOpen);
+    arrow.classList.toggle('open', !isOpen);
+  }
+
+  function filterHelp(q) {
+    const kw = q.trim().toLowerCase();
+    document.querySelectorAll('.faq-item').forEach(function(item) {
+      const text = item.textContent.toLowerCase();
+      item.style.display = (!kw || text.includes(kw)) ? '' : 'none';
+    });
+    document.querySelectorAll('.guide-card').forEach(function(card) {
+      const text = card.textContent.toLowerCase();
+      card.style.display = (!kw || text.includes(kw)) ? '' : 'none';
+    });
+  }
+</script>
+<script src="admin-common.js"></script>
+</body>
+</html>
